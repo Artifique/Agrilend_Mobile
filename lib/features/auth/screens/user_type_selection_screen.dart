@@ -48,6 +48,21 @@ class UserTypeSelectionScreen extends StatelessWidget {
                       begin: -1,
                       end: 0,
                     ),
+
+                    const SizedBox(height: 24),
+                    _buildUserTypeCard(
+                      context,
+                      title: 'Acheteur',
+                      description: 'Je souhaite acheter des produits agricoles frais',
+                      icon: Icons.shopping_cart_rounded,
+                      color: const Color(0xFFF59E0B),
+                      onTap: () => _navigateToRegister(context, 'buyer'),
+                    ).animate().slideX(
+                      delay: const Duration(milliseconds: 1000),
+                      duration: const Duration(milliseconds: 600),
+                      begin: -1,
+                      end: 0,
+                    ),
                   ],
                 ),
               ),

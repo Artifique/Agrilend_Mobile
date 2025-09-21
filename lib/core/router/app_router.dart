@@ -12,6 +12,9 @@ import '../../features/farmer/screens/create_offer_screen.dart';
 import '../../features/farmer/screens/stock_management_screen.dart';
 
 import '../../features/agent/screens/agent_main_screen.dart';
+import '../../features/buyer/screens/buyer_main_screen.dart';
+import '../../features/buyer/screens/product_detail_screen.dart';
+import '../../features/buyer/screens/order_confirmation_screen.dart';
 import '../../features/transactions/screens/payment_request_screen.dart';
 import '../../features/transactions/screens/transaction_history_screen.dart';
 import '../../features/wallet/screens/wallet_screen.dart';
@@ -148,6 +151,33 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           ),
         ],
       ),
+
+      // Buyer Routes
+      GoRoute(
+        path: '/buyer',
+        builder: (context, state) => const BuyerMainScreen(),
+        routes: [
+          GoRoute(
+            path: 'product/:productId',
+            builder: (context, state) {
+              final productId = state.pathParameters['productId']!;
+              return ProductDetailScreen(productId: productId);
+            },
+          ),
+          GoRoute(
+            path: 'order-confirmation',
+            builder: (context, state) => const OrderConfirmationScreen(),
+          ),
+          GoRoute(
+            path: 'profile',
+            builder: (context, state) => const ProfileScreen(),
+          ),
+          GoRoute(
+            path: 'notifications',
+            builder: (context, state) => const NotificationScreen(),
+          ),
+        ],
+      ),
     ],
   );
 });
@@ -156,9 +186,10 @@ String _getHomeRoute(String? userType) {
   switch (userType) {
     case 'farmer':
       return '/farmer';
-
     case 'agent':
       return '/agent';
+    case 'buyer':
+      return '/buyer';
     default:
       return '/login';
   }

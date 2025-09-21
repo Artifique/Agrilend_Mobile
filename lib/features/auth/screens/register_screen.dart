@@ -65,9 +65,11 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
           case 'farmer':
             context.go('/farmer');
             break;
-
           case 'agent':
             context.go('/agent');
+            break;
+          case 'buyer':
+            context.go('/buyer');
             break;
         }
       }
@@ -262,10 +264,13 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
           value: AppConstants.userTypeFarmer,
           child: const Text('Agriculteur'),
         ),
-
         DropdownMenuItem(
           value: AppConstants.userTypeAgent,
           child: const Text('Agent Local'),
+        ),
+        DropdownMenuItem(
+          value: AppConstants.userTypeBuyer,
+          child: const Text('Acheteur'),
         ),
       ],
       onChanged: (value) {

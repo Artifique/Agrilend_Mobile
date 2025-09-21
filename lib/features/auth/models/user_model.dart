@@ -88,4 +88,6 @@ class UserModel extends HiveObject {
   bool get isFarmer => userType == 'farmer';
 
   bool get isAgent => userType == 'agent';
+
+  bool get isBuyer => userType == 'buyer';
 }
