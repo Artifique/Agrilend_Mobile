@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../providers/buyer_providers.dart';
+import '../../auth/providers/auth_provider.dart'; // Import authProvider
 
 class BuyerProfileScreen extends ConsumerStatefulWidget {
   const BuyerProfileScreen({super.key});
@@ -17,7 +18,10 @@ class _BuyerProfileScreenState extends ConsumerState<BuyerProfileScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(buyerProfileProvider.notifier).loadProfile('buyer_1');
+      final userId = ref.read(authProvider).user?.id.toString();
+      if (userId != null) {
+        ref.read(buyerProfileProvider.notifier).loadProfile(userId);
+      }
     });
   }
 
@@ -50,7 +54,8 @@ class _BuyerProfileScreenState extends ConsumerState<BuyerProfileScreen> {
       body: buyerProfile == null
           ? const Center(
               child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(AppTheme.primaryGreen),
+                valueColor:
+                    AlwaysStoppedAnimation<Color>(AppTheme.primaryGreen),
               ),
             )
           : SingleChildScrollView(
@@ -78,10 +83,12 @@ class _BuyerProfileScreenState extends ConsumerState<BuyerProfileScreen> {
                         // Avatar
                         CircleAvatar(
                           radius: 50,
-                          backgroundColor: AppTheme.primaryGreen.withOpacity(0.1),
+                          backgroundColor:
+                              AppTheme.primaryGreen.withOpacity(0.1),
                           child: Text(
-                            buyerProfile.businessName.isNotEmpty
-                                ? buyerProfile.businessName[0].toUpperCase()
+                            (buyerProfile?.businessName ?? '').isNotEmpty
+                                ? (buyerProfile?.businessName ?? '')[0]
+                                    .toUpperCase()
                                 : 'B',
                             style: TextStyle(
                               fontSize: 32,
@@ -91,9 +98,9 @@ class _BuyerProfileScreenState extends ConsumerState<BuyerProfileScreen> {
                           ),
                         ),
                         const SizedBox(height: 16),
-                        
+
                         Text(
-                          buyerProfile.businessName,
+                          buyerProfile?.businessName ?? '',
                           style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
@@ -101,18 +108,18 @@ class _BuyerProfileScreenState extends ConsumerState<BuyerProfileScreen> {
                           ),
                         ),
                         const SizedBox(height: 4),
-                        
+
                         Text(
-                          buyerProfile.businessType,
+                          buyerProfile?.businessType ?? '',
                           style: TextStyle(
                             fontSize: 16,
                             color: Colors.grey[600],
                             fontWeight: FontWeight.w500,
                           ),
                         ),
-                        
+
                         const SizedBox(height: 16),
-                        
+
                         // Statut de vérification
                         Container(
                           padding: const EdgeInsets.symmetric(
@@ -149,9 +156,9 @@ class _BuyerProfileScreenState extends ConsumerState<BuyerProfileScreen> {
                       ],
                     ),
                   ),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // Informations de contact
                   Container(
                     width: double.infinity,
@@ -179,22 +186,21 @@ class _BuyerProfileScreenState extends ConsumerState<BuyerProfileScreen> {
                           ),
                         ),
                         const SizedBox(height: 16),
-                        
                         _buildInfoRow(
                           'Email',
-                          buyerProfile.businessEmail,
+                          buyerProfile?.businessEmail ?? '',
                           Icons.email_outlined,
                         ),
                         const SizedBox(height: 12),
                         _buildInfoRow(
                           'Téléphone',
-                          buyerProfile.businessPhone,
+                          buyerProfile?.businessPhone ?? '',
                           Icons.phone_outlined,
                         ),
                         const SizedBox(height: 12),
                         _buildInfoRow(
                           'Adresse',
-                          buyerProfile.businessAddress,
+                          buyerProfile?.businessAddress ?? '',
                           Icons.location_on_outlined,
                         ),
                         if (buyerProfile.deliveryAddress != null) ...[
@@ -208,9 +214,9 @@ class _BuyerProfileScreenState extends ConsumerState<BuyerProfileScreen> {
                       ],
                     ),
                   ),
-                  
+
                   const SizedBox(height: 20),
-                  
+
                   // Compte Hedera
                   Container(
                     width: double.infinity,
@@ -238,17 +244,16 @@ class _BuyerProfileScreenState extends ConsumerState<BuyerProfileScreen> {
                           ),
                         ),
                         const SizedBox(height: 16),
-                        
-                        if (buyerProfile.hasHederaAccount) ...[
+                        if (buyerProfile?.hasHederaAccount == true) ...[
                           _buildInfoRow(
                             'ID du compte',
-                            buyerProfile.hederaAccountId!,
+                            buyerProfile?.hederaAccountId ?? '-',
                             Icons.account_circle_outlined,
                           ),
                           const SizedBox(height: 12),
                           _buildInfoRow(
                             'Solde HBAR',
-                            buyerProfile.formattedHbarBalance,
+                            buyerProfile?.formattedHbarBalance ?? '0.00 HBAR',
                             Icons.account_balance_wallet_outlined,
                             valueColor: AppTheme.primaryGreen,
                           ),
@@ -309,9 +314,9 @@ class _BuyerProfileScreenState extends ConsumerState<BuyerProfileScreen> {
                       ],
                     ),
                   ),
-                  
+
                   const SizedBox(height: 20),
-                  
+
                   // Préférences
                   Container(
                     width: double.infinity,
@@ -339,8 +344,8 @@ class _BuyerProfileScreenState extends ConsumerState<BuyerProfileScreen> {
                           ),
                         ),
                         const SizedBox(height: 16),
-                        
-                        if (buyerProfile.preferredCategories.isNotEmpty) ...[
+                        if ((buyerProfile?.preferredCategoriesSafe ?? [])
+                            .isNotEmpty) ...[
                           const Text(
                             'Catégories préférées',
                             style: TextStyle(
@@ -353,7 +358,8 @@ class _BuyerProfileScreenState extends ConsumerState<BuyerProfileScreen> {
                           Wrap(
                             spacing: 8,
                             runSpacing: 8,
-                            children: buyerProfile.preferredCategories.map((category) {
+                            children: buyerProfile.preferredCategoriesSafe
+                                .map((category) {
                               return Container(
                                 padding: const EdgeInsets.symmetric(
                                   horizontal: 12,
@@ -363,7 +369,8 @@ class _BuyerProfileScreenState extends ConsumerState<BuyerProfileScreen> {
                                   color: AppTheme.primaryGreen.withOpacity(0.1),
                                   borderRadius: BorderRadius.circular(16),
                                   border: Border.all(
-                                    color: AppTheme.primaryGreen.withOpacity(0.3),
+                                    color:
+                                        AppTheme.primaryGreen.withOpacity(0.3),
                                   ),
                                 ),
                                 child: Text(
@@ -390,9 +397,9 @@ class _BuyerProfileScreenState extends ConsumerState<BuyerProfileScreen> {
                       ],
                     ),
                   ),
-                  
+
                   const SizedBox(height: 20),
-                  
+
                   // Actions
                   Container(
                     width: double.infinity,
@@ -473,7 +480,8 @@ class _BuyerProfileScreenState extends ConsumerState<BuyerProfileScreen> {
     }
   }
 
-  Widget _buildInfoRow(String label, String value, IconData icon, {Color? valueColor}) {
+  Widget _buildInfoRow(String label, String value, IconData icon,
+      {Color? valueColor}) {
     return Row(
       children: [
         Icon(
@@ -507,7 +515,8 @@ class _BuyerProfileScreenState extends ConsumerState<BuyerProfileScreen> {
     );
   }
 
-  Widget _buildActionTile(String title, IconData icon, VoidCallback onTap, {Color? textColor}) {
+  Widget _buildActionTile(String title, IconData icon, VoidCallback onTap,
+      {Color? textColor}) {
     return ListTile(
       leading: Icon(
         icon,

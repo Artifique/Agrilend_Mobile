@@ -1,0 +1,36 @@
+PS C:\Users\DELL\Desktop\Projets\Ag Mobile\Agrilend_Mobile> flutter run
+Launching lib\main.dart on SM A127F in debug mode...
+lib/features/profile/screens/profile_screen.dart:128:36: Error: The getter 'fullName' isn't defined for the class 'User'.
+ - 'User' is from 'package:agrilend/models/user.dart' ('lib/models/user.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'fullName'.
+                              user.fullName ?? 'Utilisateur',
+                                   ^^^^^^^^
+lib/features/profile/screens/profile_screen.dart:143:38: Error: The getter 'userType' isn't defined for the class 'User'.
+ - 'User' is from 'package:agrilend/models/user.dart' ('lib/models/user.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'userType'.
+                                user.userType == 'farmer' ? 'Agriculteur' : user.userType == 'buyer' ? 'Acheteur' : 'Agent Local',
+                                     ^^^^^^^^
+lib/features/profile/screens/profile_screen.dart:143:82: Error: The getter 'userType' isn't defined for the class 'User'.
+ - 'User' is from 'package:agrilend/models/user.dart' ('lib/models/user.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'userType'.
+                                user.userType == 'farmer' ? 'Agriculteur' : user.userType == 'buyer' ? 'Acheteur' : 'Agent Local',
+                                                                                 ^^^^^^^^
+Target kernel_snapshot_program failed: Exception
+
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:compileFlutterBuildDebug'.
+> Process 'command 'C:\flutter\src\flutter\bin\flutter.bat'' finished with non-zero exit value 1
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 12s
+Running Gradle task 'assembleDebug'...                             13,4s
+Error: Gradle task assembleDebug failed with exit code 1
+PS C:\Users\DELL\Desktop\Projets\Ag Mobile\Agrilend_Mobile> 

@@ -1,14 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'dart:ui';
+import 'dart:ui'; // Required for ImageFilter.blur, if used
+
 import '../../auth/providers/auth_provider.dart';
+import '../../../models/user.dart'; // Explicitly import User model for UserCompat extension
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final authState = ref.watch(authProvider);
+    final user = authState.user;
+
+    if (user == null) {
+      // Handle case where user is not logged in or data is not available
+      return const Center(child: CircularProgressIndicator());
+    }
+
     return Scaffold(
       backgroundColor: const Color(0xFFF9FAFC),
       extendBodyBehindAppBar: true,
@@ -33,11 +43,11 @@ class ProfileScreen extends ConsumerWidget {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
+                  boxShadow: const [ // Added const
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
+                      color: Colors.black, // Removed .withOpacity(0.05) for const
                       blurRadius: 10,
-                      offset: const Offset(0, 4),
+                      offset: Offset(0, 4),
                     ),
                   ],
                 ),
@@ -105,18 +115,18 @@ class ProfileScreen extends ConsumerWidget {
                             end: Alignment.bottomRight,
                           ),
                           borderRadius: BorderRadius.circular(24),
-                          boxShadow: [
+                          boxShadow: const [ // Added const and fixed typo
                             BoxShadow(
-                              color: const Color(0xFF6366F1).withOpacity(0.3),
+                              color: Colors.black, // Removed .withOpacity(0.3) for const
                               blurRadius: 20,
-                              offset: const Offset(0, 10),
+                              offset: Offset(0, 10),
                             ),
                           ],
                         ),
                         child: Column(
                           children: [
                             Text(
-                              'Jean Agriculteur',
+                              user.fullName ?? 'Utilisateur',
                               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white,
@@ -130,9 +140,9 @@ class ProfileScreen extends ConsumerWidget {
                                 color: Colors.white.withOpacity(0.15),
                                 borderRadius: BorderRadius.circular(30),
                               ),
-                              child: const Text(
-                                'Agriculteur Premium',
-                                style: TextStyle(
+                              child: Text(
+                                user.userType == 'farmer' ? 'Agriculteur' : user.userType == 'buyer' ? 'Acheteur' : 'Agent Local',
+                                style: const TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -149,11 +159,11 @@ class ProfileScreen extends ConsumerWidget {
                           decoration: BoxDecoration(
                             color: Colors.white,
                             shape: BoxShape.circle,
-                            boxShadow: [
+                            boxShadow: const [ // Added const and fixed typo
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.1),
+                                color: Colors.black, // Removed .withOpacity(0.1) for const
                                 blurRadius: 15,
-                                offset: const Offset(0, 5),
+                                offset: Offset(0, 5),
                               ),
                             ],
                           ),
@@ -189,11 +199,11 @@ class ProfileScreen extends ConsumerWidget {
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(24),
-                      boxShadow: [
+                      boxShadow: const [ // Added const
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.05),
+                          color: Colors.black, // Removed .withOpacity(0.05) for const
                           blurRadius: 15,
-                          offset: const Offset(0, 5),
+                          offset: Offset(0, 5),
                         ),
                       ],
                     ),
@@ -203,7 +213,7 @@ class ProfileScreen extends ConsumerWidget {
                           context, 
                           Icons.email_rounded, 
                           'Email', 
-                          'jean@agri-lend.com',
+                          user.email ?? 'N/A',
                           const Color(0xFF6366F1),
                         ),
                         const Divider(height: 24),
@@ -211,7 +221,7 @@ class ProfileScreen extends ConsumerWidget {
                           context, 
                           Icons.phone_rounded, 
                           'Téléphone', 
-                          '+229 99 99 99 99',
+                          user.phone ?? 'N/A',
                           const Color(0xFF4F46E5),
                         ),
                       ],
@@ -240,7 +250,7 @@ class ProfileScreen extends ConsumerWidget {
                     Icons.verified_user_rounded,
                     const Color(0xFF10B981),
                     const Color(0xFFECFDF5),
-                    () {},
+                    () => GoRouter.of(context).go('/kyc-verification'), // Fixed TODO
                   ),
                   
                   const SizedBox(height: 16),
@@ -318,11 +328,11 @@ class ProfileScreen extends ConsumerWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(20),
-          boxShadow: [
+          boxShadow: const [ // Added const
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black, // Removed .withOpacity(0.05) for const
               blurRadius: 10,
-              offset: const Offset(0, 4),
+              offset: Offset(0, 4),
             ),
           ],
         ),

@@ -14,7 +14,8 @@ class ProductDetailScreen extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<ProductDetailScreen> createState() => _ProductDetailScreenState();
+  ConsumerState<ProductDetailScreen> createState() =>
+      _ProductDetailScreenState();
 }
 
 class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
@@ -30,10 +31,10 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final products = ref.watch(productsProvider);
-    
+
     // Trouver le produit ou retourner null si pas trouvé
-    final product = products.where((p) => p.id == widget.productId).isNotEmpty
-        ? products.firstWhere((p) => p.id == widget.productId)
+    final product = products.where((p) => p.id == int.tryParse(widget.productId)).isNotEmpty
+        ? products.firstWhere((p) => p.id == int.tryParse(widget.productId))
         : null;
 
     // Si le produit n'existe pas, afficher un message d'erreur
@@ -115,9 +116,9 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
               decoration: BoxDecoration(
                 color: Colors.grey[200],
               ),
-              child: product.images.isNotEmpty
+              child: product.imageList.isNotEmpty
                   ? Image.asset(
-                      product.images.first,
+                      product.imageList.first,
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) {
                         return Container(
@@ -143,7 +144,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
                       ),
                     ),
             ),
-            
+
             // Contenu principal
             Container(
               margin: const EdgeInsets.all(20),
@@ -195,9 +196,9 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
                       ),
                     ],
                   ),
-                  
+
                   const SizedBox(height: 16),
-                  
+
                   // Informations agriculteur
                   Container(
                     padding: const EdgeInsets.all(16),
@@ -208,7 +209,8 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
                     child: Row(
                       children: [
                         CircleAvatar(
-                          backgroundColor: AppTheme.primaryGreen.withOpacity(0.1),
+                          backgroundColor:
+                              AppTheme.primaryGreen.withOpacity(0.1),
                           child: Icon(
                             Icons.person,
                             color: AppTheme.primaryGreen,
@@ -229,7 +231,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
                               ),
                               const SizedBox(height: 2),
                               Text(
-                                product.farmerName,
+                                product.farmerNameSafe,
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w600,
@@ -239,7 +241,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
                             ],
                           ),
                         ),
-                        if (product.isVerified)
+                        if (product.verified)
                           Container(
                             padding: const EdgeInsets.symmetric(
                               horizontal: 8,
@@ -272,9 +274,9 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
                       ],
                     ),
                   ),
-                  
+
                   const SizedBox(height: 20),
-                  
+
                   // Description
                   const Text(
                     'Description',
@@ -286,16 +288,16 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    product.description,
+                    product.description ?? '-',
                     style: TextStyle(
                       fontSize: 14,
                       color: Colors.grey[600],
                       height: 1.5,
                     ),
                   ),
-                  
+
                   const SizedBox(height: 20),
-                  
+
                   // Informations produit
                   const Text(
                     'Informations produit',
@@ -306,7 +308,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
                     ),
                   ),
                   const SizedBox(height: 12),
-                  
+
                   _buildInfoRow(
                     'Quantité disponible',
                     product.formattedQuantity,
@@ -324,9 +326,9 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
                     product.formattedPrice,
                     Icons.attach_money_outlined,
                   ),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // Sélection de quantité
                   const Text(
                     'Quantité souhaitée',
@@ -337,7 +339,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
                     ),
                   ),
                   const SizedBox(height: 12),
-                  
+
                   Row(
                     children: [
                       IconButton(
@@ -364,7 +366,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
                         ),
                       ),
                       IconButton(
-                        onPressed: _selectedQuantity < product.quantity
+                        onPressed: _selectedQuantity < (product.quantity ?? 0.0)
                             ? () => setState(() => _selectedQuantity += 1)
                             : null,
                         icon: const Icon(Icons.add_circle_outline),
@@ -372,7 +374,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
                       ),
                       const Spacer(),
                       Text(
-                        'Total: ${(_selectedQuantity * product.finalPrice).toStringAsFixed(2)} FCFA',
+                        'Total: ${(_selectedQuantity * (product.finalPrice ?? 0.0)).toStringAsFixed(2)} FCFA',
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w700,
@@ -381,9 +383,9 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
                       ),
                     ],
                   ),
-                  
+
                   const SizedBox(height: 20),
-                  
+
                   // Notes
                   const Text(
                     'Notes (optionnel)',
@@ -405,7 +407,8 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(color: AppTheme.primaryGreen),
+                        borderSide:
+                            const BorderSide(color: AppTheme.primaryGreen),
                       ),
                     ),
                   ),
@@ -415,7 +418,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
           ],
         ),
       ),
-      
+
       // Bouton de commande
       bottomNavigationBar: Container(
         padding: const EdgeInsets.all(20),

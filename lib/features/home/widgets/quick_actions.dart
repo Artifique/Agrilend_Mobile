@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // Import Riverpod
 import '../../farmer/widgets/quick_actions_widget.dart';
 import '../../buyer/widgets/buyer_quick_actions_widget.dart'; // Import buyer quick actions
+import '../../auth/providers/auth_provider.dart'; // Import authProvider
 
 class QuickActions extends ConsumerWidget {
   // Change to ConsumerWidget
@@ -10,8 +11,7 @@ class QuickActions extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // Add WidgetRef
-    // TEMP : userType démo
-    final userType = 'farmer';
+    final userType = ref.watch(authProvider).user?.userType; // Get actual userType
 
     if (userType == 'farmer') {
       return const QuickActionsWidget();

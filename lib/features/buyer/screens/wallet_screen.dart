@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../providers/buyer_providers.dart';
+import '../../auth/providers/auth_provider.dart'; // Import authProvider
 
 class WalletScreen extends ConsumerStatefulWidget {
   const WalletScreen({super.key});
@@ -17,7 +18,10 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(buyerProfileProvider.notifier).loadProfile('buyer_1');
+      final userId = ref.read(authProvider).user?.id.toString();
+      if (userId != null) {
+        ref.read(buyerProfileProvider.notifier).loadProfile(userId);
+      }
     });
   }
 
@@ -50,7 +54,8 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
       body: buyerProfile == null
           ? const Center(
               child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(AppTheme.primaryGreen),
+                valueColor:
+                    AlwaysStoppedAnimation<Color>(AppTheme.primaryGreen),
               ),
             )
           : SingleChildScrollView(
@@ -112,7 +117,7 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          '≈ ${(buyerProfile.hbarBalance * 0.05).toStringAsFixed(2)} USD',
+                          '\u2248 ${(buyerProfile.hbarBalance! * 0.05).toStringAsFixed(2)} USD',
                           style: TextStyle(
                             color: Colors.white.withOpacity(0.8),
                             fontSize: 14,
@@ -122,9 +127,9 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
                       ],
                     ),
                   ),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // Informations du compte Hedera
                   Container(
                     width: double.infinity,
@@ -152,11 +157,10 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
                           ),
                         ),
                         const SizedBox(height: 16),
-                        
-                        if (buyerProfile.hasHederaAccount) ...[
+                        if (buyerProfile.hasHederaAccountSafe) ...[
                           _buildInfoRow(
                             'ID du compte',
-                            buyerProfile.hederaAccountId!,
+                            buyerProfile.hederaAccountId ?? '-',
                             Icons.account_circle_outlined,
                           ),
                           const SizedBox(height: 12),
@@ -186,7 +190,8 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
                                 const SizedBox(width: 12),
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         'Compte Hedera non configuré',
@@ -214,9 +219,9 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
                       ],
                     ),
                   ),
-                  
+
                   const SizedBox(height: 20),
-                  
+
                   // Actions rapides
                   const Text(
                     'Actions rapides',
@@ -227,7 +232,7 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  
+
                   Row(
                     children: [
                       Expanded(
@@ -255,9 +260,9 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
                       ),
                     ],
                   ),
-                  
+
                   const SizedBox(height: 12),
-                  
+
                   Row(
                     children: [
                       Expanded(
@@ -285,9 +290,9 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
                       ),
                     ],
                   ),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // Statistiques
                   Container(
                     width: double.infinity,
@@ -315,7 +320,6 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
                           ),
                         ),
                         const SizedBox(height: 16),
-                        
                         Row(
                           children: [
                             Expanded(
@@ -346,7 +350,8 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
     );
   }
 
-  Widget _buildInfoRow(String label, String value, IconData icon, {Color? valueColor}) {
+  Widget _buildInfoRow(String label, String value, IconData icon,
+      {Color? valueColor}) {
     return Row(
       children: [
         Icon(
@@ -377,7 +382,8 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
     );
   }
 
-  Widget _buildActionCard(String title, IconData icon, Color color, VoidCallback onTap) {
+  Widget _buildActionCard(
+      String title, IconData icon, Color color, VoidCallback onTap) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -423,7 +429,8 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
     );
   }
 
-  Widget _buildStatCard(String title, String value, IconData icon, Color color) {
+  Widget _buildStatCard(
+      String title, String value, IconData icon, Color color) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(

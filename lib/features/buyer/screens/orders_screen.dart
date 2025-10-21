@@ -4,8 +4,9 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../providers/buyer_providers.dart';
-import '../models/order_model.dart';
+import '../../../models/order.dart';
 import '../widgets/order_card.dart';
+import '../../auth/providers/auth_provider.dart'; // Import authProvider
 
 class OrdersScreen extends ConsumerStatefulWidget {
   const OrdersScreen({super.key});
@@ -14,16 +15,20 @@ class OrdersScreen extends ConsumerStatefulWidget {
   ConsumerState<OrdersScreen> createState() => _OrdersScreenState();
 }
 
-class _OrdersScreenState extends ConsumerState<OrdersScreen> with SingleTickerProviderStateMixin {
+class _OrdersScreenState extends ConsumerState<OrdersScreen>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 4, vsync: this);
-    
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(buyerOrdersProvider.notifier).loadOrders('buyer_1');
+      final userId = ref.read(authProvider).user?.id.toString();
+      if (userId != null) {
+        ref.read(buyerOrdersProvider.notifier).loadOrders(userId);
+      }
     });
   }
 
@@ -77,21 +82,21 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen> with SingleTickerPr
           controller: _tabController,
           children: [
             _buildOrdersList(orders),
-            _buildOrdersList(orders.where((o) => 
-              o.status == OrderStatus.pending || 
-              o.status == OrderStatus.escrowed || 
-              o.status == OrderStatus.released || 
-              o.status == OrderStatus.inDelivery
-            ).toList()),
-            _buildOrdersList(orders.where((o) => o.status == OrderStatus.delivered).toList()),
-            _buildOrdersList(orders.where((o) => o.status == OrderStatus.cancelled).toList()),
+            _buildOrdersList(orders
+                .where((o) => ['PENDING', 'ESCROWED', 'RELEASED', 'IN_DELIVERY']
+                    .contains(o.status))
+                .toList()),
+            _buildOrdersList(
+                orders.where((o) => o.status == 'DELIVERED').toList()),
+            _buildOrdersList(
+                orders.where((o) => o.status == 'CANCELLED').toList()),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildOrdersList(List<OrderModel> orders) {
+  Widget _buildOrdersList(List<Order> orders) {
     if (orders.isEmpty) {
       return Center(
         child: Column(

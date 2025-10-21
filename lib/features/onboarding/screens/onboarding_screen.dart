@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
+import '../../../models/onboarding_item.dart'; // Import OnboardingItem model
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -33,6 +34,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       color: const Color(0xFF6366F1),
     ),
   ];
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -153,7 +160,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    child: const Text('Précédent'),
+                    child: const Text('Pr\u00e9c\u00e9dent'),
                   ),
                 ),
               if (_currentPage > 0) const SizedBox(width: 16),

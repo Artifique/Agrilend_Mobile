@@ -1,0 +1,48 @@
+import 'package:dio/dio.dart';
+
+class ApiService {
+  final Dio dio;
+  String? _authToken;
+
+  ApiService._internal(this.dio) {
+    // Attach interceptor to add Authorization header when token is present
+    dio.interceptors.add(InterceptorsWrapper(onRequest: (options, handler) {
+      if (_authToken != null && _authToken!.isNotEmpty) {
+        options.headers['Authorization'] = 'Bearer $_authToken';
+      }
+      return handler.next(options);
+    }, onError: (e, handler) {
+      return handler.next(e);
+    }));
+  }
+
+  static ApiService create({String? baseUrl}) {
+    final dio = Dio(BaseOptions(
+      baseUrl: baseUrl ?? 'http://localhost:8080',
+      connectTimeout: const Duration(seconds: 10),
+      receiveTimeout: const Duration(seconds: 10),
+    ));
+    return ApiService._internal(dio);
+  }
+
+  void setAuthToken(String? token) {
+    _authToken = token;
+  }
+
+  Future<Response> get(String path,
+      {Map<String, dynamic>? queryParameters}) async {
+    return dio.get(path, queryParameters: queryParameters);
+  }
+
+  Future<Response> post(String path, {dynamic data}) async {
+    return dio.post(path, data: data);
+  }
+
+  Future<Response> put(String path, {dynamic data}) async {
+    return dio.put(path, data: data);
+  }
+
+  Future<Response> delete(String path) async {
+    return dio.delete(path);
+  }
+}

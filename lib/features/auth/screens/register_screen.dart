@@ -1,3 +1,4 @@
+import 'package:agrilend/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -21,7 +22,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
-  
+
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
   bool _acceptTerms = false;
@@ -132,26 +133,36 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
         Text(
           'Créer un compte',
           style: Theme.of(context).textTheme.displaySmall?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
-        ).animate().slideY(
-          delay: const Duration(milliseconds: 200),
-          duration: const Duration(milliseconds: 600),
-          begin: -1,
-          end: 0,
-        ).fade(),
+                fontWeight: FontWeight.bold,
+              ),
+        )
+            .animate()
+            .slideY(
+              delay: const Duration(milliseconds: 200),
+              duration: const Duration(milliseconds: 600),
+              begin: -1,
+              end: 0,
+            )
+            .fade(),
         const SizedBox(height: 8),
         Text(
           'Rejoignez la communauté Agri-lend',
           style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-            color: Theme.of(context).textTheme.bodyLarge?.color?.withOpacity(0.7),
-          ),
-        ).animate().slideY(
-          delay: const Duration(milliseconds: 400),
-          duration: const Duration(milliseconds: 600),
-          begin: -1,
-          end: 0,
-        ).fade(),
+                color: Theme.of(context)
+                    .textTheme
+                    .bodyLarge
+                    ?.color
+                    ?.withOpacity(0.7),
+              ),
+        )
+            .animate()
+            .slideY(
+              delay: const Duration(milliseconds: 400),
+              duration: const Duration(milliseconds: 600),
+              begin: -1,
+              end: 0,
+            )
+            .fade(),
       ],
     );
   }
@@ -173,11 +184,11 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
               return null;
             },
           ).animate().slideX(
-            delay: const Duration(milliseconds: 600),
-            duration: const Duration(milliseconds: 600),
-            begin: -1,
-            end: 0,
-          ),
+                delay: const Duration(milliseconds: 600),
+                duration: const Duration(milliseconds: 600),
+                begin: -1,
+                end: 0,
+              ),
         ),
         const SizedBox(width: 16),
         Expanded(
@@ -194,11 +205,11 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
               return null;
             },
           ).animate().slideX(
-            delay: const Duration(milliseconds: 800),
-            duration: const Duration(milliseconds: 600),
-            begin: 1,
-            end: 0,
-          ),
+                delay: const Duration(milliseconds: 800),
+                duration: const Duration(milliseconds: 600),
+                begin: 1,
+                end: 0,
+              ),
         ),
       ],
     );
@@ -222,11 +233,11 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
         return null;
       },
     ).animate().slideX(
-      delay: const Duration(milliseconds: 1000),
-      duration: const Duration(milliseconds: 600),
-      begin: -1,
-      end: 0,
-    );
+          delay: const Duration(milliseconds: 1000),
+          duration: const Duration(milliseconds: 600),
+          begin: -1,
+          end: 0,
+        );
   }
 
   Widget _buildPhoneField() {
@@ -245,11 +256,11 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
         return null;
       },
     ).animate().slideX(
-      delay: const Duration(milliseconds: 1200),
-      duration: const Duration(milliseconds: 600),
-      begin: 1,
-      end: 0,
-    );
+          delay: const Duration(milliseconds: 1200),
+          duration: const Duration(milliseconds: 600),
+          begin: 1,
+          end: 0,
+        );
   }
 
   Widget _buildUserTypeField() {
@@ -279,11 +290,11 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
         });
       },
     ).animate().slideX(
-      delay: const Duration(milliseconds: 1400),
-      duration: const Duration(milliseconds: 600),
-      begin: -1,
-      end: 0,
-    );
+          delay: const Duration(milliseconds: 1400),
+          duration: const Duration(milliseconds: 600),
+          begin: -1,
+          end: 0,
+        );
   }
 
   Widget _buildCropField() {
@@ -305,11 +316,11 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
         });
       },
     ).animate().slideX(
-      delay: const Duration(milliseconds: 1600),
-      duration: const Duration(milliseconds: 600),
-      begin: 1,
-      end: 0,
-    );
+          delay: const Duration(milliseconds: 1600),
+          duration: const Duration(milliseconds: 600),
+          begin: 1,
+          end: 0,
+        );
   }
 
   Widget _buildPasswordField() {
@@ -321,7 +332,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
         prefixIcon: const Icon(Icons.lock_rounded),
         suffixIcon: IconButton(
           icon: Icon(
-            _obscurePassword ? Icons.visibility_rounded : Icons.visibility_off_rounded,
+            _obscurePassword
+                ? Icons.visibility_rounded
+                : Icons.visibility_off_rounded,
           ),
           onPressed: () {
             setState(() {
@@ -340,11 +353,11 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
         return null;
       },
     ).animate().slideX(
-      delay: const Duration(milliseconds: 1800),
-      duration: const Duration(milliseconds: 600),
-      begin: -1,
-      end: 0,
-    );
+          delay: const Duration(milliseconds: 1800),
+          duration: const Duration(milliseconds: 600),
+          begin: -1,
+          end: 0,
+        );
   }
 
   Widget _buildConfirmPasswordField() {
@@ -356,7 +369,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
         prefixIcon: const Icon(Icons.lock_outline_rounded),
         suffixIcon: IconButton(
           icon: Icon(
-            _obscureConfirmPassword ? Icons.visibility_rounded : Icons.visibility_off_rounded,
+            _obscureConfirmPassword
+                ? Icons.visibility_rounded
+                : Icons.visibility_off_rounded,
           ),
           onPressed: () {
             setState(() {
@@ -375,11 +390,11 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
         return null;
       },
     ).animate().slideX(
-      delay: const Duration(milliseconds: 2000),
-      duration: const Duration(milliseconds: 600),
-      begin: 1,
-      end: 0,
-    );
+          delay: const Duration(milliseconds: 2000),
+          duration: const Duration(milliseconds: 600),
+          begin: 1,
+          end: 0,
+        );
   }
 
   Widget _buildTermsCheckbox() {
@@ -434,9 +449,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
             )
           : const Text('Créer mon compte'),
     ).animate().scale(
-      delay: const Duration(milliseconds: 2400),
-      duration: const Duration(milliseconds: 600),
-    );
+          delay: const Duration(milliseconds: 2400),
+          duration: const Duration(milliseconds: 600),
+        );
   }
 
   Widget _buildErrorMessage(String error) {
@@ -461,8 +476,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
             child: Text(
               error,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).colorScheme.error,
-              ),
+                    color: Theme.of(context).colorScheme.error,
+                  ),
             ),
           ),
         ],
@@ -496,15 +511,17 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
       metadata = {'primaryCrop': _selectedCrop};
     }
 
-    final success = await ref.read(authProvider.notifier).register(
-      email: _emailController.text.trim(),
-      password: _passwordController.text,
-      phone: _phoneController.text.trim(),
-      firstName: _firstNameController.text.trim(),
-      lastName: _lastNameController.text.trim(),
-      userType: _selectedUserType,
-      metadata: metadata,
-    );
+    final payload = {
+      'email': _emailController.text.trim(),
+      'password': _passwordController.text,
+      'phone': _phoneController.text.trim(),
+      'firstName': _firstNameController.text.trim(),
+      'lastName': _lastNameController.text.trim(),
+      'userType': _selectedUserType,
+      'metadata': metadata,
+    }..removeWhere((k, v) => v == null);
+
+    final success = await ref.read(authProvider.notifier).register(payload);
 
     if (!success && mounted) {
       // L'erreur sera affichée automatiquement via le state

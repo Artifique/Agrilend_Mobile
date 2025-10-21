@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_theme.dart';
-import '../models/product_model.dart';
+import '../../../models/product.dart';
 
 class ProductCard extends StatelessWidget {
-  final ProductModel product;
+  final Product product;
   final VoidCallback? onTap;
 
   const ProductCard({
@@ -42,14 +42,14 @@ class ProductCard extends StatelessWidget {
                 ),
                 color: Colors.grey[200],
               ),
-              child: product.images.isNotEmpty
+              child: product.imageList.isNotEmpty
                   ? ClipRRect(
                       borderRadius: const BorderRadius.only(
                         topLeft: Radius.circular(16),
                         topRight: Radius.circular(16),
                       ),
                       child: Image.asset(
-                        product.images.first,
+                        product.imageList.first,
                         fit: BoxFit.cover,
                         errorBuilder: (context, error, stackTrace) {
                           return Container(
@@ -84,7 +84,7 @@ class ProductCard extends StatelessWidget {
                       ),
                     ),
             ),
-            
+
             // Contenu de la carte
             Padding(
               padding: const EdgeInsets.all(16),
@@ -126,9 +126,9 @@ class ProductCard extends StatelessWidget {
                       ),
                     ],
                   ),
-                  
+
                   const SizedBox(height: 8),
-                  
+
                   // Nom de l'agriculteur
                   Row(
                     children: [
@@ -139,7 +139,7 @@ class ProductCard extends StatelessWidget {
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        product.farmerName,
+                        product.farmerName ?? '-',
                         style: TextStyle(
                           fontSize: 14,
                           color: Colors.grey[600],
@@ -148,12 +148,12 @@ class ProductCard extends StatelessWidget {
                       ),
                     ],
                   ),
-                  
+
                   const SizedBox(height: 8),
-                  
+
                   // Description
                   Text(
-                    product.description,
+                    product.description ?? '',
                     style: TextStyle(
                       fontSize: 13,
                       color: Colors.grey[600],
@@ -162,9 +162,9 @@ class ProductCard extends StatelessWidget {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  
+
                   const SizedBox(height: 12),
-                  
+
                   // Informations de prix et quantité
                   Row(
                     children: [
@@ -218,9 +218,9 @@ class ProductCard extends StatelessWidget {
                       ),
                     ],
                   ),
-                  
+
                   const SizedBox(height: 12),
-                  
+
                   // Date de récolte
                   Row(
                     children: [
@@ -231,7 +231,7 @@ class ProductCard extends StatelessWidget {
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        'Récolte: ${product.formattedHarvestDate}',
+                        'Récolte: ${product.createdAt != null ? '${product.createdAt!.day}/${product.createdAt!.month}/${product.createdAt!.year}' : '-'}',
                         style: TextStyle(
                           fontSize: 13,
                           color: Colors.grey[600],
@@ -240,11 +240,11 @@ class ProductCard extends StatelessWidget {
                       ),
                     ],
                   ),
-                  
+
                   const SizedBox(height: 12),
-                  
+
                   // Badge de vérification
-                  if (product.isVerified)
+                  if (product.isVerified ?? false)
                     Row(
                       children: [
                         Icon(

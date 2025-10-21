@@ -4,18 +4,22 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../providers/buyer_providers.dart';
-import '../models/product_model.dart';
-import '../models/order_model.dart';
+import '../../../models/product.dart';
+import '../../../models/order.dart';
+import '../../auth/providers/auth_provider.dart'; // Import authProvider
 
 class OrderConfirmationScreen extends ConsumerStatefulWidget {
   const OrderConfirmationScreen({super.key});
 
   @override
-  ConsumerState<OrderConfirmationScreen> createState() => _OrderConfirmationScreenState();
+  ConsumerState<OrderConfirmationScreen> createState() =>
+      _OrderConfirmationScreenState();
 }
 
-class _OrderConfirmationScreenState extends ConsumerState<OrderConfirmationScreen> {
-  final TextEditingController _deliveryAddressController = TextEditingController();
+class _OrderConfirmationScreenState
+    extends ConsumerState<OrderConfirmationScreen> {
+  final TextEditingController _deliveryAddressController =
+      TextEditingController();
   bool _isLoading = false;
 
   @override
@@ -41,33 +45,36 @@ class _OrderConfirmationScreenState extends ConsumerState<OrderConfirmationScree
 
     try {
       // Récupérer les données de la commande depuis les arguments
-      final Map<String, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
-      
+      final Map<String, dynamic>? args =
+          ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+
       if (args == null) {
         throw Exception('Données de commande manquantes');
       }
 
-      final ProductModel product = args['product'];
+      final Product product = args['product'];
       final double quantity = args['quantity'];
       final String notes = args['notes'] ?? '';
 
+      final currentUserId = ref.read(authProvider).user?.id; // Get current user ID
+
+      if (currentUserId == null) {
+        throw Exception('Utilisateur non authentifié');
+      }
+
       // Créer la commande
-      final order = OrderModel(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
-        buyerId: 'buyer_1', // À remplacer par l'ID de l'utilisateur connecté
-        farmerId: product.farmerId,
-        productId: product.id,
-        productName: product.name,
-        farmerName: product.farmerName,
+      final order = Order(
+        id: DateTime.now().millisecondsSinceEpoch,
+        buyerId: currentUserId, // Use current user ID
+        offerId: product.id ?? 0,
         quantity: quantity,
-        unit: product.unit,
-        unitPrice: product.finalPrice,
-        totalPrice: quantity * product.finalPrice,
-        status: OrderStatus.pending,
+        unitPrice: product.finalPrice ?? 0.0,
+        totalPrice: quantity * (product.finalPrice ?? 0.0),
+        status: 'PENDING',
+        productName: product.name,
+        farmerName: product.farmerName ?? '',
         createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
         deliveryAddress: _deliveryAddressController.text,
-        notes: notes,
       );
 
       // Ajouter la commande
@@ -78,19 +85,20 @@ class _OrderConfirmationScreenState extends ConsumerState<OrderConfirmationScree
 
       // Mettre à jour le statut
       ref.read(buyerOrdersProvider.notifier).updateOrderStatus(
-        order.id,
-        OrderStatus.escrowed,
-      );
+            order.id ?? 0,
+            'ESCROWED',
+          );
 
       // Afficher le message de succès
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Commande confirmée et fonds séquestrés avec succès!'),
+            content:
+                Text('Commande confirmée et fonds séquestrés avec succès!'),
             backgroundColor: Colors.green,
           ),
         );
-        
+
         // Rediriger vers les commandes
         context.go('/buyer/orders');
       }
@@ -112,8 +120,9 @@ class _OrderConfirmationScreenState extends ConsumerState<OrderConfirmationScree
 
   @override
   Widget build(BuildContext context) {
-    final Map<String, dynamic>? args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
-    
+    final Map<String, dynamic>? args =
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+
     if (args == null) {
       return const Scaffold(
         body: Center(
@@ -122,10 +131,10 @@ class _OrderConfirmationScreenState extends ConsumerState<OrderConfirmationScree
       );
     }
 
-    final ProductModel product = args['product'];
+    final Product product = args['product'];
     final double quantity = args['quantity'];
     final String notes = args['notes'] ?? '';
-    final double totalPrice = quantity * product.finalPrice;
+    final double totalPrice = quantity * (product.finalPrice ?? 0.0);
 
     return Scaffold(
       backgroundColor: Colors.grey[50],
@@ -175,7 +184,7 @@ class _OrderConfirmationScreenState extends ConsumerState<OrderConfirmationScree
                     ),
                   ),
                   const SizedBox(height: 16),
-                  
+
                   // Produit
                   Row(
                     children: [
@@ -186,14 +195,15 @@ class _OrderConfirmationScreenState extends ConsumerState<OrderConfirmationScree
                           color: Colors.grey[200],
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: product.images.isNotEmpty
+                        child: product.imageList.isNotEmpty
                             ? ClipRRect(
                                 borderRadius: BorderRadius.circular(8),
                                 child: Image.asset(
-                                  product.images.first,
+                                  product.imageList.first,
                                   fit: BoxFit.cover,
                                   errorBuilder: (context, error, stackTrace) {
-                                    return const Icon(Icons.image, color: Colors.grey);
+                                    return const Icon(Icons.image,
+                                        color: Colors.grey);
                                   },
                                 ),
                               )
@@ -225,14 +235,15 @@ class _OrderConfirmationScreenState extends ConsumerState<OrderConfirmationScree
                       ),
                     ],
                   ),
-                  
+
                   const SizedBox(height: 16),
-                  
+
                   // Détails de la commande
                   _buildOrderDetail('Quantité', '$quantity ${product.unit}'),
                   _buildOrderDetail('Prix unitaire', product.formattedPrice),
-                  _buildOrderDetail('Total', '${totalPrice.toStringAsFixed(2)} FCFA'),
-                  
+                  _buildOrderDetail(
+                      'Total', '${totalPrice.toStringAsFixed(2)} FCFA'),
+
                   if (notes.isNotEmpty) ...[
                     const SizedBox(height: 12),
                     _buildOrderDetail('Notes', notes),
@@ -240,9 +251,9 @@ class _OrderConfirmationScreenState extends ConsumerState<OrderConfirmationScree
                 ],
               ),
             ),
-            
+
             const SizedBox(height: 20),
-            
+
             // Adresse de livraison
             Container(
               padding: const EdgeInsets.all(20),
@@ -280,16 +291,17 @@ class _OrderConfirmationScreenState extends ConsumerState<OrderConfirmationScree
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(color: AppTheme.primaryGreen),
+                        borderSide:
+                            const BorderSide(color: AppTheme.primaryGreen),
                       ),
                     ),
                   ),
                 ],
               ),
             ),
-            
+
             const SizedBox(height: 20),
-            
+
             // Informations sur le processus
             Container(
               padding: const EdgeInsets.all(20),
@@ -333,12 +345,12 @@ class _OrderConfirmationScreenState extends ConsumerState<OrderConfirmationScree
                 ],
               ),
             ),
-            
+
             const SizedBox(height: 100), // Espace pour le bouton fixe
           ],
         ),
       ),
-      
+
       // Bouton de confirmation
       bottomNavigationBar: Container(
         padding: const EdgeInsets.all(20),

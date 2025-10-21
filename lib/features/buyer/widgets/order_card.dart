@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_theme.dart';
-import '../models/order_model.dart';
+import '../../../models/order.dart';
 
 class OrderCard extends StatelessWidget {
-  final OrderModel order;
+  final Order order;
   final VoidCallback? onTap;
 
   const OrderCard({
@@ -38,7 +38,7 @@ class OrderCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Commande #${order.id.substring(0, 8)}',
+                    'Commande #${order.id ?? '-'}',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
@@ -51,26 +51,26 @@ class OrderCard extends StatelessWidget {
                       vertical: 6,
                     ),
                     decoration: BoxDecoration(
-                      color: order.statusColor.withOpacity(0.1),
+                      color: AppTheme.primaryGreen.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
-                        color: order.statusColor.withOpacity(0.3),
+                        color: AppTheme.primaryGreen.withOpacity(0.3),
                       ),
                     ),
                     child: Text(
-                      order.statusText,
+                      order.status,
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
-                        color: order.statusColor,
+                        color: AppTheme.primaryGreen,
                       ),
                     ),
                   ),
                 ],
               ),
-              
+
               const SizedBox(height: 12),
-              
+
               // Informations produit
               Row(
                 children: [
@@ -92,7 +92,7 @@ class OrderCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          order.productName,
+                          order.productName ?? '-',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
@@ -101,7 +101,7 @@ class OrderCard extends StatelessWidget {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          'Agriculteur: ${order.farmerName}',
+                          'Agriculteur: ${order.farmerName ?? '-'}',
                           style: TextStyle(
                             fontSize: 14,
                             color: Colors.grey[600],
@@ -112,9 +112,9 @@ class OrderCard extends StatelessWidget {
                   ),
                 ],
               ),
-              
+
               const SizedBox(height: 12),
-              
+
               // Détails de la commande
               Row(
                 children: [
@@ -168,9 +168,9 @@ class OrderCard extends StatelessWidget {
                   ),
                 ],
               ),
-              
+
               const SizedBox(height: 12),
-              
+
               // Dates importantes
               Row(
                 children: [
@@ -190,7 +190,7 @@ class OrderCard extends StatelessWidget {
                   ),
                 ],
               ),
-              
+
               // Dates spécifiques selon le statut
               if (order.escrowDate != null) ...[
                 const SizedBox(height: 4),
@@ -213,7 +213,7 @@ class OrderCard extends StatelessWidget {
                   ],
                 ),
               ],
-              
+
               if (order.deliveryDate != null) ...[
                 const SizedBox(height: 4),
                 Row(
@@ -235,7 +235,7 @@ class OrderCard extends StatelessWidget {
                   ],
                 ),
               ],
-              
+
               // Adresse de livraison
               if (order.deliveryAddress != null) ...[
                 const SizedBox(height: 8),

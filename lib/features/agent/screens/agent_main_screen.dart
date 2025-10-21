@@ -26,7 +26,7 @@ class AgentMainScreen extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildHeader(context, user.firstName),
+                  _buildHeader(context, user.firstName ?? 'Agent'),
                   const SizedBox(height: 24),
                   _buildWelcomeSection(context),
                   const SizedBox(height: 24),

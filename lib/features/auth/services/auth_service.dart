@@ -1,111 +1,129 @@
 import 'dart:convert';
-import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:agrilend/services/secure_storage_shim.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+
+import '../../../services/api_service.dart';
 import '../models/user_model.dart';
 
 class AuthService {
-  static const String _tokenKey = 'auth_token';
-  static const String _userKey = 'user_data';
+  final ApiService api;
+  final FlutterSecureStorage _secure;
 
+  static const _accessKey = 'auth_access_token';
+  static const _refreshKey = 'auth_refresh_token';
+  static const _typeKey = 'auth_token_type';
+  static const _userKey = 'auth_user_json';
+
+  AuthService(this.api) : _secure = const FlutterSecureStorage();
+
+  /// Calls backend login and stores tokens + user info securely
   Future<Map<String, dynamic>> login(String email, String password) async {
-    // Simulation d'API call - Remplacer par vraie API
-    await Future.delayed(const Duration(seconds: 2));
-    
-    // Validation simple pour demo
-    if (email.isNotEmpty && password.length >= 6) {
-      final user = UserModel(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
-        email: email,
-        phone: '+1234567890',
-        firstName: 'John',
-        lastName: 'Doe',
-        userType: _getUserTypeFromEmail(email),
+    final resp = await api.post('/api/auth/login', data: {
+      'email': email,
+      'password': password,
+    });
+
+    final body = resp.data;
+    if (body is Map && body['success'] == true && body['data'] is Map) {
+      final data = body['data'] as Map;
+      final access =
+          data['accessToken'] as String? ?? data['access_token'] as String?;
+      final refresh =
+          data['refreshToken'] as String? ?? data['refresh_token'] as String?;
+      final type =
+          data['tokenType'] as String? ?? data['token_type'] as String?;
+
+      // store
+      if (access != null) await _secure.write(key: _accessKey, value: access);
+      if (refresh != null)
+        await _secure.write(key: _refreshKey, value: refresh);
+      if (type != null) await _secure.write(key: _typeKey, value: type);
+
+      // user info: map relevant fields
+      final userMap = {
+        'userId': data['userId'] ?? data['id'],
+        'email': data['email'],
+        'firstName': data['firstName'],
+        'lastName': data['lastName'],
+        'role': data['role'] ?? data['userType'],
+      }..removeWhere((k, v) => v == null);
+
+      await _secure.write(key: _userKey, value: jsonEncode(userMap));
+
+      // set token on ApiService
+      if (access != null) api.setAuthToken(access);
+
+      return {'success': true, 'data': userMap};
+    }
+
+    return {'success': false, 'message': body['message'] ?? 'Login failed'};
+  }
+
+  Future<UserModel?> getCurrentUser() async {
+    final json = await _secure.read(key: _userKey);
+    if (json == null) return null;
+    final map = jsonDecode(json) as Map<String, dynamic>;
+    // Map to UserModel expecting fields used in app
+    try {
+      return UserModel(
+        id: map['userId'].toString(),
+        email: map['email'] ?? '',
+        phone: map['phone'] ?? '',
+        firstName: map['firstName'] ?? '',
+        lastName: map['lastName'] ?? '',
+        userType: map['role'] ?? map['userType'] ?? 'buyer',
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
         isVerified: true,
       );
-      
-      await _saveAuthData('mock_token_${user.id}', user);
-      
-      return {
-        'success': true,
-        'user': user.toJson(),
-        'token': 'mock_token_${user.id}',
-      };
+    } catch (_) {
+      return null;
     }
-    
-    return {
-      'success': false,
-      'message': 'Email ou mot de passe incorrect',
-    };
-  }
-
-  Future<Map<String, dynamic>> register({
-    required String email,
-    required String password,
-    required String phone,
-    required String firstName,
-    required String lastName,
-    required String userType,
-    Map<String, dynamic>? metadata,
-  }) async {
-    // Simulation d'API call
-    await Future.delayed(const Duration(seconds: 2));
-    
-    if (email.isNotEmpty && password.length >= 6) {
-      final user = UserModel(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
-        email: email,
-        phone: phone,
-        firstName: firstName,
-        lastName: lastName,
-        userType: userType,
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-        metadata: metadata,
-      );
-      
-      await _saveAuthData('mock_token_${user.id}', user);
-      
-      return {
-        'success': true,
-        'user': user.toJson(),
-        'token': 'mock_token_${user.id}',
-      };
-    }
-    
-    return {
-      'success': false,
-      'message': 'Données invalides',
-    };
-  }
-
-  Future<UserModel?> getCurrentUser() async {
-    final prefs = await SharedPreferences.getInstance();
-    final userData = prefs.getString(_userKey);
-    
-    if (userData != null) {
-      return UserModel.fromJson(jsonDecode(userData));
-    }
-    
-    return null;
   }
 
   Future<void> logout() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(_tokenKey);
-    await prefs.remove(_userKey);
+    await _secure.delete(key: _accessKey);
+    await _secure.delete(key: _refreshKey);
+    await _secure.delete(key: _typeKey);
+    await _secure.delete(key: _userKey);
+    api.setAuthToken(null);
   }
 
-  Future<void> _saveAuthData(String token, UserModel user) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_tokenKey, token);
-    await prefs.setString(_userKey, jsonEncode(user.toJson()));
-  }
+  /// Register a new user via backend. Expects similar structure in response.
+  Future<Map<String, dynamic>> register(Map<String, dynamic> payload) async {
+    final resp = await api.post('/api/auth/register', data: payload);
+    final body = resp.data;
 
-  String _getUserTypeFromEmail(String email) {
-    if (email.contains('farmer')) return 'farmer';
+    if (body is Map && body['success'] == true && body['data'] is Map) {
+      final data = body['data'] as Map;
+      final access =
+          data['accessToken'] as String? ?? data['access_token'] as String?;
+      final refresh =
+          data['refreshToken'] as String? ?? data['refresh_token'] as String?;
+      final type =
+          data['tokenType'] as String? ?? data['token_type'] as String?;
 
-    if (email.contains('agent')) return 'agent';
-    return 'farmer'; // default
+      if (access != null) await _secure.write(key: _accessKey, value: access);
+      if (refresh != null)
+        await _secure.write(key: _refreshKey, value: refresh);
+      if (type != null) await _secure.write(key: _typeKey, value: type);
+
+      final userMap = {
+        'userId': data['userId'] ?? data['id'],
+        'email': data['email'],
+        'firstName': data['firstName'],
+        'lastName': data['lastName'],
+        'role': data['role'] ?? data['userType'],
+      }..removeWhere((k, v) => v == null);
+
+      await _secure.write(key: _userKey, value: jsonEncode(userMap));
+      if (access != null) api.setAuthToken(access);
+
+      return {'success': true, 'data': userMap};
+    }
+
+    return {'success': false, 'message': body['message'] ?? 'Register failed'};
   }
 }

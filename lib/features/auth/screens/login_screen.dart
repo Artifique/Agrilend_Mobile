@@ -1,3 +1,5 @@
+import 'package:agrilend/models/user.dart';
+import 'package:agrilend/services/auth_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -39,6 +41,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
           case 'agent':
             context.go('/agent');
+            break;
+
+          case 'buyer':
+            context.go('/buyer');
             break;
         }
       }
@@ -100,35 +106,45 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             color: Colors.white,
           ),
         ).animate().scale(
-          delay: const Duration(milliseconds: 200),
-          duration: const Duration(milliseconds: 600),
-          curve: Curves.elasticOut,
-        ),
+              delay: const Duration(milliseconds: 200),
+              duration: const Duration(milliseconds: 600),
+              curve: Curves.elasticOut,
+            ),
         const SizedBox(height: 24),
         Text(
           'Bon retour !',
           style: Theme.of(context).textTheme.displaySmall?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
-        ).animate().slideY(
-          delay: const Duration(milliseconds: 400),
-          duration: const Duration(milliseconds: 600),
-          begin: 1,
-          end: 0,
-        ).fade(),
+                fontWeight: FontWeight.bold,
+              ),
+        )
+            .animate()
+            .slideY(
+              delay: const Duration(milliseconds: 400),
+              duration: const Duration(milliseconds: 600),
+              begin: 1,
+              end: 0,
+            )
+            .fade(),
         const SizedBox(height: 8),
         Text(
           'Connectez-vous pour accéder à votre compte Agri-lend',
           style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-            color: Theme.of(context).textTheme.bodyLarge?.color?.withOpacity(0.7),
-          ),
+                color: Theme.of(context)
+                    .textTheme
+                    .bodyLarge
+                    ?.color
+                    ?.withOpacity(0.7),
+              ),
           textAlign: TextAlign.center,
-        ).animate().slideY(
-          delay: const Duration(milliseconds: 600),
-          duration: const Duration(milliseconds: 600),
-          begin: 1,
-          end: 0,
-        ).fade(),
+        )
+            .animate()
+            .slideY(
+              delay: const Duration(milliseconds: 600),
+              duration: const Duration(milliseconds: 600),
+              begin: 1,
+              end: 0,
+            )
+            .fade(),
       ],
     );
   }
@@ -152,11 +168,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         return null;
       },
     ).animate().slideX(
-      delay: const Duration(milliseconds: 800),
-      duration: const Duration(milliseconds: 600),
-      begin: -1,
-      end: 0,
-    );
+          delay: const Duration(milliseconds: 800),
+          duration: const Duration(milliseconds: 600),
+          begin: -1,
+          end: 0,
+        );
   }
 
   Widget _buildPasswordField() {
@@ -168,7 +184,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         prefixIcon: const Icon(Icons.lock_rounded),
         suffixIcon: IconButton(
           icon: Icon(
-            _obscurePassword ? Icons.visibility_rounded : Icons.visibility_off_rounded,
+            _obscurePassword
+                ? Icons.visibility_rounded
+                : Icons.visibility_off_rounded,
           ),
           onPressed: () {
             setState(() {
@@ -187,11 +205,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         return null;
       },
     ).animate().slideX(
-      delay: const Duration(milliseconds: 1000),
-      duration: const Duration(milliseconds: 600),
-      begin: 1,
-      end: 0,
-    );
+          delay: const Duration(milliseconds: 1000),
+          duration: const Duration(milliseconds: 600),
+          begin: 1,
+          end: 0,
+        );
   }
 
   Widget _buildForgotPassword() {
@@ -220,9 +238,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             )
           : const Text('Se connecter'),
     ).animate().scale(
-      delay: const Duration(milliseconds: 1400),
-      duration: const Duration(milliseconds: 600),
-    );
+          delay: const Duration(milliseconds: 1400),
+          duration: const Duration(milliseconds: 600),
+        );
   }
 
   Widget _buildErrorMessage(String error) {
@@ -247,8 +265,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             child: Text(
               error,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).colorScheme.error,
-              ),
+                    color: Theme.of(context).colorScheme.error,
+                  ),
             ),
           ),
         ],
@@ -276,12 +294,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     if (!_formKey.currentState!.validate()) return;
 
     ref.read(authProvider.notifier).clearError();
-    
+
     final success = await ref.read(authProvider.notifier).login(
-      _emailController.text.trim(),
-      _passwordController.text,
-    );
-    
+          _emailController.text.trim(),
+          _passwordController.text,
+        );
+
     if (!success && mounted) {
       // L'erreur sera affichée automatiquement via le state
     }

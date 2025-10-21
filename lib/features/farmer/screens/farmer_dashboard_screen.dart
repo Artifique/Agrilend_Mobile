@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../auth/providers/auth_provider.dart';
+import '../widgets/quick_actions_widget.dart'; // Import QuickActionsWidget
 
 class FarmerDashboardScreen extends ConsumerWidget {
   const FarmerDashboardScreen({super.key});
@@ -13,34 +14,30 @@ class FarmerDashboardScreen extends ConsumerWidget {
     final authState = ref.watch(authProvider);
     final user = authState.user!;
 
-    return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA),
-      body: SafeArea(
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            return SingleChildScrollView(
-              padding: EdgeInsets.symmetric(
-                horizontal: constraints.maxWidth > 600 ? 24 : 20,
-                vertical: 16,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildHeader(context, user.firstName),
-                  const SizedBox(height: 24),
-                  _buildWelcomeSection(context),
-                  const SizedBox(height: 24),
-                  _buildGlobalMarketCard(context),
-                  const SizedBox(height: 24),
-                  _buildQuickActionsSection(context),
-                  const SizedBox(height: 20),
-                ],
-              ),
-            );
-          },
-        ),
+    return SafeArea(
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          return SingleChildScrollView(
+            padding: EdgeInsets.symmetric(
+              horizontal: constraints.maxWidth > 600 ? 24 : 20,
+              vertical: 16,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildHeader(context, user.firstName ?? 'Agriculteur'),
+                const SizedBox(height: 24),
+                _buildWelcomeSection(context, user.firstName ?? 'Agriculteur'),
+                const SizedBox(height: 24),
+                _buildGlobalMarketCard(context),
+                const SizedBox(height: 24),
+                const QuickActionsWidget(), // Use reusable QuickActionsWidget
+                const SizedBox(height: 20),
+              ],
+            ),
+          );
+        },
       ),
-      bottomNavigationBar: _buildBottomNavigation(context),
     );
   }
 
@@ -102,36 +99,36 @@ class FarmerDashboardScreen extends ConsumerWidget {
       duration: const Duration(milliseconds: 600),
     );
   }
+Widget _buildWelcomeSection(BuildContext context, String firstName) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(
+        'Bienvenue $firstName',
+        style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+          fontWeight: FontWeight.bold,
+          color: const Color(0xFF1F2937),
+        ),
+      ).animate().slideY(
+        begin: -0.5,
+        duration: const Duration(milliseconds: 600),
+        delay: const Duration(milliseconds: 200),
+      ),
+      const SizedBox(height: 8),
+      Text(
+        'Connectez-vous au marché mondial avec vos produits',
+        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+          color: const Color(0xFF6B7280),
+        ),
+      ).animate().slideY(
+        begin: -0.3,
+        duration: const Duration(milliseconds: 600),
+        delay: const Duration(milliseconds: 400),
+      ),
+    ],
+  );
+}
 
-  Widget _buildWelcomeSection(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Bienvenue Issa',
-          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-            color: const Color(0xFF1F2937),
-          ),
-        ).animate().slideY(
-          begin: -0.5,
-          duration: const Duration(milliseconds: 600),
-          delay: const Duration(milliseconds: 200),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          'Connectez-vous au marché mondial avec vos produits',
-          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-            color: const Color(0xFF6B7280),
-          ),
-        ).animate().slideY(
-          begin: -0.3,
-          duration: const Duration(milliseconds: 600),
-          delay: const Duration(milliseconds: 400),
-        ),
-      ],
-    );
-  }
 
   Widget _buildGlobalMarketCard(BuildContext context) {
     return Container(
@@ -268,168 +265,6 @@ class FarmerDashboardScreen extends ConsumerWidget {
       begin: 0.3,
       duration: const Duration(milliseconds: 600),
       delay: const Duration(milliseconds: 1200),
-    );
-  }
-
-  Widget _buildQuickActionsSection(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Actions rapides',
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-            fontWeight: FontWeight.bold,
-            color: const Color(0xFF374151),
-          ),
-        ).animate().slideY(
-          begin: -0.3,
-          duration: const Duration(milliseconds: 600),
-          delay: const Duration(milliseconds: 1400),
-        ),
-        const SizedBox(height: 16),
-        Row(
-          children: [
-            Expanded(
-              child: _buildQuickActionCard(
-                context,
-                'Créer une Offre',
-                Icons.add_shopping_cart_rounded,
-                const Color(0xFF10B981),
-                () => context.go('/farmer/create-offer'),
-              ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: _buildQuickActionCard(
-                context,
-                'Mes transactions',
-                Icons.receipt_long_rounded,
-                const Color(0xFFF59E0B),
-                () => context.go('/farmer/transaction-history'),
-              ),
-            ),
-          ],
-        ).animate().slideY(
-          begin: 0.3,
-          duration: const Duration(milliseconds: 600),
-          delay: const Duration(milliseconds: 1600),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildQuickActionCard(
-    BuildContext context,
-    String title,
-    IconData icon,
-    Color color,
-    VoidCallback onTap,
-  ) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          color: color.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: color.withOpacity(0.2),
-            width: 1,
-          ),
-        ),
-        child: Column(
-          children: [
-            Icon(
-              icon,
-              color: color,
-              size: 32,
-            ),
-            const SizedBox(height: 12),
-            Text(
-              title,
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w600,
-                color: color,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildBottomNavigation(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(20),
-          topRight: Radius.circular(20),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 10,
-            offset: Offset(0, -2),
-          ),
-        ],
-      ),
-      child: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _buildNavItem(context, Icons.grid_view_rounded, 'Accueil', true),
-              _buildNavItem(context, Icons.receipt_long_rounded, 'Mes Transa...', false),
-              _buildNavItem(context, Icons.account_balance_wallet_rounded, 'Portefeuille', false),
-              _buildNavItem(context, Icons.person_rounded, 'Profil', false),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildNavItem(BuildContext context, IconData icon, String label, bool isActive) {
-    return GestureDetector(
-      onTap: () {
-        // Navigation logic based on label
-        switch (label) {
-          case 'Accueil':
-            // Already on home
-            break;
-          case 'Mes Transa...':
-            context.go('/farmer/transaction-history');
-            break;
-          case 'Portefeuille':
-            context.go('/farmer/wallet');
-            break;
-          case 'Profil':
-            context.go('/farmer/profile');
-            break;
-        }
-      },
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            icon,
-            color: isActive ? const Color(0xFF10B981) : const Color(0xFF9CA3AF),
-            size: 24,
-          ),
-          const SizedBox(height: 4),
-          Text(
-            label,
-            style: TextStyle(
-              color: isActive ? const Color(0xFF10B981) : const Color(0xFF9CA3AF),
-              fontSize: 12,
-              fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
-            ),
-          ),
-        ],
-      ),
     );
   }
 
