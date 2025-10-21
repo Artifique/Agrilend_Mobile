@@ -371,7 +371,7 @@ class _BasicInfoScreenState extends ConsumerState<BasicInfoScreen> {
     if (!_formKey.currentState!.validate()) return;
     
     // Naviguer vers l'écran suivant avec les données
-    context.go('/personal-info', extra: {
+    context.go('/personal-info?userType=${widget.userType}', extra: {
       'userType': widget.userType,
       'email': _emailController.text.trim(),
       'password': _passwordController.text,

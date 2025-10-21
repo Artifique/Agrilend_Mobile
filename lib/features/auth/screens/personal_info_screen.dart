@@ -4,7 +4,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 class PersonalInfoScreen extends ConsumerStatefulWidget {
-  const PersonalInfoScreen({super.key});
+  final String userType;
+  
+  const PersonalInfoScreen({
+    super.key,
+    required this.userType,
+  });
 
   @override
   ConsumerState<PersonalInfoScreen> createState() => _PersonalInfoScreenState();
@@ -18,8 +23,12 @@ class _PersonalInfoScreenState extends ConsumerState<PersonalInfoScreen> {
   final _addressController = TextEditingController();
   final _cityController = TextEditingController();
   final _countryController = TextEditingController();
+  final _professionController = TextEditingController();
+  final _mainCropController = TextEditingController();
   
   String _selectedGender = 'M';
+  String _selectedCountry = 'Cameroun';
+  String _selectedMainCrop = '';
   DateTime? _selectedDateOfBirth;
   int _currentStep = 3;
   int _totalSteps = 6;
@@ -27,13 +36,6 @@ class _PersonalInfoScreenState extends ConsumerState<PersonalInfoScreen> {
   @override
   void initState() {
     super.initState();
-    // Récupérer les données de l'écran précédent
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final extra = GoRouter.of(context).routerDelegate.currentConfiguration.extra;
-      if (extra is Map<String, dynamic>) {
-        // Les données sont disponibles via extra
-      }
-    });
   }
 
   @override
@@ -44,6 +46,8 @@ class _PersonalInfoScreenState extends ConsumerState<PersonalInfoScreen> {
     _addressController.dispose();
     _cityController.dispose();
     _countryController.dispose();
+    _professionController.dispose();
+    _mainCropController.dispose();
     super.dispose();
   }
 
@@ -60,33 +64,43 @@ class _PersonalInfoScreenState extends ConsumerState<PersonalInfoScreen> {
         centerTitle: true,
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                _buildProgressIndicator(),
-                const SizedBox(height: 40),
-                _buildHeader(),
-                const SizedBox(height: 32),
-                _buildNameFields(),
-                const SizedBox(height: 20),
-                _buildPhoneField(),
-                const SizedBox(height: 20),
-                _buildGenderField(),
-                const SizedBox(height: 20),
-                _buildDateOfBirthField(),
-                const SizedBox(height: 20),
-                _buildAddressField(),
-                const SizedBox(height: 20),
-                _buildCityCountryFields(),
-                const SizedBox(height: 32),
-                _buildNextButton(),
-              ],
-            ),
-          ),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              padding: EdgeInsets.symmetric(
+                horizontal: constraints.maxWidth > 600 ? 32 : 24,
+                vertical: 16,
+              ),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    _buildProgressIndicator(),
+                    SizedBox(height: constraints.maxHeight * 0.03),
+                    _buildHeader(),
+                    SizedBox(height: constraints.maxHeight * 0.04),
+                    _buildNameFields(),
+                    const SizedBox(height: 16),
+                    _buildPhoneField(),
+                    const SizedBox(height: 16),
+                    _buildGenderField(),
+                    const SizedBox(height: 16),
+                    _buildDateOfBirthField(),
+                    const SizedBox(height: 16),
+                    _buildAddressField(),
+                    const SizedBox(height: 16),
+                    _buildCityCountryFields(),
+                    const SizedBox(height: 16),
+                    ..._buildUserSpecificFields(),
+                    SizedBox(height: constraints.maxHeight * 0.04),
+                    _buildNextButton(),
+                    const SizedBox(height: 20),
+                  ],
+                ),
+              ),
+            );
+          },
         ),
       ),
     );
@@ -364,18 +378,24 @@ class _PersonalInfoScreenState extends ConsumerState<PersonalInfoScreen> {
         ),
         const SizedBox(width: 16),
         Expanded(
-          child: TextFormField(
-            controller: _countryController,
+          child: DropdownButtonFormField<String>(
+            value: _selectedCountry,
             decoration: const InputDecoration(
               labelText: 'Pays',
               prefixIcon: Icon(Icons.public_rounded),
               border: OutlineInputBorder(),
             ),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Requis';
-              }
-              return null;
+            items: const [
+              DropdownMenuItem(value: 'Cameroun', child: Text('Cameroun')),
+              DropdownMenuItem(value: 'Nigeria', child: Text('Nigeria')),
+              DropdownMenuItem(value: 'Ghana', child: Text('Ghana')),
+              DropdownMenuItem(value: 'Côte d\'Ivoire', child: Text('Côte d\'Ivoire')),
+              DropdownMenuItem(value: 'Sénégal', child: Text('Sénégal')),
+            ],
+            onChanged: (value) {
+              setState(() {
+                _selectedCountry = value!;
+              });
             },
           ).animate().slideX(
             delay: const Duration(milliseconds: 2200),
@@ -386,6 +406,125 @@ class _PersonalInfoScreenState extends ConsumerState<PersonalInfoScreen> {
         ),
       ],
     );
+  }
+
+  List<Widget> _buildUserSpecificFields() {
+    List<Widget> fields = [];
+    
+    if (widget.userType == 'farmer') {
+      // Champ Profession pour les agriculteurs
+      fields.add(
+        TextFormField(
+          controller: _professionController,
+          decoration: const InputDecoration(
+            labelText: 'Profession',
+            prefixIcon: Icon(Icons.work_outline_rounded),
+            border: OutlineInputBorder(),
+          ),
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Veuillez saisir votre profession';
+            }
+            return null;
+          },
+        ).animate().slideX(
+          delay: const Duration(milliseconds: 2400),
+          duration: const Duration(milliseconds: 600),
+          begin: -1,
+          end: 0,
+        ),
+      );
+      
+      fields.add(const SizedBox(height: 16));
+      
+      // Champ Culture principale pour les agriculteurs
+      fields.add(
+        DropdownButtonFormField<String>(
+          value: _selectedMainCrop.isEmpty ? null : _selectedMainCrop,
+          decoration: const InputDecoration(
+            labelText: 'Culture principale',
+            prefixIcon: Icon(Icons.agriculture_rounded),
+            border: OutlineInputBorder(),
+          ),
+          items: const [
+            DropdownMenuItem(value: 'Maïs', child: Text('Maïs')),
+            DropdownMenuItem(value: 'Riz', child: Text('Riz')),
+            DropdownMenuItem(value: 'Cacao', child: Text('Cacao')),
+            DropdownMenuItem(value: 'Café', child: Text('Café')),
+            DropdownMenuItem(value: 'Banane', child: Text('Banane')),
+            DropdownMenuItem(value: 'Tomate', child: Text('Tomate')),
+            DropdownMenuItem(value: 'Oignon', child: Text('Oignon')),
+            DropdownMenuItem(value: 'Autre', child: Text('Autre')),
+          ],
+          onChanged: (value) {
+            setState(() {
+              _selectedMainCrop = value ?? '';
+            });
+          },
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Veuillez sélectionner votre culture principale';
+            }
+            return null;
+          },
+        ).animate().slideX(
+          delay: const Duration(milliseconds: 2600),
+          duration: const Duration(milliseconds: 600),
+          begin: 1,
+          end: 0,
+        ),
+      );
+    } else if (widget.userType == 'agent') {
+      // Champ spécialisé pour les agents
+      fields.add(
+        TextFormField(
+          controller: _professionController,
+          decoration: const InputDecoration(
+            labelText: 'Zone d\'intervention',
+            prefixIcon: Icon(Icons.location_on_rounded),
+            hintText: 'Ex: Douala, Yaoundé, etc.',
+            border: OutlineInputBorder(),
+          ),
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Veuillez saisir votre zone d\'intervention';
+            }
+            return null;
+          },
+        ).animate().slideX(
+          delay: const Duration(milliseconds: 2400),
+          duration: const Duration(milliseconds: 600),
+          begin: -1,
+          end: 0,
+        ),
+      );
+    } else if (widget.userType == 'buyer') {
+      // Champ spécialisé pour les acheteurs
+      fields.add(
+        TextFormField(
+          controller: _professionController,
+          decoration: const InputDecoration(
+            labelText: 'Entreprise/Organisation',
+            prefixIcon: Icon(Icons.business_rounded),
+            hintText: 'Nom de votre entreprise',
+            border: OutlineInputBorder(),
+          ),
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Veuillez saisir le nom de votre entreprise';
+            }
+            return null;
+          },
+        ).animate().slideX(
+          delay: const Duration(milliseconds: 2400),
+          duration: const Duration(milliseconds: 600),
+          begin: -1,
+          end: 0,
+        ),
+      );
+    }
+    
+    return fields;
   }
 
   Widget _buildNextButton() {
@@ -422,16 +561,19 @@ class _PersonalInfoScreenState extends ConsumerState<PersonalInfoScreen> {
   void _handleNext() {
     if (!_formKey.currentState!.validate()) return;
     
-    // Naviguer vers l'écran KYC
-    context.go('/kyc-verification', extra: {
+    // Naviguer vers l'écran KYC avec toutes les données
+    context.go('/kyc-verification?userType=${widget.userType}', extra: {
       'firstName': _firstNameController.text.trim(),
       'lastName': _lastNameController.text.trim(),
       'phone': _phoneController.text.trim(),
       'address': _addressController.text.trim(),
       'city': _cityController.text.trim(),
-      'country': _countryController.text.trim(),
+      'country': _selectedCountry,
       'gender': _selectedGender,
       'dateOfBirth': _selectedDateOfBirth,
+      'profession': _professionController.text.trim(),
+      'mainCrop': _selectedMainCrop,
+      'userType': widget.userType,
     });
   }
 }
