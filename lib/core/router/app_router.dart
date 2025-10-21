@@ -7,6 +7,10 @@ import '../../features/onboarding/screens/onboarding_screen.dart';
 import '../../features/auth/screens/login_screen.dart';
 import '../../features/auth/screens/register_screen.dart';
 import '../../features/auth/screens/user_type_selection_screen.dart';
+import '../../features/auth/screens/basic_info_screen.dart';
+import '../../features/auth/screens/personal_info_screen.dart';
+import '../../features/auth/screens/kyc_verification_screen.dart';
+import '../../features/auth/screens/registration_complete_screen.dart';
 import '../../features/farmer/screens/farmer_main_screen.dart';
 import '../../features/farmer/screens/create_offer_screen.dart';
 import '../../features/farmer/screens/stock_management_screen.dart';
@@ -87,6 +91,25 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/register',
         builder: (context, state) => const RegisterScreen(),
+      ),
+      GoRoute(
+        path: '/basic-info',
+        builder: (context, state) {
+          final userType = state.uri.queryParameters['userType'] ?? 'farmer';
+          return BasicInfoScreen(userType: userType);
+        },
+      ),
+      GoRoute(
+        path: '/personal-info',
+        builder: (context, state) => const PersonalInfoScreen(),
+      ),
+      GoRoute(
+        path: '/kyc-verification',
+        builder: (context, state) => const KycVerificationScreen(),
+      ),
+      GoRoute(
+        path: '/registration-complete',
+        builder: (context, state) => const RegistrationCompleteScreen(),
       ),
 
       // Farmer Routes

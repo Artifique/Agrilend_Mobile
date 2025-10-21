@@ -1,4 +1,4 @@
-name: agrilend_app
+name: agrilend
 description: Plateforme décentralisée de micro-crédits pour agriculteurs
 publish_to: 'none'
 version: 1.0.0+1

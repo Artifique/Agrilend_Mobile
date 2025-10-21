@@ -23,7 +23,7 @@ class UserTypeSelectionScreen extends StatelessWidget {
                 description: 'Je souhaite obtenir un financement pour mes activités agricoles',
                 icon: Icons.agriculture_rounded,
                 color: const Color(0xFF10B981),
-                onTap: () => _navigateToRegister(context, 'farmer'),
+                onTap: () => _navigateToBasicInfo(context, 'farmer'),
               ).animate().slideX(
                 delay: const Duration(milliseconds: 200),
                 duration: const Duration(milliseconds: 600),
@@ -38,7 +38,7 @@ class UserTypeSelectionScreen extends StatelessWidget {
                 description: 'Je représente Agri-lend dans ma région',
                 icon: Icons.support_agent_rounded,
                 color: const Color(0xFF6366F1),
-                onTap: () => _navigateToRegister(context, 'agent'),
+                onTap: () => _navigateToBasicInfo(context, 'agent'),
               ).animate().slideX(
                 delay: const Duration(milliseconds: 600),
                 duration: const Duration(milliseconds: 600),
@@ -53,7 +53,7 @@ class UserTypeSelectionScreen extends StatelessWidget {
                 description: 'Je souhaite acheter des produits agricoles frais',
                 icon: Icons.shopping_cart_rounded,
                 color: const Color(0xFFF59E0B),
-                onTap: () => _navigateToRegister(context, 'buyer'),
+                onTap: () => _navigateToBasicInfo(context, 'buyer'),
               ).animate().slideX(
                 delay: const Duration(milliseconds: 1000),
                 duration: const Duration(milliseconds: 600),
@@ -204,7 +204,7 @@ class UserTypeSelectionScreen extends StatelessWidget {
     ).animate().fade(delay: const Duration(milliseconds: 800));
   }
 
-  void _navigateToRegister(BuildContext context, String userType) {
-    context.go('/register?userType=$userType');
+  void _navigateToBasicInfo(BuildContext context, String userType) {
+    context.go('/basic-info?userType=$userType');
   }
 }
