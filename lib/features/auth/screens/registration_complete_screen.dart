@@ -4,7 +4,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 class RegistrationCompleteScreen extends ConsumerStatefulWidget {
-  const RegistrationCompleteScreen({super.key});
+  final String userType;
+  
+  const RegistrationCompleteScreen({
+    super.key,
+    required this.userType,
+  });
 
   @override
   ConsumerState<RegistrationCompleteScreen> createState() => _RegistrationCompleteScreenState();
@@ -13,6 +18,35 @@ class RegistrationCompleteScreen extends ConsumerStatefulWidget {
 class _RegistrationCompleteScreenState extends ConsumerState<RegistrationCompleteScreen> {
   int _currentStep = 6;
   int _totalSteps = 6;
+
+  @override
+  void initState() {
+    super.initState();
+    // Redirection automatique après 5 secondes en mode développement
+    Future.delayed(const Duration(seconds: 5), () {
+      if (mounted) {
+        _redirectToHome();
+      }
+    });
+  }
+
+  void _redirectToHome() {
+    String homeRoute = _getHomeRoute(widget.userType);
+    context.go(homeRoute);
+  }
+
+  String _getHomeRoute(String userType) {
+    switch (userType) {
+      case 'farmer':
+        return '/farmer';
+      case 'agent':
+        return '/agent';
+      case 'buyer':
+        return '/buyer';
+      default:
+        return '/login';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -176,7 +210,8 @@ class _RegistrationCompleteScreenState extends ConsumerState<RegistrationComplet
           ),
           const SizedBox(height: 8),
           Text(
-            'Votre compte sera activé dans les 24 heures après vérification de vos documents.',
+            'En mode développement, votre compte est automatiquement activé.\n'
+            'Redirection vers votre tableau de bord dans quelques secondes...',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
               color: Colors.blue.shade700,
             ),
@@ -196,14 +231,14 @@ class _RegistrationCompleteScreenState extends ConsumerState<RegistrationComplet
         SizedBox(
           width: double.infinity,
           child: ElevatedButton(
-            onPressed: () => context.go('/login'),
+            onPressed: _redirectToHome,
             style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 16),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
             ),
-            child: const Text('Se connecter'),
+            child: Text('Aller au tableau de bord (${widget.userType})'),
           ),
         ).animate().slideY(
           delay: const Duration(milliseconds: 1600),

@@ -116,11 +116,17 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: '/kyc-verification',
-        builder: (context, state) => const KycVerificationScreen(),
+        builder: (context, state) {
+          final userType = state.uri.queryParameters['userType'] ?? 'farmer';
+          return KycVerificationScreen(userType: userType);
+        },
       ),
       GoRoute(
         path: '/registration-complete',
-        builder: (context, state) => const RegistrationCompleteScreen(),
+        builder: (context, state) {
+          final userType = state.uri.queryParameters['userType'] ?? 'farmer';
+          return RegistrationCompleteScreen(userType: userType);
+        },
       ),
 
       // Farmer Routes

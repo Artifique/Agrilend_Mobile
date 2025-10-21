@@ -6,7 +6,12 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
 class KycVerificationScreen extends ConsumerStatefulWidget {
-  const KycVerificationScreen({super.key});
+  final String userType;
+  
+  const KycVerificationScreen({
+    super.key,
+    required this.userType,
+  });
 
   @override
   ConsumerState<KycVerificationScreen> createState() => _KycVerificationScreenState();
@@ -21,14 +26,84 @@ class _KycVerificationScreenState extends ConsumerState<KycVerificationScreen> {
   File? _idBackImage;
   File? _selfieImage;
   bool _isProcessing = false;
+  bool _isAutoMode = true; // Mode développement automatique
   int _currentStep = 4;
   int _totalSteps = 6;
 
   @override
-  void dispose() {
-    _idNumberController.dispose();
-    _idTypeController.dispose();
-    super.dispose();
+  void initState() {
+    super.initState();
+    if (_isAutoMode) {
+      _initializeAutoMode();
+    }
+  }
+
+  void _initializeAutoMode() {
+    // Initialiser automatiquement les données pour le mode développement
+    _idTypeController.text = 'CNI';
+    _idNumberController.text = '123456789';
+    
+    // Simuler des images (optionnel)
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        _showAutoModeDialog();
+      }
+    });
+  }
+
+  void _showAutoModeDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        title: const Row(
+          children: [
+            Icon(Icons.developer_mode_rounded, color: Colors.orange),
+            SizedBox(width: 8),
+            Text('Mode Développement'),
+          ],
+        ),
+        content: const Text(
+          'En mode développement, la vérification KYC est automatique.\n\n'
+          'Voulez-vous continuer avec la vérification automatique ?',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              _isAutoMode = false;
+              setState(() {});
+            },
+            child: const Text('Mode Manuel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              _startAutoVerification();
+            },
+            child: const Text('Continuer Automatiquement'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _startAutoVerification() async {
+    setState(() {
+      _isProcessing = true;
+    });
+
+    // Simuler le processus de vérification automatique
+    await Future.delayed(const Duration(seconds: 3));
+
+    setState(() {
+      _isProcessing = false;
+    });
+
+    if (mounted) {
+      // Naviguer vers l'écran de confirmation avec le type d'utilisateur
+      context.go('/registration-complete?userType=${widget.userType}');
+    }
   }
 
   @override
@@ -63,6 +138,8 @@ class _KycVerificationScreenState extends ConsumerState<KycVerificationScreen> {
                 const SizedBox(height: 20),
                 _buildSelfieUpload(),
                 const SizedBox(height: 32),
+                if (_isAutoMode) _buildAutoModeButton(),
+                const SizedBox(height: 16),
                 _buildNextButton(),
               ],
             ),
@@ -336,6 +413,67 @@ class _KycVerificationScreenState extends ConsumerState<KycVerificationScreen> {
     );
   }
 
+  Widget _buildAutoModeButton() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.orange.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.orange.withOpacity(0.3)),
+      ),
+      child: Column(
+        children: [
+          const Row(
+            children: [
+              Icon(Icons.developer_mode_rounded, color: Colors.orange),
+              SizedBox(width: 8),
+              Text(
+                'Mode Développement',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.orange,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          const Text(
+            'Vérification automatique disponible pour les tests',
+            style: TextStyle(fontSize: 14),
+          ),
+          const SizedBox(height: 12),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton.icon(
+              onPressed: _isProcessing ? null : _startAutoVerification,
+              icon: _isProcessing 
+                ? const SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : const Icon(Icons.auto_awesome_rounded),
+              label: Text(_isProcessing ? 'Vérification...' : 'Vérification Automatique'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.orange,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    ).animate().slideY(
+      delay: const Duration(milliseconds: 1700),
+      duration: const Duration(milliseconds: 600),
+      begin: 1,
+      end: 0,
+    );
+  }
+
   Widget _buildNextButton() {
     final isComplete = _idFrontImage != null && 
                       _idBackImage != null && 
@@ -404,8 +542,8 @@ class _KycVerificationScreenState extends ConsumerState<KycVerificationScreen> {
     });
 
     if (mounted) {
-      // Naviguer vers l'écran de confirmation
-      context.go('/registration-complete');
+      // Naviguer vers l'écran de confirmation avec le type d'utilisateur
+      context.go('/registration-complete?userType=${widget.userType}');
     }
   }
 }
