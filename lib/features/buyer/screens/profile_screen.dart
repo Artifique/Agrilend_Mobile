@@ -431,10 +431,7 @@ class _BuyerProfileScreenState extends ConsumerState<BuyerProfileScreen> {
                         _buildActionTile(
                           'Déconnexion',
                           Icons.logout_outlined,
-                          () {
-                            // Déconnexion
-                            context.go('/login');
-                          },
+                          () => _handleLogout(context),
                           textColor: Colors.red,
                         ),
                       ],
@@ -444,6 +441,36 @@ class _BuyerProfileScreenState extends ConsumerState<BuyerProfileScreen> {
               ),
             ),
     );
+  }
+
+  Future<void> _handleLogout(BuildContext context) async {
+    final shouldLogout = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Déconnexion'),
+        content: const Text('Êtes-vous sûr de vouloir vous déconnecter ?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Annuler'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            style: TextButton.styleFrom(
+              foregroundColor: Colors.red,
+            ),
+            child: const Text('Déconnexion'),
+          ),
+        ],
+      ),
+    );
+
+    if (shouldLogout == true) {
+      // Redirection vers l'onboarding
+      if (context.mounted) {
+        context.go('/onboarding');
+      }
+    }
   }
 
   Widget _buildInfoRow(String label, String value, IconData icon, {Color? valueColor}) {
