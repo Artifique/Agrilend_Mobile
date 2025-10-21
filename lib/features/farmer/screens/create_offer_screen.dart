@@ -56,6 +56,9 @@ class _CreateOfferScreenState extends State<CreateOfferScreen> {
       final String availabilityDate = _availabilityDateController.text;
 
       // TODO: Implement actual offer creation logic (e.g., API call)
+      // Using variables: productName, description, quantity, price, availabilityDate
+      print('Creating offer: $productName, $description, $quantity, $price, $availabilityDate');
+      
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content:

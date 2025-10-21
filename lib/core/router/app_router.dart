@@ -20,7 +20,6 @@ import '../../features/transactions/screens/transaction_history_screen.dart';
 import '../../features/wallet/screens/wallet_screen.dart';
 import '../../features/wallet/screens/scanner_qr_screen.dart';
 import '../../features/profile/screens/profile_screen.dart';
-import '../../features/support/screens/support_screen.dart';
 import '../../features/notification/screens/notification_screen.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
