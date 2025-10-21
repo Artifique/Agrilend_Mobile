@@ -41,7 +41,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           '/onboarding',
           '/login',
           '/register',
-          '/user-type'
+          '/user-type',
+          '/basic-info',
+          '/personal-info',
+          '/kyc-verification',
+          '/registration-complete'
         ];
         if (!publicRoutes
             .any((route) => state.uri.toString().startsWith(route))) {
@@ -56,7 +60,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           '/onboarding',
           '/login',
           '/register',
-          '/user-type'
+          '/user-type',
+          '/basic-info',
+          '/personal-info',
+          '/kyc-verification',
+          '/registration-complete'
         ];
         if (publicRoutes
             .any((route) => state.uri.toString().startsWith(route))) {
