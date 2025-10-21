@@ -210,8 +210,7 @@ class _RegistrationCompleteScreenState extends ConsumerState<RegistrationComplet
           ),
           const SizedBox(height: 8),
           Text(
-            'En mode développement, votre compte est automatiquement activé.\n'
-            'Redirection vers votre tableau de bord dans quelques secondes...',
+            'Votre compte sera activé dans les 24 heures après vérification de vos documents.',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
               color: Colors.blue.shade700,
             ),
