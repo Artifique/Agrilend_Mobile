@@ -1,83 +1,133 @@
+import 'package:intl/intl.dart';
+
 class Order {
-  final int? id;
-  final int buyerId;
+  final int id;
+  final String orderNumber;
   final int offerId;
-  final double quantity;
+  final double orderedQuantity;
   final double unitPrice;
-  final double totalPrice;
+  final double totalAmount;
   final String status;
-  // optional UI fields
-  final String? productName;
-  final String? farmerName;
-  final DateTime? createdAt;
-  final DateTime? deliveryDate;
-  final DateTime? escrowDate;
-  final String? deliveryAddress;
+  final String deliveryAddress;
+  final String? notes;
+  final String productName;
+  final String productUnit;
+  final int farmerId;
+  final String farmerName;
+  final int buyerId;
+  final String buyerName;
+  final String buyerEmail;
+  final String? escrowTransactionId;
+  final DateTime? escrowStartDate;
+  final DateTime? escrowEndDate;
+  final DateTime createdAt;
+  final DateTime updatedAt;
 
   Order({
-    this.id,
-    required this.buyerId,
+    required this.id,
+    required this.orderNumber,
     required this.offerId,
-    required this.quantity,
+    required this.orderedQuantity,
     required this.unitPrice,
-    required this.totalPrice,
+    required this.totalAmount,
     required this.status,
-    this.productName,
-    this.farmerName,
-    this.createdAt,
-    this.deliveryDate,
-    this.escrowDate,
-    this.deliveryAddress,
+    required this.deliveryAddress,
+    this.notes,
+    required this.productName,
+    required this.productUnit,
+    required this.farmerId,
+    required this.farmerName,
+    required this.buyerId,
+    required this.buyerName,
+    required this.buyerEmail,
+    this.escrowTransactionId,
+    this.escrowStartDate,
+    this.escrowEndDate,
+    required this.createdAt,
+    required this.updatedAt,
   });
 
-  factory Order.fromJson(Map<String, dynamic> json) => Order(
-        id: json['id'] is int
-            ? json['id']
-            : (json['id'] != null ? int.parse('${json['id']}') : null),
-        buyerId: json['buyer_id'] ?? json['buyerId'],
-        offerId: json['offer_id'] ?? json['offerId'],
-        quantity: json['quantity'] != null
-            ? double.parse('${json['quantity']}')
-            : 0.0,
-        unitPrice: json['unit_price'] != null
-            ? double.parse('${json['unit_price']}')
-            : 0.0,
-        totalPrice: json['total_price'] != null
-            ? double.parse('${json['total_price']}')
-            : 0.0,
-        status: json['status'] ?? 'PENDING',
-        productName: json['product_name'] ?? json['productName'],
-        farmerName: json['farmer_name'] ?? json['farmerName'],
-        createdAt: json['created_at'] != null
-            ? DateTime.tryParse('${json['created_at']}')
-            : null,
-        deliveryDate: json['delivery_date'] != null
-            ? DateTime.tryParse('${json['delivery_date']}')
-            : null,
-        escrowDate: json['escrow_date'] != null
-            ? DateTime.tryParse('${json['escrow_date']}')
-            : null,
-        deliveryAddress: json['delivery_address'] ?? json['deliveryAddress'],
-      );
+  factory Order.fromJson(Map<String, dynamic> json) {
+    return Order(
+      id: json['id'],
+      orderNumber: json['orderNumber'],
+      offerId: json['offerId'],
+      orderedQuantity: (json['orderedQuantity'] as num).toDouble(),
+      unitPrice: (json['unitPrice'] as num).toDouble(),
+      totalAmount: (json['totalAmount'] as num).toDouble(),
+      status: json['status'],
+      deliveryAddress: json['deliveryAddress'],
+      notes: json['notes'],
+      productName: json['productName'],
+      productUnit: json['productUnit'],
+      farmerId: json['farmerId'],
+      farmerName: json['farmerName'],
+      buyerId: json['buyerId'],
+      buyerName: json['buyerName'],
+      buyerEmail: json['buyerEmail'],
+      escrowTransactionId: json['escrowTransactionId'],
+      escrowStartDate: json['escrowStartDate'] != null
+          ? DateTime.parse(json['escrowStartDate'])
+          : null,
+      escrowEndDate: json['escrowEndDate'] != null
+          ? DateTime.parse(json['escrowEndDate'])
+          : null,
+      createdAt: DateTime.parse(json['createdAt']),
+      updatedAt: DateTime.parse(json['updatedAt']),
+    );
+  }
 
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'buyer_id': buyerId,
-        'offer_id': offerId,
-        'quantity': quantity,
-        'unit_price': unitPrice,
-        'total_price': totalPrice,
-        'status': status,
-      };
-
-  String get formattedTotalPrice => '${totalPrice.toStringAsFixed(0)} FCFA';
-
-  String get formattedQuantity => '${quantity.toStringAsFixed(2)}';
-
-  String get formattedCreatedDate => createdAt != null
-      ? '${createdAt!.day}/${createdAt!.month}/${createdAt!.year}'
-      : '-';
-
-  // Backwards-compatible helpers
-  String get idString => id?.toString() ?? '';
+  Order copyWith({
+    int? id,
+    String? orderNumber,
+    int? offerId,
+    double? orderedQuantity,
+    double? unitPrice,
+    double? totalAmount,
+    String? status,
+    String? deliveryAddress,
+    String? notes,
+    String? productName,
+    String? productUnit,
+    int? farmerId,
+    String? farmerName,
+    int? buyerId,
+    String? buyerName,
+    String? buyerEmail,
+    String? escrowTransactionId,
+    DateTime? escrowStartDate,
+    DateTime? escrowEndDate,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) {
+    return Order(
+      id: id ?? this.id,
+      orderNumber: orderNumber ?? this.orderNumber,
+      offerId: offerId ?? this.offerId,
+      orderedQuantity: orderedQuantity ?? this.orderedQuantity,
+      unitPrice: unitPrice ?? this.unitPrice,
+      totalAmount: totalAmount ?? this.totalAmount,
+      status: status ?? this.status,
+      deliveryAddress: deliveryAddress ?? this.deliveryAddress,
+      notes: notes ?? this.notes,
+      productName: productName ?? this.productName,
+      productUnit: productUnit ?? this.productUnit,
+      farmerId: farmerId ?? this.farmerId,
+      farmerName: farmerName ?? this.farmerName,
+      buyerId: buyerId ?? this.buyerId,
+      buyerName: buyerName ?? this.buyerName,
+      buyerEmail: buyerEmail ?? this.buyerEmail,
+      escrowTransactionId: escrowTransactionId ?? this.escrowTransactionId,
+      escrowStartDate: escrowStartDate ?? this.escrowStartDate,
+      escrowEndDate: escrowEndDate ?? this.escrowEndDate,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+  
+  String get formattedQuantity => '${orderedQuantity.toStringAsFixed(2)} $productUnit';
+  String get formattedTotalPrice => NumberFormat.currency(symbol: 'CFA').format(totalAmount);
+  String get formattedCreatedDate => DateFormat.yMMMd('fr_FR').format(createdAt);
+  DateTime? get escrowDate => escrowStartDate;
+  DateTime? get deliveryDate => status == 'DELIVERED' ? updatedAt : null;
 }

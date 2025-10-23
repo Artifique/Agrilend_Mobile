@@ -1,35 +1,22 @@
-import '../models/buyer.dart';
-import 'api_service.dart';
+import 'package:agrilend/models/buyer.dart';
+import 'package:agrilend/services/api_service.dart';
 
 class BuyerService {
-  final ApiService api;
+  final ApiService _apiService;
 
-  BuyerService(this.api);
+  BuyerService(this._apiService);
 
-  Future<List<Buyer>> fetchAll() async {
-    final resp = await api.get('/buyers');
-    final data = resp.data as List<dynamic>;
-    return data
-        .map((e) => Buyer.fromJson(Map<String, dynamic>.from(e)))
-        .toList();
-  }
-
-  Future<Buyer> getById(int userId) async {
-    final resp = await api.get('/buyers/$userId');
-    return Buyer.fromJson(Map<String, dynamic>.from(resp.data));
-  }
-
-  Future<Buyer> create(Buyer b) async {
-    final resp = await api.post('/buyers', data: b.toJson());
-    return Buyer.fromJson(Map<String, dynamic>.from(resp.data));
-  }
-
-  Future<Buyer> update(int userId, Map<String, dynamic> changes) async {
-    final resp = await api.put('/buyers/$userId', data: changes);
-    return Buyer.fromJson(Map<String, dynamic>.from(resp.data));
-  }
-
-  Future<void> delete(int userId) async {
-    await api.delete('/buyers/$userId');
+  Future<Buyer?> getBuyerProfile() async {
+    try {
+      final response = await _apiService.get('/api/buyer/profile');
+      if (response.statusCode == 200 && response.data['success'] == true) {
+        final userData = response.data['data'] as Map<String, dynamic>;
+        return Buyer.fromJson(userData);
+      }
+    } catch (e) {
+      // ignore: avoid_print
+      print('Error fetching buyer profile: $e');
+    }
+    return null;
   }
 }

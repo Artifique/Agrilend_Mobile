@@ -6,6 +6,7 @@ class Product {
   final String? subcategory;
   final String unit;
   final String? imageUrl;
+  final int? farmerId; // New field
 
   // UI-friendly optional fields
   final String? farmerName;
@@ -26,6 +27,7 @@ class Product {
     this.subcategory,
     required this.unit,
     this.imageUrl,
+    this.farmerId, // New field
     this.farmerName,
     this.images,
     this.suggestedPrice,
@@ -55,6 +57,9 @@ class Product {
         subcategory: json['subcategory'],
         unit: json['unit'] ?? 'KG',
         imageUrl: json['image_url'] ?? json['imageUrl'],
+        farmerId: json['farmer_id'] is int
+            ? json['farmer_id']
+            : (json['farmer_id'] != null ? int.parse('${json['farmer_id']}') : null), // New field
         farmerName: json['farmer_name'] ?? json['farmerName'],
         images: (json['images'] is List)
             ? List<String>.from(json['images'])
@@ -88,6 +93,7 @@ class Product {
         'subcategory': subcategory,
         'unit': unit,
         'image_url': imageUrl,
+        'farmer_id': farmerId, // New field
         'farmer_name': farmerName,
         'images': images,
         'suggested_price': suggestedPrice,

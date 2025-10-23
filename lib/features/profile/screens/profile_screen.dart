@@ -99,6 +99,11 @@ class ProfileScreen extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  // Directly display email and phone for debugging
+                  Text('Debug Email: ${user.email ?? 'N/A'}'),
+                  Text('Debug Phone: ${user.phone ?? 'N/A'}'),
+                  const SizedBox(height: 20), // Add some spacing
+
                   // Avatar and profile information
                   Stack(
                     clipBehavior: Clip.none,
@@ -224,6 +229,32 @@ class ProfileScreen extends ConsumerWidget {
                           user.phone ?? 'N/A',
                           const Color(0xFF4F46E5),
                         ),
+                        if (user.userType == 'buyer') ...[
+                          const Divider(height: 24),
+                          _buildBuyerInfoItem(
+                            context,
+                            Icons.business_rounded,
+                            'Nom de l\'entreprise',
+                            user.companyName ?? 'N/A',
+                            const Color(0xFFF59E0B),
+                          ),
+                          const Divider(height: 24),
+                          _buildBuyerInfoItem(
+                            context,
+                            Icons.category_rounded,
+                            'Type d\'activité',
+                            user.businessType ?? 'N/A',
+                            const Color(0xFF10B981),
+                          ),
+                          const Divider(height: 24),
+                          _buildBuyerInfoItem(
+                            context,
+                            Icons.location_on_rounded,
+                            'Adresse de l\'entreprise',
+                            user.businessAddress ?? 'N/A',
+                            const Color(0xFFEF4444),
+                          ),
+                        ],
                       ],
                     ),
                   ),
@@ -378,6 +409,43 @@ class ProfileScreen extends ConsumerWidget {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildBuyerInfoItem(BuildContext context, IconData icon, String label, String value, Color color) {
+    return Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: color.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Icon(icon, color: color, size: 22),
+        ),
+        const SizedBox(width: 16),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              label,
+              style: const TextStyle(
+                color: Color(0xFF64748B),
+                fontSize: 14,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              value,
+              style: const TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 16,
+                color: Color(0xFF1E293B),
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 

@@ -20,7 +20,7 @@ class _BuyerProfileScreenState extends ConsumerState<BuyerProfileScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final userId = ref.read(authProvider).user?.id.toString();
       if (userId != null) {
-        ref.read(buyerProfileProvider.notifier).loadProfile(userId);
+        ref.read(buyerProfileProvider.notifier).loadProfile();
       }
     });
   }
@@ -86,9 +86,8 @@ class _BuyerProfileScreenState extends ConsumerState<BuyerProfileScreen> {
                           backgroundColor:
                               AppTheme.primaryGreen.withOpacity(0.1),
                           child: Text(
-                            (buyerProfile?.businessName ?? '').isNotEmpty
-                                ? (buyerProfile?.businessName ?? '')[0]
-                                    .toUpperCase()
+                            buyerProfile.businessName.isNotEmpty
+                                ? buyerProfile.businessName[0].toUpperCase()
                                 : 'B',
                             style: TextStyle(
                               fontSize: 32,
@@ -100,7 +99,7 @@ class _BuyerProfileScreenState extends ConsumerState<BuyerProfileScreen> {
                         const SizedBox(height: 16),
 
                         Text(
-                          buyerProfile?.businessName ?? '',
+                          buyerProfile.businessName,
                           style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
@@ -110,7 +109,7 @@ class _BuyerProfileScreenState extends ConsumerState<BuyerProfileScreen> {
                         const SizedBox(height: 4),
 
                         Text(
-                          buyerProfile?.businessType ?? '',
+                          buyerProfile.businessType ?? '',
                           style: TextStyle(
                             fontSize: 16,
                             color: Colors.grey[600],
@@ -188,19 +187,19 @@ class _BuyerProfileScreenState extends ConsumerState<BuyerProfileScreen> {
                         const SizedBox(height: 16),
                         _buildInfoRow(
                           'Email',
-                          buyerProfile?.businessEmail ?? '',
+                          buyerProfile.businessEmail ?? '',
                           Icons.email_outlined,
                         ),
                         const SizedBox(height: 12),
                         _buildInfoRow(
                           'Téléphone',
-                          buyerProfile?.businessPhone ?? '',
+                          buyerProfile.businessPhone ?? '',
                           Icons.phone_outlined,
                         ),
                         const SizedBox(height: 12),
                         _buildInfoRow(
                           'Adresse',
-                          buyerProfile?.businessAddress ?? '',
+                          buyerProfile.businessAddress ?? '',
                           Icons.location_on_outlined,
                         ),
                         if (buyerProfile.deliveryAddress != null) ...[
@@ -244,16 +243,16 @@ class _BuyerProfileScreenState extends ConsumerState<BuyerProfileScreen> {
                           ),
                         ),
                         const SizedBox(height: 16),
-                        if (buyerProfile?.hasHederaAccount == true) ...[
+                        if (buyerProfile.hasHederaAccount == true) ...[
                           _buildInfoRow(
                             'ID du compte',
-                            buyerProfile?.hederaAccountId ?? '-',
+                            buyerProfile.hederaAccountId ?? '-',
                             Icons.account_circle_outlined,
                           ),
                           const SizedBox(height: 12),
                           _buildInfoRow(
                             'Solde HBAR',
-                            buyerProfile?.formattedHbarBalance ?? '0.00 HBAR',
+                            buyerProfile.formattedHbarBalance,
                             Icons.account_balance_wallet_outlined,
                             valueColor: AppTheme.primaryGreen,
                           ),
@@ -344,8 +343,8 @@ class _BuyerProfileScreenState extends ConsumerState<BuyerProfileScreen> {
                           ),
                         ),
                         const SizedBox(height: 16),
-                        if ((buyerProfile?.preferredCategoriesSafe ?? [])
-                            .isNotEmpty) ...[
+                        if (buyerProfile
+                            .preferredCategoriesSafe.isNotEmpty) ...[
                           const Text(
                             'Catégories préférées',
                             style: TextStyle(

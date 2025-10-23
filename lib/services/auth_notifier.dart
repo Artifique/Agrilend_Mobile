@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'auth_service.dart';
 import '../models/user.dart';
 
+import 'package:agrilend/services/buyer_service.dart'; // New import
+
 class AuthState {
   final User? user;
   final bool isLoading;
@@ -22,10 +24,12 @@ class AuthState {
   }
 }
 
+
 class AuthNotifier extends StateNotifier<AuthState> {
   final AuthService authService;
+  final BuyerService buyerService; // New field
 
-  AuthNotifier(this.authService) : super(AuthState()) {
+  AuthNotifier(this.authService, this.buyerService) : super(AuthState()) {
     init();
   }
 
@@ -40,7 +44,25 @@ class AuthNotifier extends StateNotifier<AuthState> {
     try {
       final res = await authService.login(email, password);
       if (res['success'] == true) {
-        final user = await authService.getCurrentUser();
+        final userMap = res['data'] as Map<String, dynamic>;
+        // ignore: avoid_print
+        print('AuthNotifier login - userMap from API response: $userMap');
+        User user = User.fromJson(userMap);
+
+        // If user is a buyer, fetch full profile and update user object
+        if (user.userType == 'buyer') {
+          final buyerProfile = await buyerService.getBuyerProfile();
+          if (buyerProfile != null) {
+            user = user.copyWith(
+              companyName: buyerProfile.companyName,
+              businessType: buyerProfile.businessType,
+              businessAddress: buyerProfile.businessAddress,
+              businessPhone: buyerProfile.businessPhone,
+              deliveryAddress: buyerProfile.deliveryAddress,
+            );
+          }
+        }
+        
         state = state.copyWith(user: user, isLoading: false);
         return true;
       }

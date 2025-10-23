@@ -11,6 +11,12 @@ class User {
   final bool? emailVerified;
   final DateTime? createdAt;
   final DateTime? updatedAt;
+  final String? companyName;
+  final String? businessType;
+  final String? businessAddress;
+  final String? businessPhone;
+final String? deliveryAddress;
+
 
   User({
     this.id,
@@ -25,6 +31,11 @@ class User {
     this.emailVerified,
     this.createdAt,
     this.updatedAt,
+    this.companyName,
+    this.businessType,
+    this.businessAddress,
+    this.businessPhone,
+    this.deliveryAddress,
   });
 
   factory User.fromJson(Map<String, dynamic> json) => User(
@@ -38,14 +49,19 @@ class User {
         address: json['address'],
         hederaAccountId: json['hedera_account_id'] ?? json['hederaAccountId'],
         role: json['role'] ?? 'FARMER',
-        isActive: json['is_active'] ?? json['isActive'],
+        isActive: json['is_active'] ?? json['isActive'] ?? json['active'],
         emailVerified: json['email_verified'] ?? json['emailVerified'],
         createdAt: json['created_at'] != null
             ? DateTime.parse(json['created_at'])
-            : null,
+            : (json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null),
         updatedAt: json['updated_at'] != null
             ? DateTime.parse(json['updated_at'])
-            : null,
+            : (json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null),
+        companyName: json['companyName'],
+        businessType: json['activityType'],
+        businessAddress: json['companyAddress'],
+        businessPhone: json['phone'],
+        deliveryAddress: json['deliveryAddress'],
       );
 
   Map<String, dynamic> toJson() => {
@@ -61,12 +77,65 @@ class User {
         'email_verified': emailVerified,
         'created_at': createdAt?.toIso8601String(),
         'updated_at': updatedAt?.toIso8601String(),
+        'companyName': companyName,
+        'activityType': businessType,
+        'companyAddress': businessAddress,
+        'business_phone': businessPhone,
+        'delivery_address': deliveryAddress,
       };
-}
 
-extension UserCompat on User {
-  /// Feature code expects `userType` string
-  String get userType => role.toLowerCase();
-
+  User copyWith({
+    int? id,
+    String? email,
+    String? firstName,
+    String? lastName,
+    String? phone,
+    String? address,
+    String? hederaAccountId,
+    String? role,
+    bool? isActive,
+    bool? emailVerified,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    String? companyName,
+    String? businessType,
+    String? businessAddress,
+    String? businessPhone,
+    String? deliveryAddress,
+  }) {
+    return User(
+      id: id ?? this.id,
+      email: email ?? this.email,
+      firstName: firstName ?? this.firstName,
+      lastName: lastName ?? this.lastName,
+      phone: phone ?? this.phone,
+      address: address ?? this.address,
+      hederaAccountId: hederaAccountId ?? this.hederaAccountId,
+      role: role ?? this.role,
+      isActive: isActive ?? this.isActive,
+      emailVerified: emailVerified ?? this.emailVerified,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      companyName: companyName ?? this.companyName,
+      businessType: businessType ?? this.businessType,
+      businessAddress: businessAddress ?? this.businessAddress,
+      businessPhone: businessPhone ?? this.businessPhone,
+      deliveryAddress: deliveryAddress ?? this.deliveryAddress,
+    );
+  }
   String get fullName => '${firstName ?? ''} ${lastName ?? ''}'.trim();
+
+  /// Feature code expects `userType` string normalized to one of:
+  /// 'farmer', 'buyer', 'agent'
+  String get userType {
+    final r = role.toLowerCase();
+    if (r.contains('farm') || r == 'farmer') return 'farmer';
+    if (r.contains('agent') || r.contains('admin')) return 'agent';
+    if (r.contains('buy') || r == 'buyer') return 'buyer';
+    // fallback: if role looks like a single-letter code
+    if (r == 'f') return 'farmer';
+    if (r == 'a') return 'agent';
+    if (r == 'b') return 'buyer';
+    return 'buyer';
+  }
 }

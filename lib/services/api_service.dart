@@ -18,7 +18,7 @@ class ApiService {
 
   static ApiService create({String? baseUrl}) {
     final dio = Dio(BaseOptions(
-      baseUrl: baseUrl ?? 'http://localhost:8080',
+      baseUrl: baseUrl ?? 'http://192.168.1.164:8080',
       connectTimeout: const Duration(seconds: 10),
       receiveTimeout: const Duration(seconds: 10),
     ));

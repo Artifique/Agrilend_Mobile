@@ -25,10 +25,7 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen>
     _tabController = TabController(length: 4, vsync: this);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final userId = ref.read(authProvider).user?.id.toString();
-      if (userId != null) {
-        ref.read(buyerOrdersProvider.notifier).loadOrders(userId);
-      }
+      ref.read(buyerOrdersProvider.notifier).loadOrders();
     });
   }
 

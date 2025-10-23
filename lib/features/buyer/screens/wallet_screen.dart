@@ -20,7 +20,7 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final userId = ref.read(authProvider).user?.id.toString();
       if (userId != null) {
-        ref.read(buyerProfileProvider.notifier).loadProfile(userId);
+        ref.read(buyerProfileProvider.notifier).loadProfile();
       }
     });
   }

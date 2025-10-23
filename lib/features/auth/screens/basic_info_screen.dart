@@ -223,7 +223,7 @@ class _BasicInfoScreenState extends ConsumerState<BasicInfoScreen> {
           return 'Veuillez saisir un mot de passe';
         }
         if (value.length < 6) {
-          return 'Minimum 6 caractères';
+          return 'Minimum 4 caractères';
         }
         return null;
       },

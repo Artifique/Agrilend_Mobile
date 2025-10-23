@@ -20,6 +20,7 @@ import '../../features/agent/screens/agent_main_screen.dart';
 import '../../features/buyer/screens/buyer_main_screen.dart';
 import '../../features/buyer/screens/product_detail_screen.dart';
 import '../../features/buyer/screens/order_confirmation_screen.dart';
+import '../../features/buyer/screens/order_list_screen.dart'; // New import
 import '../../features/transactions/screens/payment_request_screen.dart';
 import '../../features/transactions/screens/transaction_history_screen.dart';
 import '../../features/wallet/screens/wallet_screen.dart';
@@ -27,14 +28,27 @@ import '../../features/wallet/screens/scanner_qr_screen.dart';
 import '../../features/profile/screens/profile_screen.dart';
 import '../../features/notification/screens/notification_screen.dart';
 
+import 'dart:async'; // Import for StreamSubscription
+import 'package:flutter/foundation.dart'; // Import for ChangeNotifier
+
 final appRouterProvider = Provider<GoRouter>((ref) {
   final authState = ref.watch(authProvider);
+  final goRouterRefreshStream = ref.watch(goRouterNotifier.stream);
 
   return GoRouter(
     initialLocation: '/onboarding',
+    refreshListenable: GoRouterRefreshStream(goRouterRefreshStream),
     redirect: (context, state) {
       final isAuthenticated = authState.isAuthenticated;
       final userType = authState.user?.userType;
+
+      // ignore: avoid_print
+      print('Router Redirect: isAuthenticated=$isAuthenticated, userType=$userType, currentUri=${state.uri}, isLoading=${authState.isLoading}');
+
+      // If auth state is still loading, don't redirect yet.
+      if (authState.isLoading) {
+        return null; // Or redirect to a loading screen if you have one
+      }
 
       // Si non authentifié et pas sur les pages publiques
       if (!isAuthenticated) {
@@ -209,6 +223,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             builder: (context, state) => const OrderConfirmationScreen(),
           ),
           GoRoute(
+            path: 'orders',
+            builder: (context, state) => const OrderListScreen(),
+          ),
+          GoRoute(
             path: 'profile',
             builder: (context, state) => const ProfileScreen(),
           ),
@@ -232,5 +250,22 @@ String _getHomeRoute(String? userType) {
       return '/buyer';
     default:
       return '/login';
+  }
+}
+
+class GoRouterRefreshStream extends ChangeNotifier {
+  GoRouterRefreshStream(Stream<dynamic> stream) {
+    notifyListeners();
+    _subscription = stream.asBroadcastStream().listen(
+          (dynamic _) => notifyListeners(),
+        );
+  }
+
+  late final StreamSubscription<dynamic> _subscription;
+
+  @override
+  void dispose() {
+    _subscription.cancel();
+    super.dispose();
   }
 }

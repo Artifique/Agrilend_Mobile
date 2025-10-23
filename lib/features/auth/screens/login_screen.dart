@@ -5,7 +5,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../providers/auth_provider.dart';
+import 'package:agrilend/services/auth_providers.dart'; // Direct import
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -32,18 +32,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final authState = ref.watch(authProvider);
 
     ref.listen(authProvider, (previous, next) {
+      // ignore: avoid_print
+      print('Auth state changed in LoginScreen: isAuthenticated=${next.isAuthenticated}, userType=${next.user?.userType}');
       if (next.isAuthenticated) {
         final userType = next.user?.userType;
         switch (userType) {
           case 'farmer':
             context.go('/farmer');
             break;
-
-          case 'agent':
-            context.go('/agent');
-            break;
-
           case 'buyer':
+          default:
             context.go('/buyer');
             break;
         }
@@ -199,8 +197,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         if (value == null || value.isEmpty) {
           return 'Veuillez saisir votre mot de passe';
         }
-        if (value.length < 6) {
-          return 'Le mot de passe doit contenir au moins 6 caractères';
+        if (value.length < 4) {
+          return 'Le mot de passe doit contenir au moins 4 caractères';
         }
         return null;
       },
@@ -301,7 +299,33 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         );
 
     if (!success && mounted) {
-      // L'erreur sera affichée automatiquement via le state
+      // Show clear feedback to the user and print debug info
+      final err = ref.read(authProvider).error ?? 'Échec de la connexion';
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(err)),
+      );
+      // Log to console for debugging
+      // ignore: avoid_print
+      print('Login failed: $err');
+      return;
+    }
+
+    // If login succeeded, the ref.listen will handle navigation.
+    // No direct navigation here.
+    if (success && mounted) {
+      // Log stored user data to help debugging (secure storage contents)
+      try {
+        final authService = ref.read(authServiceProvider);
+        final stored = await authService.loadUserData();
+        // ignore: avoid_print
+        print('Stored user data after login: $stored');
+      } catch (e) {
+        // ignore: avoid_print
+        print('Could not read stored user data: $e');
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Connexion réussie. Redirection...')),
+      );
     }
   }
 }

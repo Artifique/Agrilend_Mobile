@@ -26,6 +26,8 @@ class AuthService {
     });
 
     final body = resp.data;
+    // ignore: avoid_print
+    print('AuthService login raw response: $body');
     if (body is Map && body['success'] == true && body['data'] is Map) {
       final data = body['data'] as Map;
       final access =
@@ -69,9 +71,11 @@ class AuthService {
 
   Future<User?> getCurrentUser() async {
     final data = await loadUserData();
+    // ignore: avoid_print
+    print('AuthService getCurrentUser - loaded data: $data');
     if (data == null) return null;
     try {
-      return User(
+      final user = User(
         id: data['userId'] is int
             ? data['userId']
             : int.tryParse('${data['userId']}'),
@@ -83,7 +87,12 @@ class AuthService {
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
       );
-    } catch (_) {
+      // ignore: avoid_print
+      print('AuthService getCurrentUser - constructed user: ${user.toJson()}');
+      return user;
+    } catch (e) {
+      // ignore: avoid_print
+      print('AuthService getCurrentUser - error constructing user: $e');
       return null;
     }
   }

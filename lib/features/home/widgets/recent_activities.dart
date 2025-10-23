@@ -9,7 +9,7 @@ class RecentActivities extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // TEMP : userType démo
-    final userType = ref.watch(authProvider).user?.userType;
+    final userType = ref.watch(authProvider).user?.id;
 
     List<Map<String, dynamic>> activities = [];
 

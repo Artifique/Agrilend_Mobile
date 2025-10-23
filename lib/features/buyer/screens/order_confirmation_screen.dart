@@ -54,9 +54,10 @@ class _OrderConfirmationScreenState
 
       final Product product = args['product'];
       final double quantity = args['quantity'];
-      final String notes = args['notes'] ?? '';
+      // final String notes = args['notes'] ?? ''; // not used
 
-      final currentUserId = ref.read(authProvider).user?.id; // Get current user ID
+      final currentUserId =
+          ref.read(authProvider).user?.id; // Get current user ID
 
       if (currentUserId == null) {
         throw Exception('Utilisateur non authentifié');
@@ -64,17 +65,23 @@ class _OrderConfirmationScreenState
 
       // Créer la commande
       final order = Order(
-        id: DateTime.now().millisecondsSinceEpoch,
-        buyerId: currentUserId, // Use current user ID
         offerId: product.id ?? 0,
-        quantity: quantity,
+        orderedQuantity: quantity,
         unitPrice: product.finalPrice ?? 0.0,
-        totalPrice: quantity * (product.finalPrice ?? 0.0),
+        totalAmount: quantity * (product.finalPrice ?? 0.0),
         status: 'PENDING',
-        productName: product.name,
-        farmerName: product.farmerName ?? '',
-        createdAt: DateTime.now(),
         deliveryAddress: _deliveryAddressController.text,
+        productUnit: product.unit,
+        buyerEmail: ref.read(authProvider).user?.email ?? '',
+        buyerName: ref.read(authProvider).user?.fullName ?? '',
+        farmerId: product.farmerId ?? 0,
+        farmerName: product.farmerName ?? '',
+        productName: product.name,
+        orderNumber: '',
+        id: 0,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+        buyerId: currentUserId,
       );
 
       // Ajouter la commande

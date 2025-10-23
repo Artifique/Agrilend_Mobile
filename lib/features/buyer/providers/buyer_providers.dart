@@ -1,7 +1,10 @@
+import 'package:agrilend/services/auth_providers.dart';
+import 'package:agrilend/services/buyer_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../models/product.dart';
 import '../../../models/order.dart';
 import '../../../models/buyer.dart';
+import 'package:agrilend/services/order_service.dart';
 
 // Provider pour les produits disponibles
 final productsProvider = StateNotifierProvider<ProductsNotifier, List<Product>>((ref) {
@@ -84,35 +87,17 @@ class ProductsNotifier extends StateNotifier<List<Product>> {
 
 // Provider pour les commandes de l'acheteur
 final buyerOrdersProvider = StateNotifierProvider<BuyerOrdersNotifier, List<Order>>((ref) {
-  return BuyerOrdersNotifier();
+  final orderService = ref.watch(orderServiceProvider);
+  return BuyerOrdersNotifier(orderService);
 });
 
 class BuyerOrdersNotifier extends StateNotifier<List<Order>> {
-  BuyerOrdersNotifier() : super([]);
+  final OrderService _orderService;
 
-  void loadOrders(String buyerId) {
-    // Simulation de données - à remplacer par l'API
-    // Create simple orders mapping to central Order model shape (some fields may be missing)
-    state = [
-      Order(
-        id: 1,
-        buyerId: int.tryParse(buyerId) ?? 0,
-        offerId: 1,
-        quantity: 10.0,
-        unitPrice: 750.0,
-        totalPrice: 7500.0,
-        status: 'ESCROWED',
-      ),
-      Order(
-        id: 2,
-        buyerId: int.tryParse(buyerId) ?? 0,
-        offerId: 2,
-        quantity: 5.0,
-        unitPrice: 550.0,
-        totalPrice: 2750.0,
-        status: 'DELIVERED',
-      ),
-    ];
+  BuyerOrdersNotifier(this._orderService) : super([]);
+
+  Future<void> loadOrders() async {
+    state = await _orderService.getOrders();
   }
 
   void createOrder(Order order) {
@@ -122,21 +107,7 @@ class BuyerOrdersNotifier extends StateNotifier<List<Order>> {
   void updateOrderStatus(int orderId, String newStatus) {
     state = state.map((order) {
       if (order.id == orderId) {
-        return Order(
-          id: order.id,
-          buyerId: order.buyerId,
-          offerId: order.offerId,
-          quantity: order.quantity,
-          unitPrice: order.unitPrice,
-          totalPrice: order.totalPrice,
-          status: newStatus,
-          productName: order.productName,
-          farmerName: order.farmerName,
-          createdAt: order.createdAt,
-          deliveryDate: order.deliveryDate,
-          escrowDate: order.escrowDate,
-          deliveryAddress: order.deliveryAddress,
-        );
+        return order.copyWith(status: newStatus);
       }
       return order;
     }).toList();
@@ -149,27 +120,16 @@ class BuyerOrdersNotifier extends StateNotifier<List<Order>> {
 
 // Provider pour le profil de l'acheteur
 final buyerProfileProvider = StateNotifierProvider<BuyerProfileNotifier, Buyer?>((ref) {
-  return BuyerProfileNotifier();
+  final buyerService = ref.watch(buyerServiceProvider);
+  return BuyerProfileNotifier(buyerService);
 });
 
 class BuyerProfileNotifier extends StateNotifier<Buyer?> {
-  BuyerProfileNotifier() : super(null);
+  final BuyerService _buyerService;
+  BuyerProfileNotifier(this._buyerService) : super(null);
 
-  void loadProfile(String userId) {
-    // Simulation de données - à remplacer par l'API
-    state = Buyer(
-      userId: int.tryParse(userId) ?? 0,
-      companyName: 'Restaurant Le Bon Goût',
-      businessType: 'Restaurant',
-    );
-  }
-
-  void updateProfile(Buyer profile) {
+  Future<void> loadProfile() async {
+    final profile = await _buyerService.getBuyerProfile();
     state = profile;
   }
-
-    // Central Buyer model doesn't have Hedera fields. Keep no-op or extend model if needed.
-  }
-
-    // No-op: central Buyer model doesn't carry balance.
- 
+}

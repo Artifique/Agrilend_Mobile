@@ -26,20 +26,20 @@ class Buyer {
   });
 
   factory Buyer.fromJson(Map<String, dynamic> json) => Buyer(
-        userId: json['user_id'] ?? json['userId'],
-        companyName: json['company_name'] ?? json['companyName'],
-        businessType: json['business_type'] ?? json['businessType'],
-        businessAddress: json['business_address'] ?? json['businessAddress'],
-        businessPhone: json['business_phone'] ?? json['businessPhone'],
-        businessEmail: json['business_email'] ?? json['businessEmail'],
-        deliveryAddress: json['delivery_address'] ?? json['deliveryAddress'],
-        hasHederaAccount: json['has_hedera_account'] ?? false,
-        hederaAccountId: json['hedera_account_id'] ?? json['hederaAccountId'],
-        hbarBalance: json['hbar_balance'] != null
-            ? double.tryParse('${json['hbar_balance']}')
+        userId: json['id'],
+        companyName: json['companyName'],
+        businessType: json['activityType'],
+        businessAddress: json['companyAddress'],
+        businessPhone: json['phone'],
+        businessEmail: json['email'],
+        deliveryAddress: json['deliveryAddress'],
+        hasHederaAccount: json['hederaAccountId'] != null,
+        hederaAccountId: json['hederaAccountId'],
+        hbarBalance: json['hbarBalance'] != null
+            ? double.tryParse('${json['hbarBalance']}')
             : null,
-        preferredCategories: (json['preferred_categories'] is List)
-            ? List<String>.from(json['preferred_categories'])
+        preferredCategories: (json['preferredCategories'] is List)
+            ? List<String>.from(json['preferredCategories'])
             : null,
       );
 

@@ -4,7 +4,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../providers/auth_provider.dart';
+import 'package:agrilend/services/auth_providers.dart';
 import '../../../core/constants/app_constants.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
@@ -62,16 +62,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     ref.listen(authProvider, (previous, next) {
       if (next.isAuthenticated) {
         final userType = next.user?.userType;
-        switch (userType) {
-          case 'farmer':
-            context.go('/farmer');
-            break;
-          case 'agent':
-            context.go('/agent');
-            break;
-          case 'buyer':
-            context.go('/buyer');
-            break;
+        if (userType == 'farmer') {
+          context.go('/farmer');
+        } else {
+          context.go('/buyer');
         }
       }
     });
@@ -348,7 +342,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
           return 'Veuillez saisir un mot de passe';
         }
         if (value.length < 6) {
-          return 'Minimum 6 caractères';
+          return 'Minimum 4 caractères';
         }
         return null;
       },
