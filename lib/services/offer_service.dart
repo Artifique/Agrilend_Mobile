@@ -1,22 +1,22 @@
-import '../models/offer.dart';
-import 'api_service.dart';
+import 'package:agrilend/models/offer.dart';
+import 'package:agrilend/services/api_service.dart';
 
 class OfferService {
-  final ApiService api;
+  final ApiService _apiService;
 
-  OfferService(this.api);
+  OfferService(this._apiService);
 
-  Future<List<Offer>> fetchActive() async {
-    final resp =
-        await api.get('/offers', queryParameters: {'status': 'ACTIVE'});
-    final data = resp.data as List<dynamic>;
-    return data
-        .map((e) => Offer.fromJson(Map<String, dynamic>.from(e)))
-        .toList();
-  }
-
-  Future<Offer> create(Offer offer) async {
-    final resp = await api.post('/offers', data: offer.toJson());
-    return Offer.fromJson(Map<String, dynamic>.from(resp.data));
+  Future<List<Offer>> getOffers() async {
+    try {
+      final response = await _apiService.get('/api/buyer/offers');
+      if (response.statusCode == 200 && response.data['success'] == true) {
+        final List<dynamic> offersData = response.data['data']['content'];
+        return offersData.map((json) => Offer.fromJson(json)).toList();
+      }
+    } catch (e) {
+      // ignore: avoid_print
+      print('Error fetching offers: $e');
+    }
+    return [];
   }
 }

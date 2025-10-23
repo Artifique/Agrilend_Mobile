@@ -3,8 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/theme/app_theme.dart';
-import '../providers/buyer_providers.dart';
-import '../widgets/product_card.dart';
+import '../providers/buyer_providers.dart'; // New import
+import '../providers/offer_providers.dart';
+import '../widgets/offer_card.dart';
 import '../widgets/search_bar_widget.dart';
 import '../widgets/category_filter.dart';
 
@@ -22,9 +23,6 @@ class _BuyerDashboardScreenState extends ConsumerState<BuyerDashboardScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(productsProvider.notifier).loadProducts();
-    });
   }
 
   @override
@@ -34,19 +32,19 @@ class _BuyerDashboardScreenState extends ConsumerState<BuyerDashboardScreen> {
   }
 
   void _onSearchChanged(String query) {
-    ref.read(productsProvider.notifier).searchProducts(query);
+    ref.read(offersProvider.notifier).searchOffers(query);
   }
 
   void _onCategoryChanged(String category) {
     setState(() {
       _selectedCategory = category;
     });
-    ref.read(productsProvider.notifier).filterByCategory(category);
+    ref.read(offersProvider.notifier).filterByCategory(category);
   }
 
   @override
   Widget build(BuildContext context) {
-    final products = ref.watch(productsProvider);
+    final offers = ref.watch(offersProvider);
     final buyerProfile = ref.watch(buyerProfileProvider);
 
     return Scaffold(
@@ -119,54 +117,58 @@ class _BuyerDashboardScreenState extends ConsumerState<BuyerDashboardScreen> {
             ),
           ),
           
-          // Liste des produits
+          // Liste des offres
           Expanded(
-            child: products.isEmpty
-                ? const Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.search_off,
-                          size: 64,
-                          color: Colors.grey,
-                        ),
-                        SizedBox(height: 16),
-                        Text(
-                          'Aucun produit trouvé',
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.grey,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        SizedBox(height: 8),
-                        Text(
-                          'Essayez de modifier vos critères de recherche',
-                          style: TextStyle(
-                            fontSize: 14,
+            child: offers.when(
+              data: (offers) => offers.isEmpty
+                  ? const Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.search_off,
+                            size: 64,
                             color: Colors.grey,
                           ),
-                        ),
-                      ],
+                          SizedBox(height: 16),
+                          Text(
+                            'Aucune offre trouvée',
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.grey,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          SizedBox(height: 8),
+                          Text(
+                            'Essayez de modifier vos critères de recherche',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  : ListView.builder(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      itemCount: offers.length,
+                      itemBuilder: (context, index) {
+                        final offer = offers[index];
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 16),
+                          child: OfferCard(
+                            offer: offer,
+                            onTap: () {
+                              context.go('/buyer/offer/${offer.id}');
+                            },
+                          ),
+                        );
+                      },
                     ),
-                  )
-                : ListView.builder(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    itemCount: products.length,
-                    itemBuilder: (context, index) {
-                      final product = products[index];
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 16),
-                        child: ProductCard(
-                          product: product,
-                          onTap: () {
-                            context.go('/buyer/product/${product.id}');
-                          },
-                        ),
-                      );
-                    },
-                  ),
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (err, stack) => Center(child: Text('Error: $err')),
+            ),
           ),
         ],
       ),

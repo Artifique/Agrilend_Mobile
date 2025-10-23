@@ -1,147 +1,57 @@
- mInsetsRoundedCornerFrame=false}, InsetsSource: {mType=ITYPE_BOTTOM_MANDATORY_GESTURES, mFrame=[0,1510][720,1600], mVisible=true, mInsetsRoundedCornerFrame=false}, InsetsSource: {mType=ITYPE_LEFT_DISPLAY_CUTOUT, mFrame=[0,0][-100000,1600], mVisible=true, mInsetsRoundedCornerFrame=false}, InsetsSource: {mType=ITYPE_TOP_DISPLAY_CUTOUT, mFrame=[0,0][720,43], mVisible=true, mInsetsRoundedCornerFrame=false}, InsetsSource: {mType=ITYPE_RIGHT_DISPLAY_CUTOUT, mFrame=[100000,0][720,1600], mVisible=true, mInsetsRoundedCornerFrame=false}, InsetsSource: {mType=ITYPE_BOTTOM_DISPLAY_CUTOUT, mFrame=[0,100000][720,1600], mVisible=true, mInsetsRoundedCornerFrame=false}, InsetsSource: {mType=ITYPE_TOP_TAPPABLE_ELEMENT, mFrame=[0,0][720,45], mVisible=true, mInsetsRoundedCornerFrame=false}, InsetsSource: {mType=ITYPE_BOTTOM_TAPPABLE_ELEMENT, mFrame=[0,1510][720,1600], mVisible=true, mInsetsRoundedCornerFrame=false}, InsetsSource: {mType=ITYPE_IME, mFrame=[0,0][0,0], mVisibleFrame=[0,927][720,1600], mVisible=false, mInsetsRoundedCornerFrame=false} } host=com.example.agrilend_app/com.example.agrilend_app.MainActivity from=android.view.ViewRootImpl$ViewRootHandler.handleMessageImpl:6740
-Syncing files to device SM A127F...                              1 183ms
+GET http://localhost:8080/api/buyer/offers
 
-Flutter run key commands.
-r Hot reload. 
-R Hot restart.
-h List all available interactive commands.
-d Detach (terminate "flutter run" but leave application running).
-c Clear the screen
-q Quit (terminate the application on the device).
-
-A Dart VM Service on SM A127F is available at: http://127.0.0.1:51453/3-il906qYWY=/
-I/flutter ( 7241): Router Redirect: isAuthenticated=false, userType=null, currentUri=/user-type, isLoading=false
-The Flutter DevTools debugger and profiler on SM A127F is available at:
-http://127.0.0.1:9102?uri=http://127.0.0.1:51453/3-il906qYWY=/
-W/OnBackInvokedCallback( 7241): OnBackInvokedCallback is not enabled for the application.
-W/OnBackInvokedCallback( 7241): Set 'android:enableOnBackInvokedCallback="true"' in the application manifest.
-I/flutter ( 7241): Router Redirect: isAuthenticated=false, userType=null, currentUri=/login, isLoading=false
-W/OnBackInvokedCallback( 7241): OnBackInvokedCallback is not enabled for the application.
-W/OnBackInvokedCallback( 7241): Set 'android:enableOnBackInvokedCallback="true"' in the application manifest.
-I/IMM_LC  ( 7241): showSoftInput(View,I)
-I/IMM_LC  ( 7241): ssi() - flag : 0 view : com.example.agrilend_app reason = SHOW_SOFT_INPUT
-I/IMM_LC  ( 7241): ssi() view is not EditText
-D/InputMethodManager( 7241): startInputInner - Id : 0
-I/InputMethodManager( 7241): startInputInner - mService.startInputOrWindowGainedFocus
-D/InputConnectionAdaptor( 7241): The input method toggled cursor monitoring on
-W/OnBackInvokedCallback( 7241): OnBackInvokedCallback is not enabled for the application.
-W/OnBackInvokedCallback( 7241): Set 'android:enableOnBackInvokedCallback="true"' in the application manifest.
-I/ViewRootImpl@c1b9c54[MainActivity]( 7241): Resizing android.view.ViewRootImpl@10a76f9: frame = [0,0][720,1600] reportDraw = false forceLayout = false syncSeqId = 0
-D/InsetsController( 7241): onStateChanged: InsetsState: {mDisplayFrame=Rect(0, 0 - 720, 1600), mDisplayCutout=DisplayCutout{insets=Rect(0, 43 - 0, 0) waterfall=Insets{left=0, top=0, right=0, bottom=0} boundingRect={Bounds=[Rect(0, 0 - 0, 0), Rect(296, 0 - 424, 43), Rect(0, 0 - 0, 0), Rect(0, 0 - 0, 0)]} cutoutPathParserInfo={CutoutPathParserInfo{displayWidth=720 displayHeight=1600 physicalDisplayWidth=720 physicalDisplayHeight=1600 density={1.875} cutoutSpec={M 0,0 H -34.13333333333333 V 22.93333333333333 H 34.13333333333333 V 0 H 0 Z @dp} rotation={0} scale={1.0} physicalPixelDisplaySizeRatio={1.0}}}}, mRoundedCorners=RoundedCorners{[RoundedCorner{position=TopLeft, radius=60, center=Point(60, 60)}, RoundedCorner{position=TopRight, radius=60, center=Point(660, 60)}, RoundedCorner{position=BottomRight, radius=60, center=Point(660, 1540)}, RoundedCorner{position=BottomLeft, radius=60, center=Point(60, 1540)}]}  mRoundedCornerFrame=Rect(0, 0 - 720, 1600), mPrivacyIndicatorBounds=PrivacyIndicatorBounds {static bounds=Rect(637, 0 - 720, 45) rotation=0}, mSources= { InsetsSource: {mType=ITYPE_STATUS_BAR, mFrame=[0,0][720,45], mVisible=true, mInsetsRoundedCornerFrame=false}, InsetsSource: {mType=ITYPE_NAVIGATION_BAR, mFrame=[0,1510][720,1600], mVisible=true, mInsetsRoundedCornerFrame=false}, InsetsSource: {mType=ITYPE_LEFT_GESTURES, mFrame=[0,0][0,1600], mVisible=true, mInsetsRoundedCornerFrame=false}, InsetsSource: {mType=ITYPE_RIGHT_GESTURES, mFrame=[720,0][720,1600], mVisible=true, mInsetsRoundedCornerFrame=false}, InsetsSource: {mType=ITYPE_TOP_MANDATORY_GESTURES, mFrame=[0,0][720,66], mVisible=true, mInsetsRoundedCornerFrame=false}, InsetsSource: {mType=ITYPE_BOTTOM_MANDATORY_GESTURES, mFrame=[0,1510][720,1600], mVisible=true, mInsetsRoundedCornerFrame=false}, InsetsSource: {mType=ITYPE_LEFT_DISPLAY_CUTOUT, mFrame=[0,0][-100000,1600], mVisible=true, mInsetsRoundedCornerFrame=false}, InsetsSource: {mType=ITYPE_TOP_DISPLAY_CUTOUT, mFrame=[0,0][720,43], mVisible=true, mInsetsRoundedCornerFrame=false}, InsetsSource: {mType=ITYPE_RIGHT_DISPLAY_CUTOUT, mFrame=[100000,0][720,1600], mVisible=true, mInsetsRoundedCornerFrame=false}, InsetsSource: {mType=ITYPE_BOTTOM_DISPLAY_CUTOUT, mFrame=[0,100000][720,1600], mVisible=true, mInsetsRoundedCornerFrame=false}, InsetsSource: {mType=ITYPE_TOP_TAPPABLE_ELEMENT, mFrame=[0,0][720,45], mVisible=true, mInsetsRoundedCornerFrame=false}, InsetsSource: {mType=ITYPE_BOTTOM_TAPPABLE_ELEMENT, mFrame=[0,1510][720,1600], mVisible=true, mInsetsRoundedCornerFrame=false}, InsetsSource: {mType=ITYPE_IME, mFrame=[0,927][720,1600], mVisibleFrame=[0,927][720,1600], mVisible=false, mInsetsRoundedCornerFrame=false} } host=com.example.agrilend_app/com.example.agrilend_app.MainActivity from=android.view.ViewRootImpl$ViewRootHandler.handleMessageImpl:6727
-I/ViewRootImpl@c1b9c54[MainActivity]( 7241): handleResized, msg = 4 frames=ClientWindowFrames{frame=[0,0][720,1600] display=[0,0][720,1600] parentFrame=[0,0][0,0] parentClippedByDisplayCutout=false} forceNextWindowRelayout=false displayId=0 resizeMode=-1 frameChanged=false displayFrameChanged=false configChanged=false displayChanged=false        
-D/InsetsController( 7241): show(ime(), fromIme=true)
-D/InsetsController( 7241): controlAnimationUnchecked: Added types=8 animType=0 host=com.example.agrilend_app/com.example.agrilend_app.MainActivity from=android.view.InsetsController.applyAnimation:1576 android.view.InsetsController.applyAnimation:1557 android.view.InsetsController.show:1063
-D/InsetsSourceConsumer( 7241): setRequestedVisible: visible=true, type=19, host=com.example.agrilend_app/com.example.agrilend_app.MainActivity, from=android.view.InsetsSourceConsumer.show:250 android.view.ImeInsetsSourceConsumer.show:82 android.view.InsetsController.showDirectly:1609 android.view.InsetsController.controlAnimationUnchecked:1232 android.view.InsetsController.applyAnimation:1576 android.view.InsetsController.applyAnimation:1557 android.view.InsetsController.show:1063 android.view.ViewRootImpl$ViewRootHandler.handleMessageImpl:6761 android.view.ViewRootImpl$ViewRootHandler.handleMessage:6697 android.os.Handler.dispatchMessage:106
-I/ViewRootImpl@c1b9c54[MainActivity]( 7241): mWNT: t=0xb400007367defc00 mBlastBufferQueue=0xb400007366d0bb00 fn= 5 caller= android.view.SyncRtSurfaceTransactionApplier.applyTransaction:96 android.view.SyncRtSurfaceTransactionApplier.lambda$scheduleApply$0$android-view-SyncRtSurfaceTransactionApplier:69 android.view.SyncRtSurfaceTransactionApplier$$ExternalSyntheticLambda0.onFrameDraw:4
-I/ViewRootImpl@c1b9c54[MainActivity]( 7241): Resizing android.view.ViewRootImpl@10a76f9: frame = [0,0][720,1600] reportDraw = false forceLayout = false syncSeqId = 0
-I/ViewRootImpl@c1b9c54[MainActivity]( 7241): mWNT: t=0xb400007367f6e000 mBlastBufferQueue=0xb400007366d0bb00 fn= 6 caller= android.view.SyncRtSurfaceTransactionApplier.applyTransaction:96 android.view.SyncRtSurfaceTransactionApplier.lambda$scheduleApply$0$android-view-SyncRtSurfaceTransactionApplier:69 android.view.SyncRtSurfaceTransactionApplier$$ExternalSyntheticLambda0.onFrameDraw:4
-D/InsetsController( 7241): onStateChanged: InsetsState: {mDisplayFrame=Rect(0, 0 - 720, 1600), mDisplayCutout=DisplayCutout{insets=Rect(0, 43 - 0, 0) waterfall=Insets{left=0, top=0, right=0, bottom=0} boundingRect={Bounds=[Rect(0, 0 - 0, 0), Rect(296, 0 - 424, 43), Rect(0, 0 - 0, 0), Rect(0, 0 - 0, 0)]} cutoutPathParserInfo={CutoutPathParserInfo{displayWidth=720 displayHeight=1600 physicalDisplayWidth=720 physicalDisplayHeight=1600 density={1.875} cutoutSpec={M 0,0 H -34.13333333333333 V 22.93333333333333 H 34.13333333333333 V 0 H 0 Z @dp} rotation={0} scale={1.0} physicalPixelDisplaySizeRatio={1.0}}}}, mRoundedCorners=RoundedCorners{[RoundedCorner{position=TopLeft, radius=60, center=Point(60, 60)}, RoundedCorner{position=TopRight, radius=60, center=Point(660, 60)}, RoundedCorner{position=BottomRight, radius=60, center=Point(660, 1540)}, RoundedCorner{position=BottomLeft, radius=60, center=Point(60, 1540)}]}  mRoundedCornerFrame=Rect(0, 0 - 720, 1600), mPrivacyIndicatorBounds=PrivacyIndicatorBounds {static bounds=Rect(637, 0 - 720, 45) rotation=0}, mSources= { InsetsSource: {mType=ITYPE_STATUS_BAR, mFrame=[0,0][720,45], mVisible=true, mInsetsRoundedCornerFrame=false}, InsetsSource: {mType=ITYPE_NAVIGATION_BAR, mFrame=[0,1510][720,1600], mVisible=true, mInsetsRoundedCornerFrame=false}, InsetsSource: {mType=ITYPE_LEFT_GESTURES, mFrame=[0,0][0,1600], mVisible=true, mInsetsRoundedCornerFrame=false}, InsetsSource: {mType=ITYPE_RIGHT_GESTURES, mFrame=[720,0][720,1600], mVisible=true, mInsetsRoundedCornerFrame=false}, InsetsSource: {mType=ITYPE_TOP_MANDATORY_GESTURES, mFrame=[0,0][720,66], mVisible=true, mInsetsRoundedCornerFrame=false}, InsetsSource: {mType=ITYPE_BOTTOM_MANDATORY_GESTURES, mFrame=[0,1510][720,1600], mVisible=true, mInsetsRoundedCornerFrame=false}, InsetsSource: {mType=ITYPE_LEFT_DISPLAY_CUTOUT, mFrame=[0,0][-100000,1600], mVisible=true, mInsetsRoundedCornerFrame=false}, InsetsSource: {mType=ITYPE_TOP_DISPLAY_CUTOUT, mFrame=[0,0][720,43], mVisible=true, mInsetsRoundedCornerFrame=false}, InsetsSource: {mType=ITYPE_RIGHT_DISPLAY_CUTOUT, mFrame=[100000,0][720,1600], mVisible=true, mInsetsRoundedCornerFrame=false}, InsetsSource: {mType=ITYPE_BOTTOM_DISPLAY_CUTOUT, mFrame=[0,100000][720,1600], mVisible=true, mInsetsRoundedCornerFrame=false}, InsetsSource: {mType=ITYPE_TOP_TAPPABLE_ELEMENT, mFrame=[0,0][720,45], mVisible=true, mInsetsRoundedCornerFrame=false}, InsetsSource: {mType=ITYPE_BOTTOM_TAPPABLE_ELEMENT, mFrame=[0,1510][720,1600], mVisible=true, mInsetsRoundedCornerFrame=false}, InsetsSource: {mType=ITYPE_IME, mFrame=[0,927][720,1600], mVisibleFrame=[0,927][720,1600], mVisible=true, mInsetsRoundedCornerFrame=false} } host=com.example.agrilend_app/com.example.agrilend_app.MainActivity from=android.view.ViewRootImpl$ViewRootHandler.handleMessageImpl:6740
-I/ViewRootImpl@c1b9c54[MainActivity]( 7241): handleResized, msg = 4 frames=ClientWindowFrames{frame=[0,0][720,1600] display=[0,0][720,1600] parentFrame=[0,0][0,0] parentClippedByDisplayCutout=false} forceNextWindowRelayout=false displayId=0 resizeMode=-1 frameChanged=false displayFrameChanged=false configChanged=false displayChanged=false        
-I/ViewRootImpl@c1b9c54[MainActivity]( 7241): mWNT: t=0xb400007367f6e500 mBlastBufferQueue=0xb400007366d0bb00 fn= 7 caller= android.view.SyncRtSurfaceTransactionApplier.applyTransaction:96 android.view.SyncRtSurfaceTransactionApplier.lambda$scheduleApply$0$android-view-SyncRtSurfaceTransactionApplier:69 android.view.SyncRtSurfaceTransactionApplier$$ExternalSyntheticLambda0.onFrameDraw:4
-I/ViewRootImpl@c1b9c54[MainActivity]( 7241): mWNT: t=0xb400007367f6ea00 mBlastBufferQueue=0xb400007366d0bb00 fn= 8 caller= android.view.SyncRtSurfaceTransactionApplier.applyTransaction:96 android.view.SyncRtSurfaceTransactionApplier.lambda$scheduleApply$0$android-view-SyncRtSurfaceTransactionApplier:69 android.view.SyncRtSurfaceTransactionApplier$$ExternalSyntheticLambda0.onFrameDraw:4
-I/ViewRootImpl@c1b9c54[MainActivity]( 7241): mWNT: t=0xb400007367f6eb00 mBlastBufferQueue=0xb400007366d0bb00 fn= 9 caller= android.view.SyncRtSurfaceTransactionApplier.applyTransaction:96 android.view.SyncRtSurfaceTransactionApplier.lambda$scheduleApply$0$android-view-SyncRtSurfaceTransactionApplier:69 android.view.SyncRtSurfaceTransactionApplier$$ExternalSyntheticLambda0.onFrameDraw:4
-I/ViewRootImpl@c1b9c54[MainActivity]( 7241): mWNT: t=0xb4000073758f3500 mBlastBufferQueue=0xb400007366d0bb00 fn= 10 caller= android.view.SyncRtSurfaceTransactionApplier.applyTransaction:96 android.view.SyncRtSurfaceTransactionApplier.lambda$scheduleApply$0$android-view-SyncRtSurfaceTransactionApplier:69 android.view.SyncRtSurfaceTransactionApplier$$ExternalSyntheticLambda0.onFrameDraw:4
-I/ViewRootImpl@c1b9c54[MainActivity]( 7241): mWNT: t=0xb4000073758f3600 mBlastBufferQueue=0xb400007366d0bb00 fn= 11 caller= android.view.SyncRtSurfaceTransactionApplier.applyTransaction:96 android.view.SyncRtSurfaceTransactionApplier.lambda$scheduleApply$0$android-view-SyncRtSurfaceTransactionApplier:69 android.view.SyncRtSurfaceTransactionApplier$$ExternalSyntheticLambda0.onFrameDraw:4
-I/ViewRootImpl@c1b9c54[MainActivity]( 7241): mWNT: t=0xb400007367def100 mBlastBufferQueue=0xb400007366d0bb00 fn= 12 caller= android.view.SyncRtSurfaceTransactionApplier.applyTransaction:96 android.view.SyncRtSurfaceTransactionApplier.lambda$scheduleApply$0$android-view-SyncRtSurfaceTransactionApplier:69 android.view.SyncRtSurfaceTransactionApplier$$ExternalSyntheticLambda0.onFrameDraw:4
-I/ViewRootImpl@c1b9c54[MainActivity]( 7241): mWNT: t=0xb4000073758f3c00 mBlastBufferQueue=0xb400007366d0bb00 fn= 13 caller= android.view.SyncRtSurfaceTransactionApplier.applyTransaction:96 android.view.SyncRtSurfaceTransactionApplier.lambda$scheduleApply$0$android-view-SyncRtSurfaceTransactionApplier:69 android.view.SyncRtSurfaceTransactionApplier$$ExternalSyntheticLambda0.onFrameDraw:4
-I/ViewRootImpl@c1b9c54[MainActivity]( 7241): mWNT: t=0xb4000073758f3d00 mBlastBufferQueue=0xb400007366d0bb00 fn= 14 caller= android.view.SyncRtSurfaceTransactionApplier.applyTransaction:96 android.view.SyncRtSurfaceTransactionApplier.lambda$scheduleApply$0$android-view-SyncRtSurfaceTransactionApplier:69 android.view.SyncRtSurfaceTransactionApplier$$ExternalSyntheticLambda0.onFrameDraw:4
-I/ViewRootImpl@c1b9c54[MainActivity]( 7241): mWNT: t=0xb400007375676200 mBlastBufferQueue=0xb400007366d0bb00 fn= 15 caller= android.view.SyncRtSurfaceTransactionApplier.applyTransaction:96 android.view.SyncRtSurfaceTransactionApplier.lambda$scheduleApply$0$android-view-SyncRtSurfaceTransactionApplier:69 android.view.SyncRtSurfaceTransactionApplier$$ExternalSyntheticLambda0.onFrameDraw:4
-D/InsetsController( 7241): cancelAnimation of types: 8, animType: 0, host: com.example.agrilend_app/com.example.agrilend_app.MainActivity, from:android.view.InsetsController.notifyFinished:1375 android.view.InsetsAnimationControlImpl.applyChangeInsets:285 android.view.InsetsController.lambda$new$3$android-view-InsetsController:674
-D/InsetsSourceConsumer( 7241): ensureControlPosition: Point(0, 45) for ITYPE_IME on com.example.agrilend_app/com.example.agrilend_app.MainActivity from android.view.InsetsSourceConsumer.notifyAnimationFinished:419
-I/ViewRootImpl@c1b9c54[MainActivity]( 7241): mWNT: t=0xb400007367f6e300 mBlastBufferQueue=0xb400007366d0bb00 fn= 16 caller= android.view.SyncRtSurfaceTransactionApplier.applyTransaction:96 android.view.SyncRtSurfaceTransactionApplier.lambda$scheduleApply$0$android-view-SyncRtSurfaceTransactionApplier:69 android.view.SyncRtSurfaceTransactionApplier$$ExternalSyntheticLambda0.onFrameDraw:4
-I/ViewRootImpl@c1b9c54[MainActivity]( 7241): mWNT: t=0xb400007366bb1900 mBlastBufferQueue=0xb400007366d0bb00 fn= 16 caller= android.view.SyncRtSurfaceTransactionApplier.applyTransaction:96 android.view.SyncRtSurfaceTransactionApplier.lambda$scheduleApply$0$android-view-SyncRtSurfaceTransactionApplier:69 android.view.SyncRtSurfaceTransactionApplier$$ExternalSyntheticLambda0.onFrameDraw:4
-D/InputConnectionAdaptor( 7241): The input method toggled text monitoring on
-D/InputMethodManager( 7241): startInputInner - Id : 0
-I/InputMethodManager( 7241): startInputInner - mService.startInputOrWindowGainedFocus
-I/IMM_LC  ( 7241): showSoftInput(View,I)
-I/IMM_LC  ( 7241): ssi() - flag : 0 view : com.example.agrilend_app reason = SHOW_SOFT_INPUT
-I/IMM_LC  ( 7241): ssi() view is not EditText
-W/RemoteInputConnectionImpl( 7241): getExtractedText on inactive InputConnection
-D/InputConnectionAdaptor( 7241): The input method toggled cursor monitoring on
-D/InsetsController( 7241): show(ime(), fromIme=true)
-D/InsetsController( 7241): show(ime(), fromIme=true)
-D/InputMethodManager( 7241): startInputInner - Id : 0
-I/InputMethodManager( 7241): startInputInner - mService.startInputOrWindowGainedFocus
-I/IMM_LC  ( 7241): showSoftInput(View,I)
-I/IMM_LC  ( 7241): ssi() - flag : 0 view : com.example.agrilend_app reason = SHOW_SOFT_INPUT
-I/IMM_LC  ( 7241): ssi() view is not EditText
-D/InputConnectionAdaptor( 7241): The input method toggled cursor monitoring on
-D/InsetsController( 7241): show(ime(), fromIme=true)
-D/InsetsController( 7241): show(ime(), fromIme=true)
-D/InputConnectionAdaptor( 7241): The input method toggled text monitoring on
-D/InputConnectionAdaptor( 7241): The input method toggled text monitoring off
-I/flutter ( 7241): Auth state changed in LoginScreen: isAuthenticated=false, userType=null
-I/flutter ( 7241): Auth state changed in LoginScreen: isAuthenticated=false, userType=null
-I/flutter ( 7241): Router Redirect: isAuthenticated=false, userType=null, currentUri=/onboarding, isLoading=true
-
-══╡ EXCEPTION CAUGHT BY RENDERING LIBRARY ╞═════════════════════════════════════════════════════════
-The following assertion was thrown during layout:
-A RenderFlex overflowed by 2.6 pixels on the bottom.
-
-The relevant error-causing widget was:
-  Column
-  Column:file:///C:/Users/DELL/Desktop/Projets/Ag%20Mobile/Agrilend_Mobile/lib/features/onboarding/screens/onboardin
-  g_screen.dart:75:14
-
-To inspect this widget in Flutter DevTools, visit:
-http://127.0.0.1:9102/#/inspector?uri=http%3A%2F%2F127.0.0.1%3A51453%2F3-il906qYWY%3D%2F&inspectorRef=inspector-0   
-
-The overflowing RenderFlex has an orientation of Axis.vertical.
-The edge of the RenderFlex that is overflowing has been marked in the rendering with a yellow and
-black striped pattern. This is usually caused by the contents being too big for the RenderFlex.
-Consider applying a flex factor (e.g. using an Expanded widget) to force the children of the
-RenderFlex to fit within the available space instead of being sized to their natural size.
-This is considered an error condition because it indicates that there is content that cannot be
-seen. If the content is legitimately bigger than the available space, consider clipping it with a
-ClipRect widget before putting it in the flex, or using a scrollable container rather than a Flex,
-like a ListView.
-The specific RenderFlex in question is: RenderFlex#918fd OVERFLOWING:
-  creator: Column ← Padding ← RepaintBoundary ← IndexedSemantics ← _SelectionKeepAlive ←
-    NotificationListener<KeepAliveNotification> ← KeepAlive ← AutomaticKeepAlive ← KeyedSubtree ←
-    _SliverFillViewportRenderObjectWidget ← _SliverFractionalPadding ← SliverFillViewport ← ⋯
-  parentData: offset=Offset(24.0, 24.0) (can use size)
-  constraints: BoxConstraints(w=336.0, h=282.4)
-  size: Size(336.0, 282.4)
-  direction: vertical
-  mainAxisAlignment: center
-  mainAxisSize: max
-  crossAxisAlignment: center
-  verticalDirection: down
-  spacing: 0.0
-◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤
-════════════════════════════════════════════════════════════════════════════════════════════════════
-
-I/IMM_LC  ( 7241): hsifw() - flag : 0
-I/IMM_LC  ( 7241): hsifw() - mService.hideSoftInput
-D/InsetsController( 7241): controlAnimationUnchecked: Added types=8 animType=1 host=com.example.agrilend_app/com.example.agrilend_app.MainActivity from=android.view.InsetsController.applyAnimation:1576 android.view.InsetsController.applyAnimation:1557 android.view.InsetsController.hide:1093
-D/InsetsSourceConsumer( 7241): setRequestedVisible: visible=false, type=19, host=com.example.agrilend_app/com.example.agrilend_app.MainActivity, from=android.view.InsetsSourceConsumer.hide:257 android.view.ImeInsetsSourceConsumer.hide:88 android.view.ImeInsetsSourceConsumer.hide:94 android.view.InsetsController.hideDirectly:1593 android.view.InsetsController.controlAnimationUnchecked:1234 android.view.InsetsController.applyAnimation:1576 android.view.InsetsController.applyAnimation:1557 android.view.InsetsController.hide:1093 android.view.ViewRootImpl$ViewRootHandler.handleMessageImpl:6765 android.view.ViewRootImpl$ViewRootHandler.handleMessage:6697
-I/ViewRootImpl@c1b9c54[MainActivity]( 7241): Resizing android.view.ViewRootImpl@10a76f9: frame = [0,0][720,1600] reportDraw = false forceLayout = false syncSeqId = 0
-I/ViewRootImpl@c1b9c54[MainActivity]( 7241): mWNT: t=0xb4000073a1d15900 mBlastBufferQueue=0xb400007366d0bb00 fn= 17 caller= android.view.SyncRtSurfaceTransactionApplier.applyTransaction:96 android.view.SyncRtSurfaceTransactionApplier.lambda$scheduleApply$0$android-view-SyncRtSurfaceTransactionApplier:69 android.view.SyncRtSurfaceTransactionApplier$$ExternalSyntheticLambda0.onFrameDraw:4
-D/InputConnectionAdaptor( 7241): The input method toggled cursor monitoring off
-D/InsetsController( 7241): onStateChanged: InsetsState: {mDisplayFrame=Rect(0, 0 - 720, 1600), mDisplayCutout=DisplayCutout{insets=Rect(0, 43 - 0, 0) waterfall=Insets{left=0, top=0, right=0, bottom=0} boundingRect={Bounds=[Rect(0, 0 - 0, 0), Rect(296, 0 - 424, 43), Rect(0, 0 - 0, 0), Rect(0, 0 - 0, 0)]} cutoutPathParserInfo={CutoutPathParserInfo{displayWidth=720 displayHeight=1600 physicalDisplayWidth=720 physicalDisplayHeight=1600 density={1.875} cutoutSpec={M 0,0 H -34.13333333333333 V 22.93333333333333 H 34.13333333333333 V 0 H 0 Z @dp} rotation={0} scale={1.0} physicalPixelDisplaySizeRatio={1.0}}}}, mRoundedCorners=RoundedCorners{[RoundedCorner{position=TopLeft, radius=60, center=Point(60, 60)}, RoundedCorner{position=TopRight, radius=60, center=Point(660, 60)}, RoundedCorner{position=BottomRight, radius=60, center=Point(660, 1540)}, RoundedCorner{position=BottomLeft, radius=60, center=Point(60, 1540)}]}  mRoundedCornerFrame=Rect(0, 0 - 720, 1600), mPrivacyIndicatorBounds=PrivacyIndicatorBounds {static bounds=Rect(637, 0 - 720, 45) rotation=0}, mSources= { InsetsSource: {mType=ITYPE_STATUS_BAR, mFrame=[0,0][720,45], mVisible=true, mInsetsRoundedCornerFrame=false}, InsetsSource: {mType=ITYPE_NAVIGATION_BAR, mFrame=[0,1510][720,1600], mVisible=true, mInsetsRoundedCornerFrame=false}, InsetsSource: {mType=ITYPE_LEFT_GESTURES, mFrame=[0,0][0,1600], mVisible=true, mInsetsRoundedCornerFrame=false}, InsetsSource: {mType=ITYPE_RIGHT_GESTURES, mFrame=[720,0][720,1600], mVisible=true, mInsetsRoundedCornerFrame=false}, InsetsSource: {mType=ITYPE_TOP_MANDATORY_GESTURES, mFrame=[0,0][720,66], mVisible=true, mInsetsRoundedCornerFrame=false}, InsetsSource: {mType=ITYPE_BOTTOM_MANDATORY_GESTURES, mFrame=[0,1510][720,1600], mVisible=true, mInsetsRoundedCornerFrame=false}, InsetsSource: {mType=ITYPE_LEFT_DISPLAY_CUTOUT, mFrame=[0,0][-100000,1600], mVisible=true, mInsetsRoundedCornerFrame=false}, InsetsSource: {mType=ITYPE_TOP_DISPLAY_CUTOUT, mFrame=[0,0][720,43], mVisible=true, mInsetsRoundedCornerFrame=false}, InsetsSource: {mType=ITYPE_RIGHT_DISPLAY_CUTOUT, mFrame=[100000,0][720,1600], mVisible=true, mInsetsRoundedCornerFrame=false}, InsetsSource: {mType=ITYPE_BOTTOM_DISPLAY_CUTOUT, mFrame=[0,100000][720,1600], mVisible=true, mInsetsRoundedCornerFrame=false}, InsetsSource: {mType=ITYPE_TOP_TAPPABLE_ELEMENT, mFrame=[0,0][720,45], mVisible=true, mInsetsRoundedCornerFrame=false}, InsetsSource: {mType=ITYPE_BOTTOM_TAPPABLE_ELEMENT, mFrame=[0,1510][720,1600], mVisible=true, mInsetsRoundedCornerFrame=false}, InsetsSource: {mType=ITYPE_IME, mFrame=[0,927][720,1600], mVisibleFrame=[0,927][720,1600], mVisible=false, mInsetsRoundedCornerFrame=false} } host=com.example.agrilend_app/com.example.agrilend_app.MainActivity from=android.view.ViewRootImpl$ViewRootHandler.handleMessageImpl:6740
-I/ViewRootImpl@c1b9c54[MainActivity]( 7241): handleResized, msg = 4 frames=ClientWindowFrames{frame=[0,0][720,1600] display=[0,0][720,1600] parentFrame=[0,0][0,0] parentClippedByDisplayCutout=false} forceNextWindowRelayout=false displayId=0 resizeMode=-1 frameChanged=false displayFrameChanged=false configChanged=false displayChanged=false        
-I/ViewRootImpl@c1b9c54[MainActivity]( 7241): mWNT: t=0xb4000073602f1400 mBlastBufferQueue=0xb400007366d0bb00 fn= 18 caller= android.view.SyncRtSurfaceTransactionApplier.applyTransaction:96 android.view.SyncRtSurfaceTransactionApplier.lambda$scheduleApply$0$android-view-SyncRtSurfaceTransactionApplier:69 android.view.SyncRtSurfaceTransactionApplier$$ExternalSyntheticLambda0.onFrameDraw:4
-I/ViewRootImpl@c1b9c54[MainActivity]( 7241): mWNT: t=0xb4000073602f1500 mBlastBufferQueue=0xb400007366d0bb00 fn= 19 caller= android.view.SyncRtSurfaceTransactionApplier.applyTransaction:96 android.view.SyncRtSurfaceTransactionApplier.lambda$scheduleApply$0$android-view-SyncRtSurfaceTransactionApplier:69 android.view.SyncRtSurfaceTransactionApplier$$ExternalSyntheticLambda0.onFrameDraw:4
-I/ViewRootImpl@c1b9c54[MainActivity]( 7241): mWNT: t=0xb4000073602f1d00 mBlastBufferQueue=0xb400007366d0bb00 fn= 20 caller= android.view.SyncRtSurfaceTransactionApplier.applyTransaction:96 android.view.SyncRtSurfaceTransactionApplier.lambda$scheduleApply$0$android-view-SyncRtSurfaceTransactionApplier:69 android.view.SyncRtSurfaceTransactionApplier$$ExternalSyntheticLambda0.onFrameDraw:4
-I/ViewRootImpl@c1b9c54[MainActivity]( 7241): mWNT: t=0xb400007360343300 mBlastBufferQueue=0xb400007366d0bb00 fn= 21 caller= android.view.SyncRtSurfaceTransactionApplier.applyTransaction:96 android.view.SyncRtSurfaceTransactionApplier.lambda$scheduleApply$0$android-view-SyncRtSurfaceTransactionApplier:69 android.view.SyncRtSurfaceTransactionApplier$$ExternalSyntheticLambda0.onFrameDraw:4
-I/ViewRootImpl@c1b9c54[MainActivity]( 7241): mWNT: t=0xb400007360343e00 mBlastBufferQueue=0xb400007366d0bb00 fn= 22 caller= android.view.SyncRtSurfaceTransactionApplier.applyTransaction:96 android.view.SyncRtSurfaceTransactionApplier.lambda$scheduleApply$0$android-view-SyncRtSurfaceTransactionApplier:69 android.view.SyncRtSurfaceTransactionApplier$$ExternalSyntheticLambda0.onFrameDraw:4
-I/ViewRootImpl@c1b9c54[MainActivity]( 7241): mWNT: t=0xb400007367def300 mBlastBufferQueue=0xb400007366d0bb00 fn= 23 caller= android.view.SyncRtSurfaceTransactionApplier.applyTransaction:96 android.view.SyncRtSurfaceTransactionApplier.lambda$scheduleApply$0$android-view-SyncRtSurfaceTransactionApplier:69 android.view.SyncRtSurfaceTransactionApplier$$ExternalSyntheticLambda0.onFrameDraw:4
-I/ViewRootImpl@c1b9c54[MainActivity]( 7241): mWNT: t=0xb4000073603a9100 mBlastBufferQueue=0xb400007366d0bb00 fn= 24 caller= android.view.SyncRtSurfaceTransactionApplier.applyTransaction:96 android.view.SyncRtSurfaceTransactionApplier.lambda$scheduleApply$0$android-view-SyncRtSurfaceTransactionApplier:69 android.view.SyncRtSurfaceTransactionApplier$$ExternalSyntheticLambda0.onFrameDraw:4
-I/ViewRootImpl@c1b9c54[MainActivity]( 7241): mWNT: t=0xb400007422a6f800 mBlastBufferQueue=0xb400007366d0bb00 fn= 25 caller= android.view.SyncRtSurfaceTransactionApplier.applyTransaction:96 android.view.SyncRtSurfaceTransactionApplier.lambda$scheduleApply$0$android-view-SyncRtSurfaceTransactionApplier:69 android.view.SyncRtSurfaceTransactionApplier$$ExternalSyntheticLambda0.onFrameDraw:4
-I/ViewRootImpl@c1b9c54[MainActivity]( 7241): mWNT: t=0xb4000073603a9a00 mBlastBufferQueue=0xb400007366d0bb00 fn= 26 caller= android.view.SyncRtSurfaceTransactionApplier.applyTransaction:96 android.view.SyncRtSurfaceTransactionApplier.lambda$scheduleApply$0$android-view-SyncRtSurfaceTransactionApplier:69 android.view.SyncRtSurfaceTransactionApplier$$ExternalSyntheticLambda0.onFrameDraw:4
-I/ViewRootImpl@c1b9c54[MainActivity]( 7241): mWNT: t=0xb4000073a1d15700 mBlastBufferQueue=0xb400007366d0bb00 fn= 27 caller= android.view.SyncRtSurfaceTransactionApplier.applyTransaction:96 android.view.SyncRtSurfaceTransactionApplier.lambda$scheduleApply$0$android-view-SyncRtSurfaceTransactionApplier:69 android.view.SyncRtSurfaceTransactionApplier$$ExternalSyntheticLambda0.onFrameDraw:4
-I/ViewRootImpl@c1b9c54[MainActivity]( 7241): mWNT: t=0xb400007367f6ef00 mBlastBufferQueue=0xb400007366d0bb00 fn= 28 caller= android.view.SyncRtSurfaceTransactionApplier.applyTransaction:96 android.view.SyncRtSurfaceTransactionApplier.lambda$scheduleApply$0$android-view-SyncRtSurfaceTransactionApplier:69 android.view.SyncRtSurfaceTransactionApplier$$ExternalSyntheticLambda0.onFrameDraw:4
-I/ViewRootImpl@c1b9c54[MainActivity]( 7241): mWNT: t=0xb4000073602f1c00 mBlastBufferQueue=0xb400007366d0bb00 fn= 29 caller= android.view.SyncRtSurfaceTransactionApplier.applyTransaction:96 android.view.SyncRtSurfaceTransactionApplier.lambda$scheduleApply$0$android-view-SyncRtSurfaceTransactionApplier:69 android.view.SyncRtSurfaceTransactionApplier$$ExternalSyntheticLambda0.onFrameDraw:4
-I/ViewRootImpl@c1b9c54[MainActivity]( 7241): mWNT: t=0xb4000073602f1e00 mBlastBufferQueue=0xb400007366d0bb00 fn= 30 caller= android.view.SyncRtSurfaceTransactionApplier.applyTransaction:96 android.view.SyncRtSurfaceTransactionApplier.lambda$scheduleApply$0$android-view-SyncRtSurfaceTransactionApplier:69 android.view.SyncRtSurfaceTransactionApplier$$ExternalSyntheticLambda0.onFrameDraw:4
-D/InsetsController( 7241): cancelAnimation of types: 8, animType: 1, host: com.example.agrilend_app/com.example.agrilend_app.MainActivity, from:android.view.InsetsController.notifyFinished:1375 android.view.InsetsAnimationControlImpl.applyChangeInsets:285 android.view.InsetsController.lambda$new$3$android-view-InsetsController:674
-I/IMM_LC  ( 7241): notifyImeHidden: mService.hideSoftInput
-I/ViewRootImpl@c1b9c54[MainActivity]( 7241): mWNT: t=0xb400007367f6ee00 mBlastBufferQueue=0xb400007366d0bb00 fn= 31 caller= android.view.SyncRtSurfaceTransactionApplier.applyTransaction:96 android.view.SyncRtSurfaceTransactionApplier.lambda$scheduleApply$0$android-view-SyncRtSurfaceTransactionApplier:69 android.view.SyncRtSurfaceTransactionApplier$$ExternalSyntheticLambda0.onFrameDraw:4
-I/ViewRootImpl@c1b9c54[MainActivity]( 7241): Resizing android.view.ViewRootImpl@10a76f9: frame = [0,0][720,1600] reportDraw = false forceLayout = false syncSeqId = 0
-D/InsetsController( 7241): onStateChanged: InsetsState: {mDisplayFrame=Rect(0, 0 - 720, 1600), mDisplayCutout=DisplayCutout{insets=Rect(0, 43 - 0, 0) waterfall=Insets{left=0, top=0, right=0, bottom=0} boundingRect={Bounds=[Rect(0, 0 - 0, 0), Rect(296, 0 - 424, 43), Rect(0, 0 - 0, 0), Rect(0, 0 - 0, 0)]} cutoutPathParserInfo={CutoutPathParserInfo{displayWidth=720 displayHeight=1600 physicalDisplayWidth=720 physicalDisplayHeight=1600 density={1.875} cutoutSpec={M 0,0 H -34.13333333333333 V 22.93333333333333 H 34.13333333333333 V 0 H 0 Z @dp} rotation={0} scale={1.0} physicalPixelDisplaySizeRatio={1.0}}}}, mRoundedCorners=RoundedCorners{[RoundedCorner{position=TopLeft, radius=60, center=Point(60, 60)}, RoundedCorner{position=TopRight, radius=60, center=Point(660, 60)}, RoundedCorner{position=BottomRight, radius=60, center=Point(660, 1540)}, RoundedCorner{position=BottomLeft, radius=60, center=Point(60, 1540)}]}  mRoundedCornerFrame=Rect(0, 0 - 720, 1600), mPrivacyIndicatorBounds=PrivacyIndicatorBounds {static bounds=Rect(637, 0 - 720, 45) rotation=0}, mSources= { InsetsSource: {mType=ITYPE_STATUS_BAR, mFrame=[0,0][720,45], mVisible=true, mInsetsRoundedCornerFrame=false}, InsetsSource: {mType=ITYPE_NAVIGATION_BAR, mFrame=[0,1510][720,1600], mVisible=true, mInsetsRoundedCornerFrame=false}, InsetsSource: {mType=ITYPE_LEFT_GESTURES, mFrame=[0,0][0,1600], mVisible=true, mInsetsRoundedCornerFrame=false}, InsetsSource: {mType=ITYPE_RIGHT_GESTURES, mFrame=[720,0][720,1600], mVisible=true, mInsetsRoundedCornerFrame=false}, InsetsSource: {mType=ITYPE_TOP_MANDATORY_GESTURES, mFrame=[0,0][720,66], mVisible=true, mInsetsRoundedCornerFrame=false}, InsetsSource: {mType=ITYPE_BOTTOM_MANDATORY_GESTURES, mFrame=[0,1510][720,1600], mVisible=true, mInsetsRoundedCornerFrame=false}, InsetsSource: {mType=ITYPE_LEFT_DISPLAY_CUTOUT, mFrame=[0,0][-100000,1600], mVisible=true, mInsetsRoundedCornerFrame=false}, InsetsSource: {mType=ITYPE_TOP_DISPLAY_CUTOUT, mFrame=[0,0][720,43], mVisible=true, mInsetsRoundedCornerFrame=false}, InsetsSource: {mType=ITYPE_RIGHT_DISPLAY_CUTOUT, mFrame=[100000,0][720,1600], mVisible=true, mInsetsRoundedCornerFrame=false}, InsetsSource: {mType=ITYPE_BOTTOM_DISPLAY_CUTOUT, mFrame=[0,100000][720,1600], mVisible=true, mInsetsRoundedCornerFrame=false}, InsetsSource: {mType=ITYPE_TOP_TAPPABLE_ELEMENT, mFrame=[0,0][720,45], mVisible=true, mInsetsRoundedCornerFrame=false}, InsetsSource: {mType=ITYPE_BOTTOM_TAPPABLE_ELEMENT, mFrame=[0,1510][720,1600], mVisible=true, mInsetsRoundedCornerFrame=false}, InsetsSource: {mType=ITYPE_IME, mFrame=[0,0][0,0], mVisibleFrame=[0,927][720,1600], mVisible=false, mInsetsRoundedCornerFrame=false} } host=com.example.agrilend_app/com.example.agrilend_app.MainActivity from=android.view.ViewRootImpl$ViewRootHandler.handleMessageImpl:6727
-I/ViewRootImpl@c1b9c54[MainActivity]( 7241): handleResized, msg = 4 frames=ClientWindowFrames{frame=[0,0][720,1600] display=[0,0][720,1600] parentFrame=[0,0][0,0] parentClippedByDisplayCutout=false} forceNextWindowRelayout=false displayId=0 resizeMode=-1 frameChanged=false displayFrameChanged=false configChanged=false displayChanged=false        
-I/flutter ( 7241): AuthService login raw response: {success: true, message: Connexion réussie, data: {accessToken: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkYW91LmFydGkxOUBnbWFpbC5jb20iLCJ1c2VySWQiOjMsImF1dGhvcml0aWVzIjoiUk9MRV9CVVlFUiIsInJvbGUiOiJCVVlFUiIsImlhdCI6MTc2MTIzNzI4NSwiZXhwIjoxNzYxMzIzNjg1fQ._dDypDV3HvmQLprkMXqiwCxnsr9Y_moy-e_gPEa1WH8vduUfF22sdOF0Num_DCXwYslbLCE65s7dq6AfPRSuEg, refreshToken: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkYW91LmFydGkxOUBnbWFpbC5jb20iLCJ1c2VySWQiOjMsInR5cGUiOiJyZWZyZXNoIiwiaWF0IjoxNzYxMjM3Mjg1LCJleHAiOjE3NjE4NDIwODV9.gTXXBo5Si4RPRnRar6L_3F_vGlRLPpxV9E6CQJ3ojWIvG8KfhetKAYXRRN-bY7Ca281WeP8w2qPojtlvtD7Z0w, tokenType: Bearer, userId: 3, email: daou.arti19@gmail.com, firstName: Kones, lastName: Abou, role: BUYER}, timestamp: 2025-10-23T16:34:46.0028599}
-I/flutter ( 7241): AuthNotifier login - userMap from API response: {userId: 3, email: daou.arti19@gmail.com, firstName: Kones, lastName: Abou, role: BUYER}
-I/flutter ( 7241): Router Redirect: isAuthenticated=false, userType=null, currentUri=/onboarding, isLoading=true
-I/flutter ( 7241): Router Redirect: isAuthenticated=true, userType=buyer, currentUri=/onboarding, isLoading=false
-I/flutter ( 7241): Router Redirect: isAuthenticated=true, userType=buyer, currentUri=/buyer, isLoading=false
-Another exception was thrown: LocaleDataException: Locale data has not been initialized, call
+reponse:
+{
+    "success": true,
+    "message": "Offres récupérées avec succès",
+    "data": {
+        "content": [
+            {
+                "id": 2,
+                "productId": 1,
+                "availableQuantity": 10.00,
+                "availabilityDate": "2025-12-01",
+                "suggestedUnitPrice": 250.00,
+                "finalUnitPrice": 262.50,
+                "status": "ACTIVE",
+                "notes": "Récolte de Novembre. Certifié bio.",
+                "productName": "Blé Tendre Bio Premium",
+                "productDescription": "Blé tendre biologique de qualité supérieure, idéal pour la boulangerie artisanale.",
+                "productUnit": "LITER",
+                "productionMethod": null,
+                "farmerId": 2,
+                "farmerName": "Sy Modibo",
+                "farmerEmail": "artifiquea@gmail.com",
+                "createdAt": "2025-09-24T16:32:37",
+                "updatedAt": "2025-10-08T11:28:42"
+            },
+            {
+                "id": 1,
+                "productId": 1,
+                "availableQuantity": 7.00,
+                "availabilityDate": "2025-11-15",
+                "suggestedUnitPrice": 250.00,
+                "finalUnitPrice": 262.50,
+                "status": "ACTIVE",
+                "notes": "Récolte de Septembre. Qualité extra.",
+                "productName": "Blé Tendre Bio Premium",
+                "productDescription": "Blé tendre biologique de qualité supérieure, idéal pour la boulangerie artisanale.",
+                "productUnit": "LITER",
+                "productionMethod": null,
+                "farmerId": 2,
+                "farmerName": "Sy Modibo",
+                "farmerEmail": "artifiquea@gmail.com",
+                "createdAt": "2025-09-23T12:09:52",
+                "updatedAt": "2025-10-09T11:18:32"
+            }
+        ],
+        "page": 0,
+        "size": 10,
+        "totalElements": 2,
+        "totalPages": 1,
+        "first": true,
+        "last": true,
+        "empty": false
+    },
+    "timestamp": "2025-10-23T17:23:28.582092"
+}
