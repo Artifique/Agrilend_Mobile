@@ -174,7 +174,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         curve: Curves.easeInOut,
                       );
                     } else {
-                      context.go('/user-type');
+                      context.go('/user-type-selection');
                     }
                   },
                   child: Text(

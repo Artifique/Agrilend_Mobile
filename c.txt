@@ -1,6 +1,29 @@
-L’idée générale c’est de pouvoir vendre les produits agricoles aux acheteurs partout dans le monde (les frais de transport ne sont pas inclus)
-On va voir un agriculteur on lui propose de vendre son produit rapidement, de manière transparente, rapide et possibilité de toucher le marché mondiale 
-S’il est daccord on signe un contrat avec lui pour qu’il nous fournisse les quantités de produits agricoles dont ont à besoin et nous on crée des token fungible en fonction de la quantité qu’il nous a fourni 
-Pour qu’un acheteur puisse payer il doit injecter des hbar dans un pool que nous allons créer pendant une certaine durée 
-Les fonds seront livrés à l’agriculteur que lorsqu’il viendra avec le produit et s’il est conforme aux normes de notre contrat avec lui 
-Ensuite les tokens sont brûlés et l’agriculteur est payé en hbar soit en argent ça dépendra de lui
+POST : http://localhost:8080/api/auth/register
+body:
+   
+    {
+        "firstName": "Kone",
+        "lastName": "Abou",
+        "email": "daou.arti19@gmail.com",
+        "password": "password123",
+        "phone": "90662788",
+        "role": "BUYER",
+        "companyName": "Bio Distribution B",
+        "activityType": "Distribution Alimentaire",
+        "companyAddress": "15 rue Modibo Keita, Bamako"
+      }
+      
+       
+    
+ {
+  "firstName": "Sy",
+  "lastName": "Modibo",
+  "email": "artifiquea@gmail.com",
+  "password": "password123",
+  "phone": "98765432",
+  "role": "FARMER",
+  "farmName": "Foro",
+  "farmLocation": "San",
+  "farmSize": "50 hectare"
+}
+

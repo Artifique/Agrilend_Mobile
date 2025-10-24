@@ -22,12 +22,23 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
+  final _companyNameController = TextEditingController();
+  final _activityTypeController = TextEditingController();
+  final _companyAddressController = TextEditingController();
+  final _farmNameController = TextEditingController();
+  final _farmLocationController = TextEditingController();
+  final _farmSizeController = TextEditingController();
+  final _addressController = TextEditingController();
+  final _cityController = TextEditingController();
+  final _professionController = TextEditingController();
 
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
   bool _acceptTerms = false;
   String _selectedUserType = AppConstants.userTypeFarmer;
   String _selectedCrop = AppConstants.cropTypes.first;
+  String _selectedGender = 'M'; // Default gender
+  DateTime? _selectedDateOfBirth;
 
   @override
   void initState() {
@@ -52,6 +63,15 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     _phoneController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
+    _companyNameController.dispose();
+    _activityTypeController.dispose();
+    _companyAddressController.dispose();
+    _farmNameController.dispose();
+    _farmLocationController.dispose();
+    _farmSizeController.dispose();
+    _addressController.dispose();
+    _cityController.dispose();
+    _professionController.dispose();
     super.dispose();
   }
 
@@ -88,16 +108,16 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
               children: [
                 _buildHeader(),
                 const SizedBox(height: 32),
-                _buildNameFields(),
-                const SizedBox(height: 20),
-                _buildEmailField(),
-                const SizedBox(height: 20),
-                _buildPhoneField(),
+                _buildPersonalInfoFields(), // New method for personal info fields
                 const SizedBox(height: 20),
                 _buildUserTypeField(),
                 if (_selectedUserType == AppConstants.userTypeFarmer) ...[
                   const SizedBox(height: 20),
-                  _buildCropField(),
+                  _buildFarmFields(), // New method for farmer fields
+                ],
+                if (_selectedUserType == AppConstants.userTypeBuyer) ...[
+                  const SizedBox(height: 20),
+                  _buildCompanyFields(), // New method for buyer fields
                 ],
                 const SizedBox(height: 20),
                 _buildPasswordField(),
@@ -118,6 +138,104 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildFarmFields() {
+    return Column(
+      children: [
+        TextFormField(
+          controller: _farmNameController,
+          decoration: const InputDecoration(
+            labelText: 'Nom de la ferme',
+            prefixIcon: Icon(Icons.agriculture_rounded),
+          ),
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Requis';
+            }
+            return null;
+          },
+        ),
+        const SizedBox(height: 20),
+        TextFormField(
+          controller: _farmLocationController,
+          decoration: const InputDecoration(
+            labelText: 'Localisation de la ferme',
+            prefixIcon: Icon(Icons.location_on_rounded),
+          ),
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Requis';
+            }
+            return null;
+          },
+        ),
+        const SizedBox(height: 20),
+        TextFormField(
+          controller: _farmSizeController,
+          decoration: const InputDecoration(
+            labelText: 'Taille de la ferme (ex: 50 hectares)',
+            prefixIcon: Icon(Icons.area_chart_rounded),
+          ),
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Requis';
+            }
+            return null;
+          },
+        ),
+        const SizedBox(height: 20),
+        _buildCropField(), // Keep crop field for farmer
+      ],
+    );
+  }
+
+  Widget _buildCompanyFields() {
+    return Column(
+      children: [
+        TextFormField(
+          controller: _companyNameController,
+          decoration: const InputDecoration(
+            labelText: 'Nom de l\'entreprise',
+            prefixIcon: Icon(Icons.business_rounded),
+          ),
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Requis';
+            }
+            return null;
+          },
+        ),
+        const SizedBox(height: 20),
+        TextFormField(
+          controller: _activityTypeController,
+          decoration: const InputDecoration(
+            labelText: 'Type d\'activité',
+            prefixIcon: Icon(Icons.category_rounded),
+          ),
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Requis';
+            }
+            return null;
+          },
+        ),
+        const SizedBox(height: 20),
+        TextFormField(
+          controller: _companyAddressController,
+          decoration: const InputDecoration(
+            labelText: 'Adresse de l\'entreprise',
+            prefixIcon: Icon(Icons.location_on_rounded),
+          ),
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Requis';
+            }
+            return null;
+          },
+        ),
+      ],
     );
   }
 
@@ -495,24 +613,171 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     ).animate().fade(delay: const Duration(milliseconds: 2600));
   }
 
+  Widget _buildPersonalInfoFields() {
+    return Column(
+      children: [
+        Row( // For Name fields
+          children: [
+            Expanded(
+              child: TextFormField(
+                controller: _firstNameController,
+                decoration: const InputDecoration(
+                  labelText: 'Prénom',
+                  prefixIcon: Icon(Icons.person_rounded),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Requis';
+                  }
+                  return null;
+                },
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: TextFormField(
+                controller: _lastNameController,
+                decoration: const InputDecoration(
+                  labelText: 'Nom',
+                  prefixIcon: Icon(Icons.person_outline_rounded),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Requis';
+                  }
+                  return null;
+                },
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 20),
+        TextFormField( // For Phone
+          controller: _phoneController,
+          keyboardType: TextInputType.phone,
+          decoration: const InputDecoration(
+            labelText: 'Téléphone',
+            prefixIcon: Icon(Icons.phone_rounded),
+            hintText: '+237 6XX XXX XXX',
+          ),
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Veuillez saisir votre téléphone';
+            }
+            return null;
+          },
+        ),
+        const SizedBox(height: 20),
+        DropdownButtonFormField<String>( // For Gender
+          value: _selectedGender,
+          decoration: const InputDecoration(
+            labelText: 'Genre',
+            prefixIcon: Icon(Icons.person_rounded),
+          ),
+          items: const [
+            DropdownMenuItem(value: 'M', child: Text('Masculin')),
+            DropdownMenuItem(value: 'F', child: Text('Féminin')),
+          ],
+          onChanged: (value) {
+            setState(() {
+              _selectedGender = value!;
+            });
+          },
+        ),
+        const SizedBox(height: 20),
+        TextFormField( // For Date of Birth
+          readOnly: true,
+          controller: TextEditingController(
+            text: _selectedDateOfBirth != null
+                ? '${_selectedDateOfBirth!.day}/${_selectedDateOfBirth!.month}/${_selectedDateOfBirth!.year}'
+                : '',
+          ),
+          decoration: const InputDecoration(
+            labelText: 'Date de naissance',
+            prefixIcon: Icon(Icons.calendar_today_rounded),
+          ),
+          onTap: _selectDateOfBirth, // Need to define _selectDateOfBirth
+          validator: (value) {
+            if (_selectedDateOfBirth == null) {
+              return 'Veuillez sélectionner votre date de naissance';
+            }
+            return null;
+          },
+        ),
+        const SizedBox(height: 20),
+        TextFormField( // For Address
+          controller: _addressController,
+          decoration: const InputDecoration(
+            labelText: 'Adresse',
+            prefixIcon: Icon(Icons.location_on_rounded),
+          ),
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Veuillez saisir votre adresse';
+            }
+            return null;
+          },
+        ),
+        const SizedBox(height: 20),
+        TextFormField( // For City (now expanded)
+          controller: _cityController,
+          decoration: const InputDecoration(
+            labelText: 'Ville',
+            prefixIcon: Icon(Icons.location_city_rounded),
+          ),
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Requis';
+            }
+            return null;
+          },
+        ),
+      ],
+    );
+  }
+
+  Future<void> _selectDateOfBirth() async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now().subtract(const Duration(days: 365 * 20)),
+      firstDate: DateTime(1900),
+      lastDate: DateTime.now().subtract(const Duration(days: 365 * 16)),
+    );
+
+    if (picked != null && picked != _selectedDateOfBirth) {
+      setState(() {
+        _selectedDateOfBirth = picked;
+      });
+    }
+  }
+
   Future<void> _handleRegister() async {
     if (!_formKey.currentState!.validate()) return;
 
     ref.read(authProvider.notifier).clearError();
 
-    Map<String, dynamic>? metadata;
-    if (_selectedUserType == AppConstants.userTypeFarmer) {
-      metadata = {'primaryCrop': _selectedCrop};
-    }
-
     final payload = {
       'email': _emailController.text.trim(),
       'password': _passwordController.text,
-      'phone': _phoneController.text.trim(),
       'firstName': _firstNameController.text.trim(),
       'lastName': _lastNameController.text.trim(),
-      'userType': _selectedUserType,
-      'metadata': metadata,
+      'phone': _phoneController.text.trim(),
+      'gender': _selectedGender,
+      'dateOfBirth': _selectedDateOfBirth?.toIso8601String(),
+      'address': _addressController.text.trim(),
+      'city': _cityController.text.trim(),
+      'role': _selectedUserType, // Use 'role' instead of 'userType' as per backend
+      if (_selectedUserType == AppConstants.userTypeBuyer) ...{
+        'companyName': _companyNameController.text.trim(),
+        'activityType': _activityTypeController.text.trim(),
+        'companyAddress': _companyAddressController.text.trim(),
+      },
+      if (_selectedUserType == AppConstants.userTypeFarmer) ...{
+        'farmName': _farmNameController.text.trim(),
+        'farmLocation': _farmLocationController.text.trim(),
+        'farmSize': _farmSizeController.text.trim(),
+        'primaryCrop': _selectedCrop, // Use primaryCrop for farmer
+      },
     }..removeWhere((k, v) => v == null);
 
     final success = await ref.read(authProvider.notifier).register(payload);

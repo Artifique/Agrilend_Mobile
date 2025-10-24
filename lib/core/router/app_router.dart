@@ -7,9 +7,6 @@ import '../../features/auth/providers/auth_provider.dart';
 import '../../features/onboarding/screens/onboarding_screen.dart';
 import '../../features/auth/screens/login_screen.dart';
 import '../../features/auth/screens/register_screen.dart';
-import '../../features/auth/screens/user_type_selection_screen.dart';
-import '../../features/auth/screens/basic_info_screen.dart';
-import '../../features/auth/screens/personal_info_screen.dart';
 import '../../features/auth/screens/kyc_verification_screen.dart';
 import '../../features/auth/screens/registration_complete_screen.dart';
 import '../../features/farmer/screens/farmer_main_screen.dart';
@@ -33,9 +30,6 @@ import '../../features/auth/providers/auth_provider.dart';
 import '../../features/onboarding/screens/onboarding_screen.dart';
 import '../../features/auth/screens/login_screen.dart';
 import '../../features/auth/screens/register_screen.dart';
-import '../../features/auth/screens/user_type_selection_screen.dart';
-import '../../features/auth/screens/basic_info_screen.dart';
-import '../../features/auth/screens/personal_info_screen.dart';
 import '../../features/auth/screens/kyc_verification_screen.dart';
 import '../../features/auth/screens/registration_complete_screen.dart';
 import '../../features/farmer/screens/farmer_main_screen.dart';
@@ -63,6 +57,9 @@ import 'package:agrilend/features/wallet/screens/wallet_settings_screen.dart'; /
 
 import 'dart:async'; // Import for StreamSubscription
 import 'package:flutter/foundation.dart'; // Import for ChangeNotifier
+import 'package:agrilend/features/auth/screens/user_type_selection_screen.dart';
+import 'package:agrilend/features/auth/screens/basic_info_screen.dart';
+import 'package:agrilend/features/auth/screens/personal_info_screen.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
   final authState = ref.watch(authProvider);
@@ -89,7 +86,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           '/onboarding',
           '/login',
           '/register',
-          '/user-type',
+          '/user-type-selection',
           '/basic-info',
           '/personal-info',
           '/kyc-verification',
@@ -108,7 +105,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           '/onboarding',
           '/login',
           '/register',
-          '/user-type',
+          '/user-type-selection',
           '/basic-info',
           '/personal-info',
           '/kyc-verification',
@@ -137,16 +134,8 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const OnboardingScreen(),
       ),
       GoRoute(
-        path: '/user-type',
+        path: '/user-type-selection',
         builder: (context, state) => const UserTypeSelectionScreen(),
-      ),
-      GoRoute(
-        path: '/login',
-        builder: (context, state) => const LoginScreen(),
-      ),
-      GoRoute(
-        path: '/register',
-        builder: (context, state) => const RegisterScreen(),
       ),
       GoRoute(
         path: '/basic-info',
@@ -159,8 +148,23 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: '/personal-info',
         builder: (context, state) {
           final userType = state.uri.queryParameters['userType'] ?? 'farmer';
-          return PersonalInfoScreen(userType: userType);
+          final extra = state.extra as Map<String, dynamic>?;
+          final email = extra?['email'] as String? ?? '';
+          final password = extra?['password'] as String? ?? '';
+          return PersonalInfoScreen(
+            userType: userType,
+            email: email,
+            password: password,
+          );
         },
+      ),
+      GoRoute(
+        path: '/login',
+        builder: (context, state) => const LoginScreen(),
+      ),
+      GoRoute(
+        path: '/register',
+        builder: (context, state) => const RegisterScreen(),
       ),
       GoRoute(
         path: '/kyc-verification',

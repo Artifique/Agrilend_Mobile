@@ -42,7 +42,7 @@ class _BasicInfoScreenState extends ConsumerState<BasicInfoScreen> {
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_rounded),
-          onPressed: () => context.go('/user-type'),
+          onPressed: () => context.go('/user-type-selection'),
         ),
         title: const Text('Informations de base'),
         centerTitle: true,

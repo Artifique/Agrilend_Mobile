@@ -3,12 +3,18 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:dio/dio.dart';
+
 class PersonalInfoScreen extends ConsumerStatefulWidget {
   final String userType;
-  
+  final String email;
+  final String password;
+
   const PersonalInfoScreen({
     super.key,
     required this.userType,
+    required this.email,
+    required this.password,
   });
 
   @override
@@ -21,17 +27,18 @@ class _PersonalInfoScreenState extends ConsumerState<PersonalInfoScreen> {
   final _lastNameController = TextEditingController();
   final _phoneController = TextEditingController();
   final _addressController = TextEditingController();
-  final _cityController = TextEditingController();
-  final _countryController = TextEditingController();
-  final _professionController = TextEditingController();
-  final _mainCropController = TextEditingController();
+
+  // Buyer specific
+  final _companyNameController = TextEditingController();
+  final _activityTypeController = TextEditingController();
+
+  // Farmer specific
+  final _farmNameController = TextEditingController();
+  final _farmSizeController = TextEditingController();
   
-  String _selectedGender = 'M';
-  String _selectedCountry = 'Cameroun';
-  String _selectedMainCrop = '';
-  DateTime? _selectedDateOfBirth;
   int _currentStep = 3;
   int _totalSteps = 6;
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -44,10 +51,10 @@ class _PersonalInfoScreenState extends ConsumerState<PersonalInfoScreen> {
     _lastNameController.dispose();
     _phoneController.dispose();
     _addressController.dispose();
-    _cityController.dispose();
-    _countryController.dispose();
-    _professionController.dispose();
-    _mainCropController.dispose();
+    _companyNameController.dispose();
+    _activityTypeController.dispose();
+    _farmNameController.dispose();
+    _farmSizeController.dispose();
     super.dispose();
   }
 
@@ -84,13 +91,7 @@ class _PersonalInfoScreenState extends ConsumerState<PersonalInfoScreen> {
                     const SizedBox(height: 16),
                     _buildPhoneField(),
                     const SizedBox(height: 16),
-                    _buildGenderField(),
-                    const SizedBox(height: 16),
-                    _buildDateOfBirthField(),
-                    const SizedBox(height: 16),
                     _buildAddressField(),
-                    const SizedBox(height: 16),
-                    _buildCityCountryFields(),
                     const SizedBox(height: 16),
                     ..._buildUserSpecificFields(),
                     SizedBox(height: constraints.maxHeight * 0.04),
@@ -277,70 +278,26 @@ class _PersonalInfoScreenState extends ConsumerState<PersonalInfoScreen> {
     );
   }
 
-  Widget _buildGenderField() {
-    return DropdownButtonFormField<String>(
-      value: _selectedGender,
-      decoration: const InputDecoration(
-        labelText: 'Genre',
-        prefixIcon: Icon(Icons.person_rounded),
-        border: OutlineInputBorder(),
-      ),
-      items: const [
-        DropdownMenuItem(value: 'M', child: Text('Masculin')),
-        DropdownMenuItem(value: 'F', child: Text('Féminin')),
-      ],
-      onChanged: (value) {
-        setState(() {
-          _selectedGender = value!;
-        });
-      },
-    ).animate().slideX(
-      delay: const Duration(milliseconds: 1400),
-      duration: const Duration(milliseconds: 600),
-      begin: 1,
-      end: 0,
-    );
-  }
-
-  Widget _buildDateOfBirthField() {
-    return TextFormField(
-      readOnly: true,
-      controller: TextEditingController(
-        text: _selectedDateOfBirth != null 
-          ? '${_selectedDateOfBirth!.day}/${_selectedDateOfBirth!.month}/${_selectedDateOfBirth!.year}'
-          : '',
-      ),
-      decoration: const InputDecoration(
-        labelText: 'Date de naissance',
-        prefixIcon: Icon(Icons.calendar_today_rounded),
-        border: OutlineInputBorder(),
-      ),
-      onTap: _selectDateOfBirth,
-      validator: (value) {
-        if (_selectedDateOfBirth == null) {
-          return 'Veuillez sélectionner votre date de naissance';
-        }
-        return null;
-      },
-    ).animate().slideX(
-      delay: const Duration(milliseconds: 1600),
-      duration: const Duration(milliseconds: 600),
-      begin: -1,
-      end: 0,
-    );
-  }
-
   Widget _buildAddressField() {
+    String labelText;
+    if (widget.userType == 'farmer') {
+      labelText = 'Localisation de la ferme';
+    } else if (widget.userType == 'buyer') {
+      labelText = 'Adresse de l entreprise';
+    } else {
+      labelText = 'Adresse';
+    }
+
     return TextFormField(
       controller: _addressController,
-      decoration: const InputDecoration(
-        labelText: 'Adresse',
-        prefixIcon: Icon(Icons.location_on_rounded),
-        border: OutlineInputBorder(),
+      decoration: InputDecoration(
+        labelText: labelText,
+        prefixIcon: const Icon(Icons.location_on_rounded),
+        border: const OutlineInputBorder(),
       ),
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return 'Veuillez saisir votre adresse';
+          return 'Veuillez saisir l\'adresse';
         }
         return null;
       },
@@ -352,176 +309,73 @@ class _PersonalInfoScreenState extends ConsumerState<PersonalInfoScreen> {
     );
   }
 
-  Widget _buildCityCountryFields() {
-    return Row(
-      children: [
-        Expanded(
-          child: TextFormField(
-            controller: _cityController,
-            decoration: const InputDecoration(
-              labelText: 'Ville',
-              prefixIcon: Icon(Icons.location_city_rounded),
-              border: OutlineInputBorder(),
-            ),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Requis';
-              }
-              return null;
-            },
-          ).animate().slideX(
-            delay: const Duration(milliseconds: 2000),
-            duration: const Duration(milliseconds: 600),
-            begin: -1,
-            end: 0,
-          ),
-        ),
-        const SizedBox(width: 16),
-        Expanded(
-          child: DropdownButtonFormField<String>(
-            value: _selectedCountry,
-            decoration: const InputDecoration(
-              labelText: 'Pays',
-              prefixIcon: Icon(Icons.public_rounded),
-              border: OutlineInputBorder(),
-            ),
-            items: const [
-              DropdownMenuItem(value: 'Cameroun', child: Text('Cameroun')),
-              DropdownMenuItem(value: 'Nigeria', child: Text('Nigeria')),
-              DropdownMenuItem(value: 'Ghana', child: Text('Ghana')),
-              DropdownMenuItem(value: 'Côte d\'Ivoire', child: Text('Côte d\'Ivoire')),
-              DropdownMenuItem(value: 'Sénégal', child: Text('Sénégal')),
-            ],
-            onChanged: (value) {
-              setState(() {
-                _selectedCountry = value!;
-              });
-            },
-          ).animate().slideX(
-            delay: const Duration(milliseconds: 2200),
-            duration: const Duration(milliseconds: 600),
-            begin: 1,
-            end: 0,
-          ),
-        ),
-      ],
-    );
-  }
-
   List<Widget> _buildUserSpecificFields() {
     List<Widget> fields = [];
     
     if (widget.userType == 'farmer') {
-      // Champ Profession pour les agriculteurs
-      fields.add(
+      fields.addAll([
         TextFormField(
-          controller: _professionController,
+          controller: _farmNameController,
           decoration: const InputDecoration(
-            labelText: 'Profession',
+            labelText: 'Nom de la ferme',
+            prefixIcon: Icon(Icons.business_rounded),
+            border: OutlineInputBorder(),
+          ),
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Veuillez saisir le nom de la ferme';
+            }
+            return null;
+          },
+        ),
+        const SizedBox(height: 16),
+        TextFormField(
+          controller: _farmSizeController,
+          decoration: const InputDecoration(
+            labelText: 'Taille de la ferme',
+            prefixIcon: Icon(Icons.square_foot_rounded),
+            border: OutlineInputBorder(),
+          ),
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Veuillez saisir la taille de la ferme';
+            }
+            return null;
+          },
+        ),
+      ]);
+    } else if (widget.userType == 'buyer') {
+      fields.addAll([
+        TextFormField(
+          controller: _companyNameController,
+          decoration: const InputDecoration(
+            labelText: 'Nom de l\'entreprise',
+            prefixIcon: Icon(Icons.business_rounded),
+            border: OutlineInputBorder(),
+          ),
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Veuillez saisir le nom de l\'entreprise';
+            }
+            return null;
+          },
+        ),
+        const SizedBox(height: 16),
+        TextFormField(
+          controller: _activityTypeController,
+          decoration: const InputDecoration(
+            labelText: 'Type d\'activité',
             prefixIcon: Icon(Icons.work_outline_rounded),
             border: OutlineInputBorder(),
           ),
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return 'Veuillez saisir votre profession';
+              return 'Veuillez saisir le type d\'activité';
             }
             return null;
           },
-        ).animate().slideX(
-          delay: const Duration(milliseconds: 2400),
-          duration: const Duration(milliseconds: 600),
-          begin: -1,
-          end: 0,
         ),
-      );
-      
-      fields.add(const SizedBox(height: 16));
-      
-      // Champ Culture principale pour les agriculteurs
-      fields.add(
-        DropdownButtonFormField<String>(
-          value: _selectedMainCrop.isEmpty ? null : _selectedMainCrop,
-          decoration: const InputDecoration(
-            labelText: 'Culture principale',
-            prefixIcon: Icon(Icons.agriculture_rounded),
-            border: OutlineInputBorder(),
-          ),
-          items: const [
-            DropdownMenuItem(value: 'Maïs', child: Text('Maïs')),
-            DropdownMenuItem(value: 'Riz', child: Text('Riz')),
-            DropdownMenuItem(value: 'Cacao', child: Text('Cacao')),
-            DropdownMenuItem(value: 'Café', child: Text('Café')),
-            DropdownMenuItem(value: 'Banane', child: Text('Banane')),
-            DropdownMenuItem(value: 'Tomate', child: Text('Tomate')),
-            DropdownMenuItem(value: 'Oignon', child: Text('Oignon')),
-            DropdownMenuItem(value: 'Autre', child: Text('Autre')),
-          ],
-          onChanged: (value) {
-            setState(() {
-              _selectedMainCrop = value ?? '';
-            });
-          },
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Veuillez sélectionner votre culture principale';
-            }
-            return null;
-          },
-        ).animate().slideX(
-          delay: const Duration(milliseconds: 2600),
-          duration: const Duration(milliseconds: 600),
-          begin: 1,
-          end: 0,
-        ),
-      );
-    } else if (widget.userType == 'agent') {
-      // Champ spécialisé pour les agents
-      fields.add(
-        TextFormField(
-          controller: _professionController,
-          decoration: const InputDecoration(
-            labelText: 'Zone d\'intervention',
-            prefixIcon: Icon(Icons.location_on_rounded),
-            hintText: 'Ex: Douala, Yaoundé, etc.',
-            border: OutlineInputBorder(),
-          ),
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Veuillez saisir votre zone d\'intervention';
-            }
-            return null;
-          },
-        ).animate().slideX(
-          delay: const Duration(milliseconds: 2400),
-          duration: const Duration(milliseconds: 600),
-          begin: -1,
-          end: 0,
-        ),
-      );
-    } else if (widget.userType == 'buyer') {
-      // Champ spécialisé pour les acheteurs
-      fields.add(
-        TextFormField(
-          controller: _professionController,
-          decoration: const InputDecoration(
-            labelText: 'Entreprise/Organisation',
-            prefixIcon: Icon(Icons.business_rounded),
-            hintText: 'Nom de votre entreprise',
-            border: OutlineInputBorder(),
-          ),
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Veuillez saisir le nom de votre entreprise';
-            }
-            return null;
-          },
-        ).animate().slideX(
-          delay: const Duration(milliseconds: 2400),
-          duration: const Duration(milliseconds: 600),
-          begin: -1,
-          end: 0,
-        ),
-      );
+      ]);
     }
     
     return fields;
@@ -529,51 +383,81 @@ class _PersonalInfoScreenState extends ConsumerState<PersonalInfoScreen> {
 
   Widget _buildNextButton() {
     return ElevatedButton(
-      onPressed: _handleNext,
+      onPressed: _isLoading ? null : _handleNext,
       style: ElevatedButton.styleFrom(
         padding: const EdgeInsets.symmetric(vertical: 16),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
         ),
       ),
-      child: const Text('Continuer'),
+      child: _isLoading
+          ? const CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.white))
+          : const Text('Continuer'),
     ).animate().scale(
       delay: const Duration(milliseconds: 2400),
       duration: const Duration(milliseconds: 600),
     );
   }
 
-  Future<void> _selectDateOfBirth() async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now().subtract(const Duration(days: 365 * 20)),
-      firstDate: DateTime(1900),
-      lastDate: DateTime.now().subtract(const Duration(days: 365 * 16)),
-    );
-    
-    if (picked != null && picked != _selectedDateOfBirth) {
-      setState(() {
-        _selectedDateOfBirth = picked;
-      });
-    }
-  }
 
-  void _handleNext() {
+
+  void _handleNext() async {
     if (!_formKey.currentState!.validate()) return;
-    
-    // Naviguer vers l'écran KYC avec toutes les données
-    context.go('/kyc-verification?userType=${widget.userType}', extra: {
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    final Map<String, dynamic> data = {
       'firstName': _firstNameController.text.trim(),
       'lastName': _lastNameController.text.trim(),
+      'email': widget.email,
+      'password': widget.password,
       'phone': _phoneController.text.trim(),
-      'address': _addressController.text.trim(),
-      'city': _cityController.text.trim(),
-      'country': _selectedCountry,
-      'gender': _selectedGender,
-      'dateOfBirth': _selectedDateOfBirth,
-      'profession': _professionController.text.trim(),
-      'mainCrop': _selectedMainCrop,
-      'userType': widget.userType,
-    });
+      'role': widget.userType.toUpperCase(),
+    };
+
+    if (widget.userType == 'farmer') {
+      data.addAll({
+        'farmName': _farmNameController.text.trim(),
+        'farmLocation': _addressController.text.trim(),
+        'farmSize': _farmSizeController.text.trim(),
+      });
+    } else if (widget.userType == 'buyer') {
+      data.addAll({
+        'companyName': _companyNameController.text.trim(),
+        'activityType': _activityTypeController.text.trim(),
+        'companyAddress': _addressController.text.trim(),
+      });
+    }
+
+    try {
+      final dio = Dio();
+      final response = await dio.post(
+        'http://localhost:8080/api/auth/register',
+        data: data,
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        // Navigate to the next screen on success
+        context.go('/kyc-verification?userType=${widget.userType}');
+      } else {
+        // Handle error
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Erreur: ${response.statusMessage}')),
+        );
+      }
+    } on DioException catch (e) {
+      // Handle Dio error
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Erreur réseau: ${e.message}')),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
   }
 }
