@@ -20,7 +20,7 @@ class UserTypeSelectionScreen extends StatelessWidget {
               _buildUserTypeCard(
                 context,
                 title: 'Agriculteur',
-                description: 'Je souhaite obtenir un financement pour mes activités agricoles',
+                description: 'Je souhaite vendre mes produits agricoles',
                 icon: Icons.agriculture_rounded,
                 color: const Color(0xFF10B981),
                 onTap: () => _navigateToBasicInfo(context, 'farmer'),
@@ -30,22 +30,6 @@ class UserTypeSelectionScreen extends StatelessWidget {
                 begin: -1,
                 end: 0,
               ),
-
-              const SizedBox(height: 24),
-              _buildUserTypeCard(
-                context,
-                title: 'Agent Local',
-                description: 'Je représente Agri-lend dans ma région',
-                icon: Icons.support_agent_rounded,
-                color: const Color(0xFF6366F1),
-                onTap: () => _navigateToBasicInfo(context, 'agent'),
-              ).animate().slideX(
-                delay: const Duration(milliseconds: 600),
-                duration: const Duration(milliseconds: 600),
-                begin: -1,
-                end: 0,
-              ),
-
               const SizedBox(height: 24),
               _buildUserTypeCard(
                 context,

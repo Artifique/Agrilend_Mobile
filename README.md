@@ -6,10 +6,10 @@ Agrilend est une plateforme mobile innovante visant à connecter directement les
 
 Le processus est le suivant :
 1.  **Engagement avec l'Agriculteur** : Nous approchons les agriculteurs pour leur proposer de vendre leurs produits rapidement et de manière transparente.
-2.  **Contractualisation et Tokenisation** : Après accord, un contrat est signé avec l'agriculteur pour la fourniture de quantités spécifiques de produits. En fonction de la quantité fournie, des tokens fongibles sont créés sur une blockchain.
-3.  **Mécanisme de Paiement pour l'Acheteur** : Pour effectuer un achat, l'acheteur doit injecter des HBAR (la cryptomonnaie de Hedera) dans un pool dédié, pour une durée déterminée.
+2.  **Contractualisation** : Après accord, un contrat est signé avec l'agriculteur pour la fourniture de quantités spécifiques de produits.
+3.  **Mécanisme de Paiement pour l'Acheteur** : Pour effectuer un achat, l'acheteur effectue un paiement sécurisé.
 4.  **Livraison et Vérification** : Les fonds ne sont versés à l'agriculteur qu'après la livraison du produit et la vérification de sa conformité aux termes du contrat.
-5.  **Finalisation de la Transaction** : Une fois la conformité confirmée, les tokens sont "brûlés" (retirés de la circulation) et l'agriculteur est rémunéré en HBAR ou en monnaie fiduciaire, selon sa préférence.
+5.  **Finalisation de la Transaction** : Une fois la conformité confirmée, l'agriculteur est rémunéré.
 
 ## Prérequis
 
