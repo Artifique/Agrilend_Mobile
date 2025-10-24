@@ -6,14 +6,30 @@ class ApiService {
 
   ApiService._internal(this.dio) {
     // Attach interceptor to add Authorization header when token is present
-    dio.interceptors.add(InterceptorsWrapper(onRequest: (options, handler) {
-      if (_authToken != null && _authToken!.isNotEmpty) {
-        options.headers['Authorization'] = 'Bearer $_authToken';
-      }
-      return handler.next(options);
-    }, onError: (e, handler) {
-      return handler.next(e);
-    }));
+    dio.interceptors.add(InterceptorsWrapper(
+      onRequest: (options, handler) {
+        if (_authToken != null && _authToken!.isNotEmpty) {
+          options.headers['Authorization'] = 'Bearer $_authToken';
+        }
+        print('API Request: ${options.method} ${options.path}');
+        print('Headers: ${options.headers}');
+        print('Data: ${options.data}');
+        return handler.next(options);
+      },
+      onResponse: (response, handler) {
+        print('API Response: ${response.statusCode} ${response.requestOptions.path}');
+        print('Response Data: ${response.data}');
+        return handler.next(response);
+      },
+      onError: (DioException e, handler) { // Changed error type to DioException
+        print('API Error: ${e.response?.statusCode} ${e.requestOptions.path}');
+        print('Error Message: ${e.message}');
+        if (e.response != null) {
+          print('Error Response Data: ${e.response?.data}');
+        }
+        return handler.next(e);
+      },
+    ));
   }
 
   static ApiService create({String? baseUrl}) {

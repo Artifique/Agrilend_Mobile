@@ -69,42 +69,79 @@ class _BuyerDashboardScreenState extends ConsumerState<BuyerDashboardScreen> {
       body: Column(
         children: [
           // Header avec informations du profil
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: AppTheme.primaryGreen,
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(20),
-                bottomRight: Radius.circular(20),
+          buyerProfile.when(
+            data: (buyerProfile) {
+              return Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: AppTheme.primaryGreen,
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(20),
+                    bottomRight: Radius.circular(20),
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Bonjour, ${buyerProfile?.businessName ?? 'Acheteur'}',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Trouvez des produits frais directement des agriculteurs',
+                      style: TextStyle(
+                        color: Colors.white.withOpacity(0.9),
+                        fontSize: 14,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    // Barre de recherche
+                    SearchBarWidget(
+                      controller: _searchController,
+                      onChanged: _onSearchChanged,
+                    ),
+                  ],
+                ),
+              );
+            },
+            loading: () => Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: AppTheme.primaryGreen,
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(20),
+                  bottomRight: Radius.circular(20),
+                ),
+              ),
+              child: const Center(
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                ),
               ),
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Bonjour, ${buyerProfile?.businessName ?? 'Acheteur'}',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                  ),
+            error: (err, stack) => Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: AppTheme.primaryGreen,
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(20),
+                  bottomRight: Radius.circular(20),
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  'Trouvez des produits frais directement des agriculteurs',
-                  style: TextStyle(
-                    color: Colors.white.withOpacity(0.9),
-                    fontSize: 14,
-                  ),
+              ),
+              child: Center(
+                child: Text(
+                  'Error: $err',
+                  style: const TextStyle(color: Colors.white),
                 ),
-                const SizedBox(height: 16),
-                // Barre de recherche
-                SearchBarWidget(
-                  controller: _searchController,
-                  onChanged: _onSearchChanged,
-                ),
-              ],
+              ),
             ),
           ),
           

@@ -229,6 +229,32 @@ class ProfileScreen extends ConsumerWidget {
                           user.phone ?? 'N/A',
                           const Color(0xFF4F46E5),
                         ),
+                        if (user.userType == 'farmer') ...[
+                          const Divider(height: 24),
+                          _buildContactItem(
+                            context,
+                            Icons.agriculture_rounded,
+                            'Nom de la ferme',
+                            user.farmName ?? 'N/A',
+                            const Color(0xFF10B981),
+                          ),
+                          const Divider(height: 24),
+                          _buildContactItem(
+                            context,
+                            Icons.location_on_rounded,
+                            'Localisation de la ferme',
+                            user.farmLocation ?? 'N/A',
+                            const Color(0xFFEF4444),
+                          ),
+                          const Divider(height: 24),
+                          _buildContactItem(
+                            context,
+                            Icons.area_chart_rounded,
+                            'Taille de la ferme',
+                            user.farmSize ?? 'N/A',
+                            const Color(0xFFF59E0B),
+                          ),
+                        ],
                         if (user.userType == 'buyer') ...[
                           const Divider(height: 24),
                           _buildBuyerInfoItem(
@@ -264,12 +290,36 @@ class ProfileScreen extends ConsumerWidget {
                   // Menu items with modern cards
                   _buildMenuCard(
                     context,
-                    'Historique des prêts',
-                    'Consultez vos demandes et remboursements passés',
+                    'Modifier Profil',
+                    'Mettez à jour vos informations personnelles',
+                    Icons.person_rounded,
+                    const Color(0xFF6366F1),
+                    const Color(0xFFEEF2FF),
+                    () => context.go('/buyer/edit-profile'),
+                  ),
+                  
+                  const SizedBox(height: 16),
+
+                  _buildMenuCard(
+                    context,
+                    'Paramètres',
+                    'Gérez vos préférences et notifications',
+                    Icons.settings_rounded,
+                    const Color(0xFF10B981),
+                    const Color(0xFFECFDF5),
+                    () => context.go('/buyer/settings'),
+                  ),
+                  
+                  const SizedBox(height: 16),
+
+                  _buildMenuCard(
+                    context,
+                    user.userType == 'farmer' ? 'Historique des prêts' : 'Historique des Transactions',
+                    user.userType == 'farmer' ? 'Consultez vos demandes et remboursements passés' : 'Consultez toutes vos transactions passées',
                     Icons.history_rounded,
                     const Color(0xFF6366F1),
                     const Color(0xFFEEF2FF),
-                    () => GoRouter.of(context).go('/farmer/repayments'),
+                    () => context.go(user.userType == 'farmer' ? '/farmer/repayments' : '/buyer/transaction-history'),
                   ),
                   
                   const SizedBox(height: 16),
@@ -281,7 +331,7 @@ class ProfileScreen extends ConsumerWidget {
                     Icons.verified_user_rounded,
                     const Color(0xFF10B981),
                     const Color(0xFFECFDF5),
-                    () => GoRouter.of(context).go('/kyc-verification'), // Fixed TODO
+                    () => GoRouter.of(context).go('/kyc-verification'),
                   ),
                   
                   const SizedBox(height: 16),
@@ -293,7 +343,7 @@ class ProfileScreen extends ConsumerWidget {
                     Icons.support_agent_rounded,
                     const Color(0xFFF59E0B),
                     const Color(0xFFFEF3C7),
-                    () => GoRouter.of(context).go('/farmer/support'),
+                    () => context.go('/buyer/support'),
                   ),
                   
                   const SizedBox(height: 24),
@@ -477,7 +527,7 @@ class ProfileScreen extends ConsumerWidget {
 
       // Redirection vers l'onboarding
       if (context.mounted) {
-        context.go('/onboarding');
+        context.go('/login');
       }
     }
   }

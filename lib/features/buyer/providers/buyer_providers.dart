@@ -119,17 +119,20 @@ class BuyerOrdersNotifier extends StateNotifier<List<Order>> {
 }
 
 // Provider pour le profil de l'acheteur
-final buyerProfileProvider = StateNotifierProvider<BuyerProfileNotifier, Buyer?>((ref) {
-  final buyerService = ref.watch(buyerServiceProvider);
-  return BuyerProfileNotifier(buyerService);
+final buyerProfileProvider = AsyncNotifierProvider<BuyerProfileNotifier, Buyer?>(() {
+  return BuyerProfileNotifier();
 });
 
-class BuyerProfileNotifier extends StateNotifier<Buyer?> {
-  final BuyerService _buyerService;
-  BuyerProfileNotifier(this._buyerService) : super(null);
+class BuyerProfileNotifier extends AsyncNotifier<Buyer?> {
+  @override
+  Future<Buyer?> build() async {
+    final buyerService = ref.watch(buyerServiceProvider);
+    return buyerService.getBuyerProfile();
+  }
 
   Future<void> loadProfile() async {
-    final profile = await _buyerService.getBuyerProfile();
-    state = profile;
+    state = const AsyncValue.loading();
+    final buyerService = ref.watch(buyerServiceProvider);
+    state = await AsyncValue.guard(() => buyerService.getBuyerProfile());
   }
 }

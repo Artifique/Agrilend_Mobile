@@ -43,13 +43,27 @@ class AuthService {
         await _secure.write(key: _refreshKey, value: refresh);
       if (type != null) await _secure.write(key: _typeKey, value: type);
 
-      // user info: map relevant fields
       final userMap = {
         'userId': data['userId'] ?? data['id'],
         'email': data['email'],
         'firstName': data['firstName'],
         'lastName': data['lastName'],
+        'phone': data['phone'],
+        'address': data['address'],
+        'hederaAccountId': data['hederaAccountId'],
         'role': data['role'] ?? data['userType'],
+        'isActive': data['isActive'],
+        'emailVerified': data['emailVerified'],
+        'createdAt': data['createdAt'],
+        'updatedAt': data['updatedAt'],
+        'companyName': data['companyName'],
+        'businessType': data['activityType'],
+        'businessAddress': data['companyAddress'],
+        'businessPhone': data['businessPhone'],
+        'deliveryAddress': data['deliveryAddress'],
+        'farmName': data['farmName'],
+        'farmLocation': data['farmLocation'],
+        'farmSize': data['farmSize'],
       }..removeWhere((k, v) => v == null);
 
       await _secure.write(key: _userKey, value: jsonEncode(userMap));
@@ -83,9 +97,21 @@ class AuthService {
         firstName: data['firstName'] ?? '',
         lastName: data['lastName'] ?? '',
         phone: data['phone'] ?? '',
+        address: data['address'],
+        hederaAccountId: data['hederaAccountId'],
         role: (data['role'] ?? data['userType'] ?? 'BUYER').toString(),
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
+        isActive: data['isActive'],
+        emailVerified: data['emailVerified'],
+        createdAt: data['createdAt'] != null ? DateTime.parse(data['createdAt']) : null,
+        updatedAt: data['updatedAt'] != null ? DateTime.parse(data['updatedAt']) : null,
+        companyName: data['companyName'],
+        businessType: data['businessType'],
+        businessAddress: data['businessAddress'],
+        businessPhone: data['businessPhone'],
+        deliveryAddress: data['deliveryAddress'],
+        farmName: data['farmName'],
+        farmLocation: data['farmLocation'],
+        farmSize: data['farmSize'],
       );
       // ignore: avoid_print
       print('AuthService getCurrentUser - constructed user: ${user.toJson()}');
@@ -120,7 +146,22 @@ class AuthService {
         'email': data['email'],
         'firstName': data['firstName'],
         'lastName': data['lastName'],
+        'phone': data['phone'],
+        'address': data['address'],
+        'hederaAccountId': data['hederaAccountId'],
         'role': data['role'] ?? data['userType'],
+        'isActive': data['isActive'],
+        'emailVerified': data['emailVerified'],
+        'createdAt': data['createdAt'],
+        'updatedAt': data['updatedAt'],
+        'companyName': data['companyName'],
+        'businessType': data['activityType'],
+        'businessAddress': data['companyAddress'],
+        'businessPhone': data['businessPhone'],
+        'deliveryAddress': data['deliveryAddress'],
+        'farmName': data['farmName'],
+        'farmLocation': data['farmLocation'],
+        'farmSize': data['farmSize'],
       }..removeWhere((k, v) => v == null);
 
       await _secure.write(key: _userKey, value: jsonEncode(userMap));

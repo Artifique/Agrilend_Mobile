@@ -20,13 +20,46 @@ import '../../features/agent/screens/agent_main_screen.dart';
 import '../../features/buyer/screens/buyer_main_screen.dart';
 import '../../features/buyer/screens/product_detail_screen.dart';
 import '../../features/buyer/screens/order_confirmation_screen.dart';
-import '../../features/buyer/screens/order_list_screen.dart'; // New import
+import '../../features/buyer/screens/order_list_screen.dart';
+import '../../features/buyer/screens/offer_detail_screen.dart'; // New import
+import 'package:agrilend/features/buyer/screens/payment_method_screen.dart'; // New import
+import 'package:agrilend/features/transactions/screens/transaction_details_screen.dart'; // New import
+import 'package:agrilend/models/transaction.dart'; // New import for extra parameter
+import 'package:agrilend/models/user.dart';
+import 'package:go_router/go_router.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../features/auth/providers/auth_provider.dart';
+import '../../features/onboarding/screens/onboarding_screen.dart';
+import '../../features/auth/screens/login_screen.dart';
+import '../../features/auth/screens/register_screen.dart';
+import '../../features/auth/screens/user_type_selection_screen.dart';
+import '../../features/auth/screens/basic_info_screen.dart';
+import '../../features/auth/screens/personal_info_screen.dart';
+import '../../features/auth/screens/kyc_verification_screen.dart';
+import '../../features/auth/screens/registration_complete_screen.dart';
+import '../../features/farmer/screens/farmer_main_screen.dart';
+import '../../features/farmer/screens/create_offer_screen.dart';
+import '../../features/farmer/screens/stock_management_screen.dart';
+
+import '../../features/agent/screens/agent_main_screen.dart';
+import '../../features/buyer/screens/buyer_main_screen.dart';
+import '../../features/buyer/screens/product_detail_screen.dart';
+import '../../features/buyer/screens/order_confirmation_screen.dart';
+import '../../features/buyer/screens/order_list_screen.dart';
+import '../../features/buyer/screens/offer_detail_screen.dart'; // New import
 import '../../features/transactions/screens/payment_request_screen.dart';
 import '../../features/transactions/screens/transaction_history_screen.dart';
 import '../../features/wallet/screens/wallet_screen.dart';
 import '../../features/wallet/screens/scanner_qr_screen.dart';
 import '../../features/profile/screens/profile_screen.dart';
 import '../../features/notification/screens/notification_screen.dart';
+import '../../features/profile/screens/edit_profile_screen.dart'; // New import
+import '../../features/profile/screens/settings_screen.dart'; // New import
+import 'package:agrilend/features/profile/screens/support_screen.dart'; // New import
+import 'package:agrilend/features/wallet/screens/receive_qr_screen.dart'; // New import
+import 'package:agrilend/features/wallet/screens/send_hbar_screen.dart'; // New import
+import 'package:agrilend/features/wallet/screens/wallet_settings_screen.dart'; // New import
 
 import 'dart:async'; // Import for StreamSubscription
 import 'package:flutter/foundation.dart'; // Import for ChangeNotifier
@@ -219,6 +252,13 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             },
           ),
           GoRoute(
+            path: 'offer/:offerId',
+            builder: (context, state) {
+              final offerId = state.pathParameters['offerId']!;
+              return OfferDetailScreen(offerId: offerId);
+            },
+          ),
+          GoRoute(
             path: 'order-confirmation',
             builder: (context, state) => const OrderConfirmationScreen(),
           ),
@@ -233,6 +273,34 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           GoRoute(
             path: 'notifications',
             builder: (context, state) => const NotificationScreen(),
+          ),
+          GoRoute(
+            path: 'edit-profile',
+            builder: (context, state) => const EditProfileScreen(),
+          ),
+          GoRoute(
+            path: 'settings',
+            builder: (context, state) => const SettingsScreen(),
+          ),
+          GoRoute(
+            path: 'support',
+            builder: (context, state) => const SupportScreen(),
+          ),
+          GoRoute(
+            path: 'qr-scanner',
+            builder: (context, state) => const ScannerQrScreen(),
+          ),
+          GoRoute(
+            path: 'receive-qr',
+            builder: (context, state) => const ReceiveQrScreen(),
+          ),
+          GoRoute(
+            path: 'send-hbar',
+            builder: (context, state) => const SendHbarScreen(),
+          ),
+          GoRoute(
+            path: 'wallet-settings',
+            builder: (context, state) => const WalletSettingsScreen(),
           ),
         ],
       ),

@@ -32,4 +32,9 @@ class UserService {
   Future<void> delete(int id) async {
     await api.delete('/users/$id');
   }
+
+  Future<User> updateCurrentUserProfile(Map<String, dynamic> changes) async {
+    final resp = await api.put('/user/profile', data: changes);
+    return User.fromJson(Map<String, dynamic>.from(resp.data));
+  }
 }

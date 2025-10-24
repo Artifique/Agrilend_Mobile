@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 
-class SupportScreen extends StatelessWidget {
-  const SupportScreen({super.key});
+class ReceiveQrScreen extends StatelessWidget {
+  const ReceiveQrScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Support'),
+        title: const Text('Recevoir HBAR'),
       ),
       body: const Center(
-        child: Text('Écran de support'),
+        child: Text('Receive QR Screen (Placeholder)'),
       ),
     );
   }

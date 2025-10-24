@@ -27,10 +27,11 @@ class _OrderConfirmationScreenState
     super.initState();
     // Charger l'adresse de livraison par défaut du profil
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final buyerProfile = ref.read(buyerProfileProvider);
-      if (buyerProfile?.deliveryAddress != null) {
-        _deliveryAddressController.text = buyerProfile!.deliveryAddress!;
-      }
+      ref.read(buyerProfileProvider).whenData((buyerProfile) {
+        if (buyerProfile?.deliveryAddress != null) {
+          _deliveryAddressController.text = buyerProfile!.deliveryAddress!;
+        }
+      });
     });
   }
 

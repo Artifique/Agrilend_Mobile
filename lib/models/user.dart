@@ -16,6 +16,9 @@ class User {
   final String? businessAddress;
   final String? businessPhone;
 final String? deliveryAddress;
+  final String? farmName;
+  final String? farmLocation;
+  final String? farmSize;
 
 
   User({
@@ -36,6 +39,9 @@ final String? deliveryAddress;
     this.businessAddress,
     this.businessPhone,
     this.deliveryAddress,
+    this.farmName,
+    this.farmLocation,
+    this.farmSize,
   });
 
   factory User.fromJson(Map<String, dynamic> json) => User(
@@ -62,10 +68,13 @@ final String? deliveryAddress;
         businessAddress: json['companyAddress'],
         businessPhone: json['phone'],
         deliveryAddress: json['deliveryAddress'],
+        farmName: json['farmName'],
+        farmLocation: json['farmLocation'],
+        farmSize: json['farmSize'],
       );
 
   Map<String, dynamic> toJson() => {
-        'id': id,
+        if (id != null) 'id': id,
         'email': email,
         'first_name': firstName,
         'last_name': lastName,
@@ -82,6 +91,9 @@ final String? deliveryAddress;
         'companyAddress': businessAddress,
         'business_phone': businessPhone,
         'delivery_address': deliveryAddress,
+        'farmName': farmName,
+        'farmLocation': farmLocation,
+        'farmSize': farmSize,
       };
 
   User copyWith({
@@ -102,6 +114,9 @@ final String? deliveryAddress;
     String? businessAddress,
     String? businessPhone,
     String? deliveryAddress,
+    String? farmName,
+    String? farmLocation,
+    String? farmSize,
   }) {
     return User(
       id: id ?? this.id,
@@ -121,6 +136,9 @@ final String? deliveryAddress;
       businessAddress: businessAddress ?? this.businessAddress,
       businessPhone: businessPhone ?? this.businessPhone,
       deliveryAddress: deliveryAddress ?? this.deliveryAddress,
+      farmName: farmName ?? this.farmName,
+      farmLocation: farmLocation ?? this.farmLocation,
+      farmSize: farmSize ?? this.farmSize,
     );
   }
   String get fullName => '${firstName ?? ''} ${lastName ?? ''}'.trim();

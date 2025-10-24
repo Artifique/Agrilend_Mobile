@@ -1,57 +1,6 @@
-GET http://localhost:8080/api/buyer/offers
-
-reponse:
-{
-    "success": true,
-    "message": "Offres récupérées avec succès",
-    "data": {
-        "content": [
-            {
-                "id": 2,
-                "productId": 1,
-                "availableQuantity": 10.00,
-                "availabilityDate": "2025-12-01",
-                "suggestedUnitPrice": 250.00,
-                "finalUnitPrice": 262.50,
-                "status": "ACTIVE",
-                "notes": "Récolte de Novembre. Certifié bio.",
-                "productName": "Blé Tendre Bio Premium",
-                "productDescription": "Blé tendre biologique de qualité supérieure, idéal pour la boulangerie artisanale.",
-                "productUnit": "LITER",
-                "productionMethod": null,
-                "farmerId": 2,
-                "farmerName": "Sy Modibo",
-                "farmerEmail": "artifiquea@gmail.com",
-                "createdAt": "2025-09-24T16:32:37",
-                "updatedAt": "2025-10-08T11:28:42"
-            },
-            {
-                "id": 1,
-                "productId": 1,
-                "availableQuantity": 7.00,
-                "availabilityDate": "2025-11-15",
-                "suggestedUnitPrice": 250.00,
-                "finalUnitPrice": 262.50,
-                "status": "ACTIVE",
-                "notes": "Récolte de Septembre. Qualité extra.",
-                "productName": "Blé Tendre Bio Premium",
-                "productDescription": "Blé tendre biologique de qualité supérieure, idéal pour la boulangerie artisanale.",
-                "productUnit": "LITER",
-                "productionMethod": null,
-                "farmerId": 2,
-                "farmerName": "Sy Modibo",
-                "farmerEmail": "artifiquea@gmail.com",
-                "createdAt": "2025-09-23T12:09:52",
-                "updatedAt": "2025-10-09T11:18:32"
-            }
-        ],
-        "page": 0,
-        "size": 10,
-        "totalElements": 2,
-        "totalPages": 1,
-        "first": true,
-        "last": true,
-        "empty": false
-    },
-    "timestamp": "2025-10-23T17:23:28.582092"
-}
+L’idée générale c’est de pouvoir vendre les produits agricoles aux acheteurs partout dans le monde (les frais de transport ne sont pas inclus)
+On va voir un agriculteur on lui propose de vendre son produit rapidement, de manière transparente, rapide et possibilité de toucher le marché mondiale 
+S’il est daccord on signe un contrat avec lui pour qu’il nous fournisse les quantités de produits agricoles dont ont à besoin et nous on crée des token fungible en fonction de la quantité qu’il nous a fourni 
+Pour qu’un acheteur puisse payer il doit injecter des hbar dans un pool que nous allons créer pendant une certaine durée 
+Les fonds seront livrés à l’agriculteur que lorsqu’il viendra avec le produit et s’il est conforme aux normes de notre contrat avec lui 
+Ensuite les tokens sont brûlés et l’agriculteur est payé en hbar soit en argent ça dépendra de lui

@@ -7,10 +7,10 @@ class SupportScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Support'),
+        title: const Text('Support & Assistance'),
       ),
       body: const Center(
-        child: Text('Écran de support'),
+        child: Text('Support Screen (Placeholder)'),
       ),
     );
   }
