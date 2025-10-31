@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/theme/app_theme.dart';
 import '../screens/buyer_dashboard_screen.dart';
 import '../screens/orders_screen.dart';
-import '../screens/profile_screen.dart';
+import '../../profile/screens/profile_screen.dart';
 import '../screens/wallet_screen.dart';
 
 class BuyerMainScreen extends ConsumerStatefulWidget {
@@ -21,7 +21,7 @@ class _BuyerMainScreenState extends ConsumerState<BuyerMainScreen> {
     const BuyerDashboardScreen(),
     const OrdersScreen(),
     const WalletScreen(),
-    const BuyerProfileScreen(),
+    const ProfileScreen(),
   ];
 
   void _onItemTapped(int index) {

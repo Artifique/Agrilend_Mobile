@@ -19,6 +19,13 @@ class AuthService {
   AuthService(this.api) : _secure = const FlutterSecureStorage();
 
   /// Calls backend login and stores tokens + user info securely
+  Future<void> loadToken() async {
+    final token = await _secure.read(key: _accessKey);
+    if (token != null) {
+      api.setAuthToken(token);
+    }
+  }
+
   Future<Map<String, dynamic>> login(String email, String password) async {
     final resp = await api.post('/api/auth/login', data: {
       'email': email,

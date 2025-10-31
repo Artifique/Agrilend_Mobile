@@ -117,7 +117,7 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        '\u2248 ${(buyerProfile.hbarBalance! * 0.05).toStringAsFixed(2)} USD',
+                        '\u2248 ${((buyerProfile.hbarBalance ?? 0) * 0.05).toStringAsFixed(2)} USD',
                         style: TextStyle(
                           color: Colors.white.withOpacity(0.8),
                           fontSize: 14,
@@ -157,7 +157,7 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
                         ),
                       ),
                       const SizedBox(height: 16),
-                      if (buyerProfile.hasHederaAccount == true) ...[
+                      if (buyerProfile.hasHederaAccountSafe) ...[
                         _buildInfoRow(
                           'ID du compte',
                           buyerProfile.hederaAccountId ?? '-',

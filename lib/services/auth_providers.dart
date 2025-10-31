@@ -17,7 +17,7 @@ import 'user_service.dart';
 // Export notifier so feature code can reference AuthState/AuthNotifier types
 export 'auth_notifier.dart';
 
-final apiServiceProvider = Provider<ApiService>((ref) => ApiService.create());
+final apiServiceProvider = Provider<ApiService>((ref) => ApiService());
 
 final authServiceProvider =
     Provider<AuthService>((ref) => AuthService(ref.read(apiServiceProvider)));
@@ -45,7 +45,8 @@ final authNotifierProvider =
     StateNotifierProvider<AuthNotifier, AuthState>((ref) {
   final authService = ref.read(authServiceProvider);
   final buyerService = ref.read(buyerServiceProvider);
-  return AuthNotifier(authService, buyerService);
+  final farmerService = ref.read(farmerServiceProvider); // New
+  return AuthNotifier(authService, buyerService, farmerService); // New
 });
 
 // Backwards-compatible alias

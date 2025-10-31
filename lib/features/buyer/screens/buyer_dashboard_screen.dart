@@ -85,7 +85,7 @@ class _BuyerDashboardScreenState extends ConsumerState<BuyerDashboardScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Bonjour, ${buyerProfile?.businessName ?? 'Acheteur'}',
+                      'Bonjour, ${buyerProfile?.companyName ?? 'Acheteur'}',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 18,
@@ -187,21 +187,26 @@ class _BuyerDashboardScreenState extends ConsumerState<BuyerDashboardScreen> {
                         ],
                       ),
                     )
-                  : ListView.builder(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      itemCount: offers.length,
-                      itemBuilder: (context, index) {
-                        final offer = offers[index];
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 16),
-                          child: OfferCard(
-                            offer: offer,
-                            onTap: () {
-                              context.go('/buyer/offer/${offer.id}');
-                            },
-                          ),
-                        );
+                  : RefreshIndicator(
+                      onRefresh: () async {
+                        ref.invalidate(offersProvider);
                       },
+                      child: ListView.builder(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        itemCount: offers.length,
+                        itemBuilder: (context, index) {
+                          final offer = offers[index];
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 16),
+                            child: OfferCard(
+                              offer: offer,
+                              onTap: () {
+                                context.go('/buyer/offer/${offer.id}');
+                              },
+                            ),
+                          );
+                        },
+                      ),
                     ),
               loading: () => const Center(child: CircularProgressIndicator()),
               error: (err, stack) => Center(child: Text('Error: $err')),

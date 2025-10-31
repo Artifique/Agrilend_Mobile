@@ -19,9 +19,16 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
   late TextEditingController _fullNameController;
   late TextEditingController _emailController;
   late TextEditingController _phoneController;
+
+  // Buyer specific
   late TextEditingController _companyNameController;
   late TextEditingController _businessTypeController;
   late TextEditingController _businessAddressController;
+
+  // Farmer specific
+  late TextEditingController _farmNameController;
+  late TextEditingController _farmLocationController;
+  late TextEditingController _farmSizeController;
 
   @override
   void initState() {
@@ -30,9 +37,16 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     _fullNameController = TextEditingController(text: user?.fullName ?? '');
     _emailController = TextEditingController(text: user?.email ?? '');
     _phoneController = TextEditingController(text: user?.phone ?? '');
+
+    // Buyer
     _companyNameController = TextEditingController(text: user?.companyName ?? '');
     _businessTypeController = TextEditingController(text: user?.businessType ?? '');
     _businessAddressController = TextEditingController(text: user?.businessAddress ?? '');
+
+    // Farmer
+    _farmNameController = TextEditingController(text: user?.farmName ?? '');
+    _farmLocationController = TextEditingController(text: user?.farmLocation ?? '');
+    _farmSizeController = TextEditingController(text: user?.farmSize ?? '');
   }
 
   @override
@@ -43,6 +57,9 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     _companyNameController.dispose();
     _businessTypeController.dispose();
     _businessAddressController.dispose();
+    _farmNameController.dispose();
+    _farmLocationController.dispose();
+    _farmSizeController.dispose();
     super.dispose();
   }
 
@@ -68,6 +85,9 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
         companyName: _companyNameController.text.trim(),
         businessType: _businessTypeController.text.trim(),
         businessAddress: _businessAddressController.text.trim(),
+        farmName: _farmNameController.text.trim(),
+        farmLocation: _farmLocationController.text.trim(),
+        farmSize: _farmSizeController.text.trim(),
       );
 
       try {
@@ -78,10 +98,8 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
         print('Updated User Object: $updatedUser');
         print('Changes being sent to API: ${updatedUser.toJson()}');
 
-        await userService.updateCurrentUserProfile(updatedUser.toJson()); // Use the new method
-
-        // Update auth state with new user data
-        authNotifier.state = authNotifier.state.copyWith(user: updatedUser);
+        final fetchedUser = await userService.updateCurrentUserProfile(updatedUser.toJson());
+        authNotifier.state = authNotifier.state.copyWith(user: fetchedUser);
 
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -104,6 +122,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final user = ref.watch(authProvider).user;
+    final isFarmer = user?.userType == 'farmer';
 
     if (user == null) {
       return Scaffold(
@@ -115,6 +134,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Modifier le Profil'),
+        backgroundColor: isFarmer ? const Color(0xFF10B981) : null,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -159,26 +179,48 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                   return null;
                 },
               ),
-              if (user.userType == 'buyer') ...[
-                const SizedBox(height: 16),
-                TextFormField(
-                  controller: _companyNameController,
-                  decoration: const InputDecoration(labelText: 'Nom de l\'entreprise'),
-                ),
-                const SizedBox(height: 16),
-                TextFormField(
-                  controller: _businessTypeController,
-                  decoration: const InputDecoration(labelText: 'Type d\'activité'),
-                ),
-                const SizedBox(height: 16),
-                TextFormField(
-                  controller: _businessAddressController,
-                  decoration: const InputDecoration(labelText: 'Adresse de l\'entreprise'),
-                ),
-              ],
+              if (user.userType == 'buyer')
+                ...[
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    controller: _companyNameController,
+                    decoration: const InputDecoration(labelText: 'Nom de l\'entreprise'),
+                  ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    controller: _businessTypeController,
+                    decoration: const InputDecoration(labelText: 'Type d\'activité'),
+                  ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    controller: _businessAddressController,
+                    decoration: const InputDecoration(labelText: 'Adresse de l\'entreprise'),
+                  ),
+                ]
+              else if (user.userType == 'farmer')
+                ...[
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    controller: _farmNameController,
+                    decoration: const InputDecoration(labelText: 'Nom de la ferme'),
+                  ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    controller: _farmLocationController,
+                    decoration: const InputDecoration(labelText: 'Localisation de la ferme'),
+                  ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    controller: _farmSizeController,
+                    decoration: const InputDecoration(labelText: 'Taille de la ferme'),
+                  ),
+                ],
               const SizedBox(height: 32),
               ElevatedButton(
                 onPressed: _saveProfile,
+                style: isFarmer
+                    ? ElevatedButton.styleFrom(backgroundColor: const Color(0xFF10B981))
+                    : null,
                 child: const Text('Enregistrer les modifications'),
               ),
             ],

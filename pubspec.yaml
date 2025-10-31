@@ -12,7 +12,7 @@ dependencies:
   cupertino_icons: ^1.0.6
 
   # State Management
-  flutter_riverpod: ^2.4.9
+  flutter_riverpod: ^2.6.1
 
   # Navigation
   go_router: ^12.1.3

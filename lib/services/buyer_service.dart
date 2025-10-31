@@ -1,4 +1,4 @@
-import 'package:agrilend/models/buyer.dart';
+import 'package:agrilend/models/buyer.dart'; // Import Buyer model
 import 'package:agrilend/services/api_service.dart';
 
 class BuyerService {
@@ -11,7 +11,7 @@ class BuyerService {
       final response = await _apiService.get('/api/buyer/profile');
       if (response.statusCode == 200 && response.data['success'] == true) {
         final userData = response.data['data'] as Map<String, dynamic>;
-        return Buyer.fromJson(userData);
+        return Buyer.fromJson(userData); // Return Buyer object
       }
     } catch (e) {
       // ignore: avoid_print

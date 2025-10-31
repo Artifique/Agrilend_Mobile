@@ -19,4 +19,32 @@ class OfferService {
     }
     return [];
   }
+
+  Future<bool> createOffer({
+    required int productId,
+    required double availableQuantity,
+    required double suggestedUnitPrice,
+    required String availabilityDate,
+    String? notes,
+  }) async {
+    try {
+      final response = await _apiService.post(
+        '/api/farmer/offers',
+        data: {
+          'productId': productId,
+          'availableQuantity': availableQuantity,
+          'suggestedUnitPrice': suggestedUnitPrice,
+          'availabilityDate': availabilityDate,
+          'notes': notes,
+        },
+      );
+      if ((response.statusCode == 201 || response.statusCode == 200) && response.data['success'] == true) {
+        return true;
+      }
+    } catch (e) {
+      // ignore: avoid_print
+      print('Error creating offer: $e');
+    }
+    return false;
+  }
 }

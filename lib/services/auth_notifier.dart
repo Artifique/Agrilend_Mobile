@@ -2,6 +2,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'auth_service.dart';
 import '../models/user.dart';
+import 'package:agrilend/services/farmer_service.dart';
+import 'package:agrilend/services/farmer_service.dart'; // New import
 
 import 'package:agrilend/services/buyer_service.dart'; // New import
 
@@ -25,17 +27,35 @@ class AuthState {
 }
 
 
+ // New import
+
 class AuthNotifier extends StateNotifier<AuthState> {
   final AuthService authService;
-  final BuyerService buyerService; // New field
+  final BuyerService buyerService;
+  final FarmerService farmerService; // New field
 
-  AuthNotifier(this.authService, this.buyerService) : super(AuthState()) {
+  AuthNotifier(this.authService, this.buyerService, this.farmerService) : super(AuthState()) {
     init();
   }
 
   Future<void> init() async {
     state = state.copyWith(isLoading: true);
-    final user = await authService.getCurrentUser();
+    await authService.loadToken(); // Load token first
+    User? user = await authService.getCurrentUser(); // Make user mutable
+
+    if (user != null) {
+      if (user.userType == 'buyer') {
+        final buyerProfile = await buyerService.getBuyerProfile();
+        if (buyerProfile != null) {
+          user = buyerProfile; // Replace user with fetched profile
+        }
+      } else if (user.userType == 'farmer') {
+        final farmerProfile = await farmerService.getFarmerProfile();
+        if (farmerProfile != null) {
+          user = farmerProfile; // Replace user with fetched profile
+        }
+      }
+    }
     state = state.copyWith(user: user, isLoading: false);
   }
 
@@ -53,13 +73,12 @@ class AuthNotifier extends StateNotifier<AuthState> {
         if (user.userType == 'buyer') {
           final buyerProfile = await buyerService.getBuyerProfile();
           if (buyerProfile != null) {
-            user = user.copyWith(
-              companyName: buyerProfile.companyName,
-              businessType: buyerProfile.businessType,
-              businessAddress: buyerProfile.businessAddress,
-              businessPhone: buyerProfile.businessPhone,
-              deliveryAddress: buyerProfile.deliveryAddress,
-            );
+            user = buyerProfile; // Replace user with fetched profile
+          }
+        } else if (user.userType == 'farmer') {
+          final farmerProfile = await farmerService.getFarmerProfile();
+          if (farmerProfile != null) {
+            user = farmerProfile; // Replace user with fetched profile
           }
         }
         
@@ -97,6 +116,14 @@ class AuthNotifier extends StateNotifier<AuthState> {
   Future<void> logout() async {
     await authService.logout();
     state = AuthState();
+  }
+
+  void updateUserHederaAccountId(String? hederaAccountId) {
+    if (state.user != null) {
+      state = state.copyWith(
+        user: state.user!.copyWith(hederaAccountId: hederaAccountId),
+      );
+    }
   }
 
   void clearError() {

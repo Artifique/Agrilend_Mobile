@@ -60,6 +60,8 @@ import 'package:flutter/foundation.dart'; // Import for ChangeNotifier
 import 'package:agrilend/features/auth/screens/user_type_selection_screen.dart';
 import 'package:agrilend/features/auth/screens/basic_info_screen.dart';
 import 'package:agrilend/features/auth/screens/personal_info_screen.dart';
+import 'package:agrilend/features/profile/screens/configure_hedera_account_screen.dart'; // New import
+import 'package:agrilend/features/profile/screens/create_hedera_account_screen.dart'; // New import
 
 final appRouterProvider = Provider<GoRouter>((ref) {
   final authState = ref.watch(authProvider);
@@ -180,6 +182,14 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           return RegistrationCompleteScreen(userType: userType);
         },
       ),
+      GoRoute(
+        path: '/configure-hedera-account',
+        builder: (context, state) => const ConfigureHederaAccountScreen(),
+      ),
+      GoRoute(
+        path: '/create-hedera-account',
+        builder: (context, state) => const CreateHederaAccountScreen(),
+      ),
 
       // Farmer Routes
       GoRoute(
@@ -219,6 +229,18 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           GoRoute(
             path: 'transaction-history',
             builder: (context, state) => const TransactionHistoryScreen(),
+          ),
+          GoRoute(
+            path: 'edit-profile',
+            builder: (context, state) => const EditProfileScreen(),
+          ),
+          GoRoute(
+            path: 'settings',
+            builder: (context, state) => const SettingsScreen(),
+          ),
+          GoRoute(
+            path: 'support',
+            builder: (context, state) => const SupportScreen(),
           ),
         ], // <-- ferme le tableau des routes imbriquées
       ), // <-- ferme le GoRoute /farmer

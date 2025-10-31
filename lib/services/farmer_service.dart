@@ -1,10 +1,26 @@
 import '../models/farmer.dart';
 import 'api_service.dart';
 
+import '../models/user.dart'; // Import User model
+
 class FarmerService {
   final ApiService api;
 
   FarmerService(this.api);
+
+  Future<User?> getFarmerProfile() async {
+    try {
+      final resp = await api.get('/api/farmer/profile');
+      if (resp.data != null && resp.data['success'] == true && resp.data['data'] != null) {
+        return User.fromJson(Map<String, dynamic>.from(resp.data['data']));
+      }
+      return null;
+    } catch (e) {
+      // Handle error, e.g., log it
+      print('Error fetching farmer profile: $e');
+      return null;
+    }
+  }
 
   Future<List<Farmer>> fetchAll() async {
     final resp = await api.get('/farmers');

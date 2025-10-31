@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:dio/dio.dart';
+import 'package:agrilend/services/api_service.dart';
 
 class PersonalInfoScreen extends ConsumerStatefulWidget {
   final String userType;
@@ -432,25 +433,67 @@ class _PersonalInfoScreenState extends ConsumerState<PersonalInfoScreen> {
     }
 
     try {
-      final dio = Dio();
-      final response = await dio.post(
-        'http://localhost:8080/api/auth/register',
+      final apiService = ApiService();
+      final response = await apiService.post(
+        '/api/auth/register',
         data: data,
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        // Navigate to the next screen on success
-        context.go('/kyc-verification?userType=${widget.userType}');
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Succès'),
+              content: const Text('Votre compte a été créé avec succès.'),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text('OK'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    context.go('/kyc-verification?userType=${widget.userType}');
+                  },
+                ),
+              ],
+            );
+          },
+        );
       } else {
-        // Handle error
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Erreur: ${response.statusMessage}')),
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Erreur'),
+              content: Text('Erreur: ${response.statusMessage}'),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text('OK'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
         );
       }
     } on DioException catch (e) {
-      // Handle Dio error
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erreur réseau: ${e.message}')),
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Erreur réseau'),
+            content: Text('Erreur réseau: ${e.message}'),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
       );
     } finally {
       if (mounted) {

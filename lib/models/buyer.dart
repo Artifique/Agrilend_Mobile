@@ -1,58 +1,73 @@
-class Buyer {
-  final int userId;
-  final String? companyName;
-  final String? businessType;
-  final String? businessAddress;
-  final String? businessPhone;
-  final String? businessEmail;
-  final String? deliveryAddress;
+import 'package:agrilend/models/user.dart';
+
+class Buyer extends User {
   final bool? hasHederaAccount;
-  final String? hederaAccountId;
   final double? hbarBalance;
   final List<String>? preferredCategories;
 
   Buyer({
-    required this.userId,
-    this.companyName,
-    this.businessType,
-    this.businessAddress,
-    this.businessPhone,
-    this.businessEmail,
-    this.deliveryAddress,
+    required super.email,
+    required super.role,
+    super.id,
+    super.firstName,
+    super.lastName,
+    super.phone,
+    super.address,
+    super.hederaAccountId,
+    super.isActive,
+    super.emailVerified,
+    super.createdAt,
+    super.updatedAt,
+    super.companyName,
+    super.businessType,
+    super.businessAddress,
+    super.businessPhone,
+    super.deliveryAddress,
+    super.farmName,
+    super.farmLocation,
+    super.farmSize,
     this.hasHederaAccount,
-    this.hederaAccountId,
     this.hbarBalance,
     this.preferredCategories,
   });
 
-  factory Buyer.fromJson(Map<String, dynamic> json) => Buyer(
-        userId: json['id'],
-        companyName: json['companyName'],
-        businessType: json['activityType'],
-        businessAddress: json['companyAddress'],
-        businessPhone: json['phone'],
-        businessEmail: json['email'],
-        deliveryAddress: json['deliveryAddress'],
-        hasHederaAccount: json['hederaAccountId'] != null,
-        hederaAccountId: json['hederaAccountId'],
-        hbarBalance: json['hbarBalance'] != null
-            ? double.tryParse('${json['hbarBalance']}')
-            : null,
-        preferredCategories: (json['preferredCategories'] is List)
-            ? List<String>.from(json['preferredCategories'])
-            : null,
-      );
+  factory Buyer.fromJson(Map<String, dynamic> json) {
+    final user = User.fromJson(json); // Parse User fields
+    return Buyer(
+      id: user.id,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      phone: user.phone,
+      address: user.address,
+      hederaAccountId: user.hederaAccountId,
+      role: user.role,
+      isActive: user.isActive,
+      emailVerified: user.emailVerified,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+      companyName: user.companyName,
+      businessType: user.businessType,
+      businessAddress: user.businessAddress,
+      businessPhone: user.businessPhone,
+      deliveryAddress: user.deliveryAddress,
+      farmName: user.farmName,
+      farmLocation: user.farmLocation,
+      farmSize: user.farmSize,
+      hasHederaAccount: json['hederaAccountId'] != null,
+      hbarBalance: json['hbarBalance'] != null
+          ? double.tryParse('${json['hbarBalance']}')
+          : null,
+      preferredCategories: (json['preferredCategories'] is List)
+          ? List<String>.from(json['preferredCategories'])
+          : null,
+    );
+  }
 
+  @override
   Map<String, dynamic> toJson() => {
-        'user_id': userId,
-        'company_name': companyName,
-        'business_type': businessType,
-        'business_address': businessAddress,
-        'business_phone': businessPhone,
-        'business_email': businessEmail,
-        'delivery_address': deliveryAddress,
+        ...super.toJson(), // Include User fields
         'has_hedera_account': hasHederaAccount,
-        'hedera_account_id': hederaAccountId,
         'hbar_balance': hbarBalance,
         'preferred_categories': preferredCategories,
       };

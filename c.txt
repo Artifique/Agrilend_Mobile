@@ -1,29 +1,501 @@
-POST : http://localhost:8080/api/auth/register
-body:
-   
-    {
-        "firstName": "Kone",
-        "lastName": "Abou",
-        "email": "daou.arti19@gmail.com",
-        "password": "password123",
-        "phone": "90662788",
-        "role": "BUYER",
-        "companyName": "Bio Distribution B",
-        "activityType": "Distribution Alimentaire",
-        "companyAddress": "15 rue Modibo Keita, Bamako"
-      }
-      
-       
-    
- {
-  "firstName": "Sy",
-  "lastName": "Modibo",
-  "email": "artifiquea@gmail.com",
-  "password": "password123",
-  "phone": "98765432",
-  "role": "FARMER",
-  "farmName": "Foro",
-  "farmLocation": "San",
-  "farmSize": "50 hectare"
-}
+Je vais structurer ma réponse en détaillant chaque étape du parcours de l'acheteur.
 
+  Partie 1 : Configuration initiale (après connexion)
+
+   * Action 1 : Connexion de l'utilisateur
+       * Endpoint : POST /api/auth/login
+       * JSON de la requête
+       * JSON de la réponse (incluant le token JWT)
+   * Action 2 : Récupération du profil de l'acheteur
+       * Endpoint : GET /api/user/profile
+       * En-têtes (Autorisation)
+       * JSON de la réponse (vérifier hederaAccountId)
+   * Action 3 : (Conditionnel) Lier/Créer un compte Hedera
+       * Scénario A : L'utilisateur a un ID de compte Hedera
+           * Action : Lier un compte Hedera existant
+           * Endpoint : POST /api/user/link-hedera-account
+           * JSON de la requête
+           * JSON de la réponse
+       * Scénario B : L'utilisateur a besoin d'un nouveau compte Hedera
+           * Action : Créer un nouveau compte Hedera
+           * Endpoint : POST /api/user/create-hedera-account
+           * JSON de la requête (vide)
+           * JSON de la réponse (incluant accountId et privateKey - critique pour le stockage côté client)
+
+  Partie 2 : Actions principales de l'acheteur (avec interactions Hedera)
+
+   * Action 4 : Afficher les offres disponibles
+       * Endpoint : GET /api/buyer/offers
+       * En-têtes (Autorisation)
+       * JSON de la réponse
+   * Action 5 : Préparer un dépôt HBAR (nécessite une signature côté client)
+       * Endpoint : POST /api/buyer/deposit/prepare
+       * En-têtes (Autorisation)
+       * JSON de la requête
+       * JSON de la réponse (incluant unsignedTx - encodé en Base64)
+       * Processus de signature côté client (Flutter) :
+           1. Recevoir unsignedTx du backend.
+           2. Récupérer la clé privée de l'acheteur (de manière sécurisée depuis le stockage local).
+           3. Utiliser le SDK Hedera pour Dart (via Platform Channels) pour décoder unsignedTx, le signer avec la clé privée, et le
+              ré-encoder en Base64.
+           4. Soumettre le signedTx au backend.
+   * Action 6 : Confirmer le dépôt HBAR (après signature côté client)
+       * Endpoint : POST /api/buyer/deposit/confirm
+       * En-têtes (Autorisation)
+       * JSON de la requête (incluant hederaTransactionId de la transaction signée)
+       * JSON de la réponse
+   * Action 7 : Passer une commande
+       * Endpoint : POST /api/buyer/orders
+       * En-têtes (Autorisation)
+       * JSON de la requête
+       * JSON de la réponse
+   * Action 8 : Préparer l'association de jetons (si nécessaire, nécessite une signature côté client)
+       * Endpoint : POST /api/buyer/token/associate/prepare
+       * En-têtes (Autorisation)
+       * JSON de la requête
+       * JSON de la réponse (incluant unsignedTx - encodé en Base64)
+       * Processus de signature côté client (Flutter) : (Identique à l'Action 5)
+   * Action 9 : Échanger des AgriTokens (nécessite une signature côté client)
+       * Endpoint : POST /api/buyer/redeem
+       * En-têtes (Autorisation)
+       * JSON de la requête
+       * JSON de la réponse (incluant unsignedTx - encodé en Base64)
+       * Processus de signature côté client (Flutter) : (Identique à l'Action 5)
+
+  Partie 3 : Considérations générales pour Flutter
+   * Platform Channels : Réitérer la nécessité des Platform Channels pour les interactions avec le SDK Hedera.
+   * Stockage sécurisé : Mettre l'accent sur flutter_secure_storage pour les clés privées.
+   * Gestion des erreurs : Importance d'une gestion robuste des erreurs.
+
+  Je vais maintenant commencer à détailler chaque action.
+
+  ---
+
+  Absolument ! Reprenons les explications de manière très détaillée, en nous concentrant sur le parcours de l'acheteur sur votre
+  application mobile Flutter, après la connexion. Nous allons suivre l'ordre logique des actions, en incluant les endpoints, les
+  exemples de corps JSON et les explications sur la signature côté client.
+
+  Contexte Important pour Flutter et Hedera
+
+  Comme nous l'avons discuté, il n'existe pas de SDK Hedera officiel en Dart/Flutter. La solution la plus robuste pour la signature
+  côté client est d'utiliser les Platform Channels de Flutter pour communiquer avec les SDK Hedera natifs (Java/Kotlin pour Android,
+  Swift/Objective-C pour iOS).
+
+  Principe de la signature côté client :
+
+   1. Le backend prépare une transaction Hedera, mais ne la signe pas.
+   2. Le backend envoie cette transaction non signée (généralement encodée en Base64) au frontend Flutter.
+   3. Le frontend Flutter, via un Platform Channel, transmet cette transaction non signée et la clé privée de l'utilisateur (stockée
+      localement et de manière sécurisée) au code natif.
+   4. Le code natif utilise le SDK Hedera natif pour signer la transaction.
+   5. Le code natif renvoie la transaction signée (encodée en Base64) au frontend Flutter.
+   6. Le frontend Flutter envoie cette transaction signée au backend pour soumission au réseau Hedera.
+
+  ---
+
+  Parcours Détaillé de l'Acheteur sur l'Application Flutter (Après le Login)
+
+  Étape 1 : Connexion de l'utilisateur
+
+  L'utilisateur se connecte à l'application pour obtenir un jeton d'authentification (JWT).
+
+   * Action : L'utilisateur entre ses identifiants et clique sur "Se connecter".
+   * Méthode HTTP : POST
+   * URL : http://localhost:8080/api/auth/login
+   * En-têtes (Headers) :
+       * Content-Type: application/json
+
+   * Corps de la Requête (Request Body - JSON) :
+   1     {
+   2         "email": "acheteur@example.com",
+   3         "password": "motdepasse_securise"
+   4     }
+
+   * Corps de la Réponse (Response Body - JSON) :
+
+    1     {
+    2         "success": true,
+    3         "message": "Connexion réussie",
+    4         "data": {
+    5             "accessToken": "eyJhbGciOiJIUzUxMiJ9...", // <-- C'est votre JWT !
+    6             "refreshToken": "eyJhbGciOiJIUzUxMiJ9...",
+    7             "userId": 123,
+    8             "email": "acheteur@example.com",
+    9             "firstName": "Jean",
+   10             "lastName": "Dupont",
+   11             "role": "BUYER"
+   12         },
+   13         "timestamp": "2025-10-31T10:00:00.000Z"
+   14     }
+       * Action Flutter : Stockez accessToken et refreshToken de manière sécurisée (par exemple, en utilisant flutter_secure_storage).
+         Le accessToken sera utilisé dans l'en-tête Authorization de toutes les requêtes suivantes.
+
+  Étape 2 : Récupération du profil de l'acheteur et vérification du compte Hedera
+
+  Après la connexion, l'application doit vérifier si l'acheteur a déjà un compte Hedera lié à son profil.
+
+   * Action : L'application charge le profil de l'utilisateur.
+   * Méthode HTTP : GET
+   * URL : http://localhost:8080/api/user/profile
+   * En-têtes (Headers) :
+       * Authorization: Bearer VOTRE_ACCESS_TOKEN
+
+   * Corps de la Requête (Request Body - JSON) : (Aucun)
+
+   * Corps de la Réponse (Response Body - JSON) :
+
+    1     {
+    2         "success": true,
+    3         "message": "Profil récupéré avec succès",
+    4         "data": {
+    5             "id": 123,
+    6             "firstName": "Jean",
+    7             "lastName": "Dupont",
+    8             "email": "acheteur@example.com",
+    9             "phone": "123-456-7890",
+   10             "role": "BUYER",
+   11             "isActive": true,
+   12             "emailVerified": true,
+   13             "hederaAccountId": "0.0.123456", // <-- Vérifiez ce champ !
+   14             "companyName": "Ma Société",
+   15             "activityType": "Distribution",
+   16             "companyAddress": "123 Rue de l'Achat"
+   17         },
+   18         "timestamp": "2025-10-31T10:01:00.000Z"
+   19     }
+       * Action Flutter : Si hederaAccountId est null ou vide, proposez à l'utilisateur de lier un compte existant ou d'en créer un
+         nouveau.
+
+  Étape 3 (Conditionnel) : Lier ou Créer un Compte Hedera
+
+  ##### Scénario A : L'acheteur a déjà un compte Hedera et souhaite le lier
+
+   * Action : L'utilisateur entre son ID de compte Hedera existant.
+   * Méthode HTTP : POST
+   * URL : http://localhost:8080/api/user/link-hedera-account
+   * En-têtes (Headers) :
+       * Authorization: Bearer VOTRE_ACCESS_TOKEN
+       * Content-Type: application/json
+
+   * Corps de la Requête (Request Body - JSON) :
+   1     {
+   2         "hederaAccountId": "0.0.123456"
+   3     }
+
+   * Corps de la Réponse (Response Body - JSON) :
+
+   1     {
+   2         "success": true,
+   3         "message": "Compte Hedera lié avec succès.",
+   4         "data": null,
+   5         "timestamp": "2025-10-31T10:02:00.000Z"
+   6     }
+
+  ##### Scénario B : L'acheteur a besoin d'un nouveau compte Hedera
+
+   * Action : L'utilisateur clique sur "Créer un nouveau compte Hedera".
+   * Méthode HTTP : POST
+   * URL : http://localhost:8080/api/user/create-hedera-account
+   * En-têtes (Headers) :
+       * Authorization: Bearer VOTRE_ACCESS_TOKEN
+       * Content-Type: application/json
+
+   * Corps de la Requête (Request Body - JSON) : (Aucun, le backend génère le compte)
+
+   * Corps de la Réponse (Response Body - JSON) :
+
+    1     {
+    2         "success": true,
+    3         "message": "Compte Hedera créé et lié avec succès.",
+    4         "data": {
+    5             "accountId": "0.0.789012",
+    6             "privateKey": "302e020100300506032b657004220420...", // <-- TRÈS IMPORTANT : À sauvegarder côté client !
+    7             "publicKey": "302a300506032b6570032100..."
+    8         },
+    9         "timestamp": "2025-10-31T10:03:00.000Z"
+   10     }
+       * Action Flutter :
+           * Affichez `privateKey` à l'utilisateur une seule fois avec un message clair lui demandant de la sauvegarder en lieu sûr
+             (hors de l'application).
+           * Stockez `privateKey` de manière sécurisée sur l'appareil de l'utilisateur en utilisant flutter_secure_storage. C'est la
+             clé qui sera utilisée pour signer les transactions.
+           * Stockez également accountId.
+
+  Étape 4 : Afficher les offres disponibles
+
+  L'acheteur consulte les produits et récoltes disponibles à l'achat.
+
+   * Action : L'utilisateur navigue vers la section "Offres".
+   * Méthode HTTP : GET
+   * URL : http://localhost:8080/api/buyer/offers
+   * En-têtes (Headers) :
+       * Authorization: Bearer VOTRE_ACCESS_TOKEN
+
+   * Corps de la Requête (Request Body - JSON) : (Aucun, ou paramètres de pagination/filtre comme ?page=0&size=10)
+
+   * Corps de la Réponse (Response Body - JSON) :
+
+    1     {
+    2         "success": true,
+    3         "message": "Offres récupérées avec succès",
+    4         "data": {
+    5             "content": [
+    6                 {
+    7                     "id": 1,
+    8                     "productId": 101,
+    9                     "productName": "Maïs",
+   10                     "farmerId": 201,
+   11                     "farmerName": "Agriculteur Alpha",
+   12                     "pricePerUnit": 0.50,
+   13                     "quantityAvailable": 1000,
+   14                     "unit": "KG",
+   15                     "status": "ACTIVE",
+   16                     "createdAt": "2025-10-25T09:00:00.000Z"
+   17                 },
+   18                 // ... autres offres
+   19             ],
+   20             "page": 0,
+   21             "size": 10,
+   22             "totalElements": 50,
+   23             "totalPages": 5,
+   24             "first": true,
+   25             "last": false,
+   26             "empty": false
+   27         },
+   28         "timestamp": "2025-10-31T10:05:00.000Z"
+   29     }
+
+  Étape 5 : Préparer un dépôt HBAR (Nécessite une signature côté client)
+
+  Avant de pouvoir acheter des AgriTokens, l'acheteur doit déposer des HBAR dans le HarvestVault.
+
+   * Action : L'utilisateur entre le montant de HBAR à déposer et clique sur "Déposer".
+   * Méthode HTTP : POST
+   * URL : http://localhost:8080/api/buyer/deposit/prepare
+   * En-têtes (Headers) :
+       * Authorization: Bearer VOTRE_ACCESS_TOKEN
+       * Content-Type: application/json
+
+   * Corps de la Requête (Request Body - JSON) :
+
+   1     {
+   2         "amount": 100.00 // Montant en HBAR
+   3     }
+
+   * Corps de la Réponse (Response Body - JSON) :
+
+   1     {
+   2         "success": true,
+   3         "message": "Transaction de dépôt préparée",
+   4         "data": {
+   5             "unsignedTx": "0x0101010102020202..." // Transaction Hedera non signée, encodée en Base64
+   6         },
+   7         "timestamp": "2025-10-31T10:07:00.000Z"
+   8     }
+
+   * Action Flutter - Processus de Signature Côté Client :
+
+       1. Récupérer la clé privée : Votre application Flutter récupère la clé privée de l'acheteur de manière sécurisée (par exemple,
+          depuis flutter_secure_storage).
+       2. Appel au code natif (Platform Channel) :
+           * Vous devez implémenter un Platform Channel dans Flutter qui appellera une fonction native (par exemple,
+             signHederaTransaction).
+           * Cette fonction native recevra unsignedTx (Base64) et la clé privée de l'acheteur.
+           * Code Natif (Android - Java/Kotlin) :
+
+    1             // Exemple simplifié en Java
+    2             import com.hedera.hashgraph.sdk.*;
+    3             import java.util.Base64;
+    4
+    5             // ... dans votre méthode de Platform Channel
+    6             String unsignedTxBase64 = call.argument("unsignedTx");
+    7             String privateKeyString = call.argument("privateKey");
+    8
+    9             byte[] unsignedTxBytes = Base64.getDecoder().decode(unsignedTxBase64);
+   10             Transaction unsignedTransaction = Transaction.fromBytes(unsignedTxBytes);
+   11
+   12             PrivateKey privateKey = PrivateKey.fromString(privateKeyString);
+   13             Transaction signedTransaction = unsignedTransaction.sign(privateKey);
+   14
+   15             byte[] signedTxBytes = signedTransaction.toBytes();
+   16             String signedTxBase64 = Base64.getEncoder().encodeToString(signedTxBytes);
+   17
+   18             result.success(signedTxBase64); // Renvoie la transaction signée à Flutter
+           * Code Natif (iOS - Swift) : (Concept similaire avec le SDK Swift)
+       3. Retour à Flutter : Flutter reçoit la transaction signée encodée en Base64.
+
+  Étape 6 : Confirmer le dépôt HBAR
+
+  Après que l'acheteur a signé la transaction de dépôt côté client, l'application envoie la transaction signée au backend pour
+  soumission au réseau Hedera.
+
+   * Action : L'application envoie la transaction signée au backend.
+   * Méthode HTTP : POST
+   * URL : http://localhost:8080/api/buyer/deposit/confirm
+   * En-têtes (Headers) :
+       * Authorization: Bearer VOTRE_ACCESS_TOKEN
+       * Content-Type: application/json
+
+   * Corps de la Requête (Request Body - JSON) :
+
+   1     {
+   2         "hederaTransactionId": "0.0.123456@1678888888.123456789", // L'ID de la transaction signée
+   3         "hbarAmount": 100.00 // Le montant déposé (pour vérification côté backend)
+   4     }
+       * Note : Le hederaTransactionId est obtenu après la signature de la transaction côté client. Le SDK Hedera fournit des méthodes
+         pour extraire cet ID d'une transaction signée.
+
+   * Corps de la Réponse (Response Body - JSON) :
+
+   1     {
+   2         "success": true,
+   3         "message": "Dépôt HBAR enregistré et vérification initiée.",
+   4         "data": null,
+   5         "timestamp": "2025-10-31T10:08:00.000Z"
+   6     }
+
+  Étape 7 : Passer une commande
+
+  L'acheteur utilise ses HBAR déposés pour passer une commande sur une offre.
+
+   * Action : L'utilisateur sélectionne une offre et la quantité, puis clique sur "Acheter".
+   * Méthode HTTP : POST
+   * URL : http://localhost:8080/api/buyer/orders
+   * En-têtes (Headers) :
+       * Authorization: Bearer VOTRE_ACCESS_TOKEN
+       * Content-Type: application/json
+
+   * Corps de la Requête (Request Body - JSON) :
+
+   1     {
+   2         "offerId": 1,
+   3         "quantity": 500,
+   4         "hbarDepositId": 10 // L'ID du dépôt HBAR utilisé pour cette commande
+   5     }
+
+   * Corps de la Réponse (Response Body - JSON) :
+
+    1     {
+    2         "success": true,
+    3         "message": "Commande créée avec succès",
+    4         "data": {
+    5             "id": 20,
+    6             "buyerId": 123,
+    7             "farmerId": 201,
+    8             "offerId": 1,
+    9             "productId": 101,
+   10             "productName": "Maïs",
+   11             "quantity": 500,
+   12             "unit": "KG",
+   13             "totalAmount": 250.00,
+   14             "status": "PENDING",
+   15             "createdAt": "2025-10-31T10:10:00.000Z"
+   16         },
+   17         "timestamp": "2025-10-31T10:10:00.000Z"
+   18     }
+
+  Étape 8 : Préparer l'association de token (si nécessaire, nécessite une signature côté client)
+
+  Si l'acheteur n'a pas encore associé le token AgriToken à son compte Hedera, il devra le faire avant de pouvoir le recevoir.
+
+   * Action : L'utilisateur clique sur "Associer le token" pour un AgriToken spécifique.
+   * Méthode HTTP : POST
+   * URL : http://localhost:8080/api/buyer/token/associate/prepare
+   * En-têtes (Headers) :
+       * Authorization: Bearer VOTRE_ACCESS_TOKEN
+       * Content-Type: application/json
+
+   * Corps de la Requête (Request Body - JSON) :
+
+   1     {
+   2         "tokenId": "0.0.6891937" // L'ID du token AgriToken à associer
+   3     }
+
+   * Corps de la Réponse (Response Body - JSON) :
+
+   1     {
+   2         "success": true,
+   3         "message": "Transaction d'association préparée",
+   4         "data": {
+   5             "unsignedTx": "0x0101010102020202..." // Transaction Hedera non signée, encodée en Base64
+   6         },
+   7         "timestamp": "2025-10-31T10:12:00.000Z"
+   8     }
+
+   * Action Flutter - Processus de Signature Côté Client : (Identique à l'Étape 5)
+       1. Récupérer la clé privée.
+       2. Appel au code natif pour signer unsignedTx.
+       3. Retour à Flutter avec signedTx.
+
+  Étape 9 : Échanger des AgriTokens contre des biens physiques (Nécessite une signature côté client)
+
+  Lorsque l'acheteur souhaite récupérer sa marchandise, il doit "brûler" ses AgriTokens.
+
+   * Action : L'utilisateur entre la quantité d'AgriTokens à échanger et clique sur "Échanger".
+   * Méthode HTTP : POST
+   * URL : http://localhost:8080/api/buyer/redeem
+   * En-têtes (Headers) :
+       * Authorization: Bearer VOTRE_ACCESS_TOKEN
+       * Content-Type: application/json
+
+   * Corps de la Requête (Request Body - JSON) :
+
+   1     {
+   2         "tokenId": "0.0.6891937", // L'ID du token AgriToken
+   3         "amount": 500 // La quantité d'AgriTokens à échanger
+   4     }
+
+   * Corps de la Réponse (Response Body - JSON) :
+
+   1     {
+   2         "success": true,
+   3         "message": "Transaction de rachat d'AgriTokens préparée avec succès.",
+   4         "data": "0x0101010102020202...", // Transaction Hedera non signée, encodée en Base64
+   5         "timestamp": "2025-10-31T10:15:00.000Z"
+   6     }
+
+   * Action Flutter - Processus de Signature Côté Client : (Identique à l'Étape 5)
+       1. Récupérer la clé privée.
+       2. Appel au code natif pour signer unsignedTx.
+       3. Retour à Flutter avec signedTx.
+
+  Étape 10 : Soumettre la transaction signée (pour les actions 5, 8, 9)
+
+  Après chaque signature côté client, la transaction signée doit être envoyée au backend pour être soumise au réseau Hedera.
+
+   * Action : L'application envoie la transaction signée au backend.
+   * Méthode HTTP : POST
+   * URL : http://localhost:8080/api/user/hedera/submit-signed-transaction
+   * En-têtes (Headers) :
+       * Authorization: Bearer VOTRE_ACCESS_TOKEN
+       * Content-Type: application/json
+
+   * Corps de la Requête (Request Body - JSON) :
+
+   1     "0x0101010102020202..." // La transaction Hedera signée, encodée en Base64 (pas un objet JSON)
+       * Note : Le corps de la requête est directement la chaîne Base64 de la transaction signée, pas un objet JSON avec un champ
+         signedTransactionBytesBase64.
+
+   * Corps de la Réponse (Response Body - JSON) :
+
+   1     {
+   2         "success": true,
+   3         "message": "Transaction signée soumise avec succès.",
+   4         "data": "0.0.123456@1678888888.123456789", // L'ID de la transaction Hedera
+   5         "timestamp": "2025-10-31T10:16:00.000Z"
+   6     }
+
+  ---
+
+  Récapitulatif et Prochaines Étapes pour vous
+
+  Ce guide détaillé devrait vous donner une feuille de route claire pour l'intégration frontend.
+
+   1. Implémentez les Platform Channels dans votre application Flutter pour la communication avec le code natif Android/iOS.
+   2. Développez le code natif (Java/Kotlin pour Android, Swift pour iOS) qui utilisera le SDK Hedera natif pour :
+       * Décoder les transactions non signées.
+       * Charger la clé privée de l'utilisateur.
+       * Signer les transactions.
+       * Encoder les transactions signées.
+   3. Utilisez `flutter_secure_storage` pour gérer la clé privée de l'utilisateur de manière sécurisée.
+   4. Suivez ce workflow pour chaque action de l'acheteur nécessitant une interaction avec Hedera.

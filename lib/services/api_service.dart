@@ -4,7 +4,17 @@ class ApiService {
   final Dio dio;
   String? _authToken;
 
-  ApiService._internal(this.dio) {
+  static final ApiService _instance = ApiService._internal();
+
+  factory ApiService() {
+    return _instance;
+  }
+
+  ApiService._internal() : dio = Dio(BaseOptions(
+    baseUrl: 'http://192.168.1.164:8080',
+    connectTimeout: const Duration(seconds: 30),
+    // receiveTimeout: const Duration(seconds: 30),
+  )) {
     // Attach interceptor to add Authorization header when token is present
     dio.interceptors.add(InterceptorsWrapper(
       onRequest: (options, handler) {
@@ -17,11 +27,13 @@ class ApiService {
         return handler.next(options);
       },
       onResponse: (response, handler) {
-        print('API Response: ${response.statusCode} ${response.requestOptions.path}');
+        print(
+            'API Response: ${response.statusCode} ${response.requestOptions.path}');
         print('Response Data: ${response.data}');
         return handler.next(response);
       },
-      onError: (DioException e, handler) { // Changed error type to DioException
+      onError: (DioException e, handler) {
+        // Changed error type to DioException
         print('API Error: ${e.response?.statusCode} ${e.requestOptions.path}');
         print('Error Message: ${e.message}');
         if (e.response != null) {
@@ -30,15 +42,6 @@ class ApiService {
         return handler.next(e);
       },
     ));
-  }
-
-  static ApiService create({String? baseUrl}) {
-    final dio = Dio(BaseOptions(
-      baseUrl: baseUrl ?? 'http://192.168.10.16:8080',
-      connectTimeout: const Duration(seconds: 10),
-      receiveTimeout: const Duration(seconds: 10),
-    ));
-    return ApiService._internal(dio);
   }
 
   void setAuthToken(String? token) {

@@ -13,6 +13,7 @@ class ProfileScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final authState = ref.watch(authProvider);
     final user = authState.user;
+    final isFarmer = user?.userType == 'farmer';
 
     if (user == null) {
       // Handle case where user is not logged in or data is not available
@@ -70,7 +71,7 @@ class ProfileScreen extends ConsumerWidget {
               width: 300,
               decoration: BoxDecoration(
                 gradient: const RadialGradient(
-                  colors: [Color(0x306366F1), Colors.transparent],
+                  colors: [Color(0x3010B981), Colors.transparent],
                   radius: 0.8,
                 ),
                 borderRadius: BorderRadius.circular(150),
@@ -85,7 +86,7 @@ class ProfileScreen extends ConsumerWidget {
               width: 250,
               decoration: BoxDecoration(
                 gradient: const RadialGradient(
-                  colors: [Color(0x304F46E5), Colors.transparent],
+                  colors: [Color(0x30059669), Colors.transparent],
                   radius: 0.7,
                 ),
                 borderRadius: BorderRadius.circular(125),
@@ -99,11 +100,7 @@ class ProfileScreen extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  // Directly display email and phone for debugging
-                  Text('Debug Email: ${user.email ?? 'N/A'}'),
-                  Text('Debug Phone: ${user.phone ?? 'N/A'}'),
-                  const SizedBox(height: 20), // Add some spacing
-
+                
                   // Avatar and profile information
                   Stack(
                     clipBehavior: Clip.none,
@@ -115,7 +112,7 @@ class ProfileScreen extends ConsumerWidget {
                         width: double.infinity,
                         decoration: BoxDecoration(
                           gradient: const LinearGradient(
-                            colors: [Color(0xFF6366F1), Color(0xFF4F46E5)],
+                            colors: [const Color(0xFF10B981), const Color(0xFF059669)],
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
                           ),
@@ -177,7 +174,7 @@ class ProfileScreen extends ConsumerWidget {
                             height: 100,
                             decoration: BoxDecoration(
                               gradient: const LinearGradient(
-                                colors: [Color(0xFF6366F1), Color(0xFF4F46E5)],
+                                colors: [const Color(0xFF10B981), const Color(0xFF059669)],
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
                               ),
@@ -219,7 +216,7 @@ class ProfileScreen extends ConsumerWidget {
                           Icons.email_rounded, 
                           'Email', 
                           user.email ?? 'N/A',
-                          const Color(0xFF6366F1),
+                          const Color(0xFF10B981),
                         ),
                         const Divider(height: 24),
                         _buildContactItem(
@@ -227,7 +224,7 @@ class ProfileScreen extends ConsumerWidget {
                           Icons.phone_rounded, 
                           'Téléphone', 
                           user.phone ?? 'N/A',
-                          const Color(0xFF4F46E5),
+                          const Color(0xFF10B981),
                         ),
                         if (user.userType == 'farmer') ...[
                           const Divider(height: 24),
@@ -244,7 +241,7 @@ class ProfileScreen extends ConsumerWidget {
                             Icons.location_on_rounded,
                             'Localisation de la ferme',
                             user.farmLocation ?? 'N/A',
-                            const Color(0xFFEF4444),
+                            const Color(0xFF10B981),
                           ),
                           const Divider(height: 24),
                           _buildContactItem(
@@ -252,20 +249,20 @@ class ProfileScreen extends ConsumerWidget {
                             Icons.area_chart_rounded,
                             'Taille de la ferme',
                             user.farmSize ?? 'N/A',
-                            const Color(0xFFF59E0B),
+                            const Color(0xFF10B981),
                           ),
                         ],
                         if (user.userType == 'buyer') ...[
                           const Divider(height: 24),
-                          _buildBuyerInfoItem(
+                          _buildContactItem(
                             context,
                             Icons.business_rounded,
                             'Nom de l\'entreprise',
                             user.companyName ?? 'N/A',
-                            const Color(0xFFF59E0B),
+                            const Color(0xFF10B981),
                           ),
                           const Divider(height: 24),
-                          _buildBuyerInfoItem(
+                          _buildContactItem(
                             context,
                             Icons.category_rounded,
                             'Type d\'activité',
@@ -273,18 +270,23 @@ class ProfileScreen extends ConsumerWidget {
                             const Color(0xFF10B981),
                           ),
                           const Divider(height: 24),
-                          _buildBuyerInfoItem(
+                          _buildContactItem(
                             context,
                             Icons.location_on_rounded,
                             'Adresse de l\'entreprise',
                             user.businessAddress ?? 'N/A',
-                            const Color(0xFFEF4444),
+                            const Color(0xFF10B981),
                           ),
                         ],
                       ],
                     ),
                   ),
                   
+                  const SizedBox(height: 24),
+
+                  // Hedera Account Section
+                  _buildHederaAccountSection(context, user, isFarmer),
+
                   const SizedBox(height: 24),
                   
                   // Menu items with modern cards
@@ -293,9 +295,9 @@ class ProfileScreen extends ConsumerWidget {
                     'Modifier Profil',
                     'Mettez à jour vos informations personnelles',
                     Icons.person_rounded,
-                    const Color(0xFF6366F1),
-                    const Color(0xFFEEF2FF),
-                    () => context.go('/buyer/edit-profile'),
+                    const Color(0xFF10B981),
+                    const Color(0xFFECFDF5),
+                    () => context.go('/${user!.userType}/edit-profile'),
                   ),
                   
                   const SizedBox(height: 16),
@@ -307,7 +309,7 @@ class ProfileScreen extends ConsumerWidget {
                     Icons.settings_rounded,
                     const Color(0xFF10B981),
                     const Color(0xFFECFDF5),
-                    () => context.go('/buyer/settings'),
+                    () => context.go('/${user.userType}/settings'),
                   ),
                   
                   const SizedBox(height: 16),
@@ -317,8 +319,8 @@ class ProfileScreen extends ConsumerWidget {
                     user.userType == 'farmer' ? 'Historique des prêts' : 'Historique des Transactions',
                     user.userType == 'farmer' ? 'Consultez vos demandes et remboursements passés' : 'Consultez toutes vos transactions passées',
                     Icons.history_rounded,
-                    const Color(0xFF6366F1),
-                    const Color(0xFFEEF2FF),
+                    const Color(0xFF10B981),
+                    const Color(0xFFECFDF5),
                     () => context.go(user.userType == 'farmer' ? '/farmer/repayments' : '/buyer/transaction-history'),
                   ),
                   
@@ -343,7 +345,7 @@ class ProfileScreen extends ConsumerWidget {
                     Icons.support_agent_rounded,
                     const Color(0xFFF59E0B),
                     const Color(0xFFFEF3C7),
-                    () => context.go('/buyer/support'),
+                    () => context.go('/${user.userType}/support'),
                   ),
                   
                   const SizedBox(height: 24),
@@ -351,6 +353,78 @@ class ProfileScreen extends ConsumerWidget {
               ),
             ),
           ),
+        ],
+      ),
+    );
+  }
+  
+  Widget _buildHederaAccountSection(BuildContext context, User user, bool isFarmer) {
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black,
+            blurRadius: 15,
+            offset: Offset(0, 5),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.account_balance_wallet_rounded, color: const Color(0xFF10B981), size: 28),
+              const SizedBox(width: 16),
+              Text(
+                'Compte Hedera',
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: const Color(0xFF1E293B),
+                ),
+              ),
+            ],
+          ),
+          const Divider(height: 24),
+          if (user.hederaAccountId != null && user.hederaAccountId!.isNotEmpty) ...[
+            _buildContactItem(
+              context,
+              Icons.credit_card_rounded,
+              'ID du Compte Hedera',
+              user.hederaAccountId!,
+              const Color(0xFF10B981),
+            ),
+          ] else ...[
+            Text(
+              'Votre compte Hedera n\'est pas encore configuré.',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: const Color(0xFF64748B),
+              ),
+            ),
+            const SizedBox(height: 16),
+            _buildMenuCard(
+              context,
+              'Configurer un compte existant',
+              'Associez votre ID de compte Hedera existant',
+              Icons.link_rounded,
+              const Color(0xFFF59E0B),
+              const Color(0xFFFEF3C7),
+              () => context.go('/configure-hedera-account'),
+            ),
+            const SizedBox(height: 16),
+            _buildMenuCard(
+              context,
+              'Créer un nouveau compte',
+              'Générez un nouveau compte Hedera sécurisé',
+              Icons.add_card_rounded,
+              const Color(0xFF10B981),
+              const Color(0xFFECFDF5),
+              () => context.go('/create-hedera-account'),
+            ),
+          ],
         ],
       ),
     );
