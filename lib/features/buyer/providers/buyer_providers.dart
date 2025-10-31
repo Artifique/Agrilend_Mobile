@@ -1,5 +1,4 @@
 import 'package:agrilend/services/product_service.dart';
-import 'package:agrilend/services/auth_providers.dart';
 import 'package:agrilend/services/buyer_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../models/product.dart';
@@ -7,6 +6,9 @@ import '../../../models/order.dart';
 // import 'package:agrilend/models/user.dart'; // Import User model
 import '../../../models/buyer.dart';
 import 'package:agrilend/services/order_service.dart';
+
+// Import the providers from their respective service files
+import 'package:agrilend/services/api_service.dart'; // Import apiServiceProvider
 
 // Provider pour les produits disponibles
 final productsProvider =
@@ -86,8 +88,15 @@ class BuyerOrdersNotifier extends StateNotifier<List<Order>> {
     state = await _orderService.getOrders();
   }
 
-  void createOrder(Order order) {
-    state = [order, ...state];
+  Future<void> createOrder(Order order) async {
+    try {
+      final createdOrder = await _orderService.createOrder(order);
+      state = [createdOrder, ...state];
+    } catch (e) {
+      // Gérer l'erreur, par exemple, en affichant un message ou en mettant un état d'erreur
+      print('Error creating order: $e');
+      rethrow; // Propage l'erreur pour qu'elle soit gérée par l'UI
+    }
   }
 
   void updateOrderStatus(int orderId, String newStatus) {

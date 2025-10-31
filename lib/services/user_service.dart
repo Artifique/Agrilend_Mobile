@@ -37,4 +37,9 @@ class UserService {
     final resp = await api.put('/user/profile', data: changes);
     return User.fromJson(Map<String, dynamic>.from(resp.data));
   }
+
+  Future<User> linkHederaAccount(String hederaAccountId) async {
+    final resp = await api.post('/user/link-hedera-account', data: {'hederaAccountId': hederaAccountId});
+    return User.fromJson(Map<String, dynamic>.from(resp.data));
+  }
 }

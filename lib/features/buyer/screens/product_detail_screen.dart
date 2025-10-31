@@ -438,6 +438,12 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
             height: 50,
             child: ElevatedButton(
               onPressed: () {
+                if (product == null) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Erreur: Produit non disponible.')),
+                  );
+                  return;
+                }
                 context.go('/buyer/order-confirmation', extra: {
                   'product': product,
                   'quantity': _selectedQuantity,

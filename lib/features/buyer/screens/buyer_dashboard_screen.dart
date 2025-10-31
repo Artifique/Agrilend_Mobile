@@ -106,6 +106,7 @@ class _BuyerDashboardScreenState extends ConsumerState<BuyerDashboardScreen> {
                       controller: _searchController,
                       onChanged: _onSearchChanged,
                     ),
+                    const SizedBox(height: 16),
                   ],
                 ),
               );

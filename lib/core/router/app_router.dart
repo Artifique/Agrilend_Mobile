@@ -22,26 +22,7 @@ import '../../features/buyer/screens/offer_detail_screen.dart'; // New import
 import 'package:agrilend/features/buyer/screens/payment_method_screen.dart'; // New import
 import 'package:agrilend/features/transactions/screens/transaction_details_screen.dart'; // New import
 import 'package:agrilend/models/transaction.dart'; // New import for extra parameter
-import 'package:agrilend/models/user.dart';
-import 'package:go_router/go_router.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../features/auth/providers/auth_provider.dart';
-import '../../features/onboarding/screens/onboarding_screen.dart';
-import '../../features/auth/screens/login_screen.dart';
-import '../../features/auth/screens/register_screen.dart';
-import '../../features/auth/screens/kyc_verification_screen.dart';
-import '../../features/auth/screens/registration_complete_screen.dart';
-import '../../features/farmer/screens/farmer_main_screen.dart';
-import '../../features/farmer/screens/create_offer_screen.dart';
-import '../../features/farmer/screens/stock_management_screen.dart';
-
-import '../../features/agent/screens/agent_main_screen.dart';
-import '../../features/buyer/screens/buyer_main_screen.dart';
-import '../../features/buyer/screens/product_detail_screen.dart';
-import '../../features/buyer/screens/order_confirmation_screen.dart';
-import '../../features/buyer/screens/order_list_screen.dart';
-import '../../features/buyer/screens/offer_detail_screen.dart'; // New import
 import '../../features/transactions/screens/payment_request_screen.dart';
 import '../../features/transactions/screens/transaction_history_screen.dart';
 import '../../features/wallet/screens/wallet_screen.dart';
@@ -62,6 +43,10 @@ import 'package:agrilend/features/auth/screens/basic_info_screen.dart';
 import 'package:agrilend/features/auth/screens/personal_info_screen.dart';
 import 'package:agrilend/features/profile/screens/configure_hedera_account_screen.dart'; // New import
 import 'package:agrilend/features/profile/screens/create_hedera_account_screen.dart'; // New import
+import 'package:agrilend/features/buyer/screens/deposit_hbar_screen.dart'; // New import
+import 'package:agrilend/features/buyer/screens/associate_token_screen.dart'; // New import
+import 'package:agrilend/features/buyer/screens/redeem_agritokens_screen.dart'; // New import
+import 'package:agrilend/features/buyer/screens/browse_products_screen.dart'; // New import
 
 final appRouterProvider = Provider<GoRouter>((ref) {
   final authState = ref.watch(authProvider);
@@ -208,6 +193,18 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                 path: 'scanner-qr',
                 builder: (context, state) => const ScannerQrScreen(),
               ),
+              GoRoute(
+                path: 'deposit-hbar',
+                builder: (context, state) => const DepositHbarScreen(),
+              ),
+              GoRoute(
+                path: 'associate-token',
+                builder: (context, state) => const AssociateTokenScreen(),
+              ),
+              GoRoute(
+                path: 'redeem-agritokens',
+                builder: (context, state) => const RedeemAgriTokensScreen(),
+              ),
             ],
           ),
           GoRoute(
@@ -327,6 +324,34 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           GoRoute(
             path: 'wallet-settings',
             builder: (context, state) => const WalletSettingsScreen(),
+          ),
+          GoRoute(
+            path: 'orders',
+            builder: (context, state) => const OrderListScreen(),
+            routes: [
+              GoRoute(
+                path: 'browse-products',
+                builder: (context, state) => const BrowseProductsScreen(),
+              ),
+            ],
+          ),
+          GoRoute(
+            path: 'wallet',
+            builder: (context, state) => const WalletScreen(),
+            routes: [
+              GoRoute(
+                path: 'deposit-hbar',
+                builder: (context, state) => const DepositHbarScreen(),
+              ),
+              GoRoute(
+                path: 'associate-token',
+                builder: (context, state) => const AssociateTokenScreen(),
+              ),
+              GoRoute(
+                path: 'redeem-agritokens',
+                builder: (context, state) => const RedeemAgriTokensScreen(),
+              ),
+            ],
           ),
         ],
       ),

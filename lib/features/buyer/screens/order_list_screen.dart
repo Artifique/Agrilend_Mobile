@@ -40,6 +40,19 @@ class OrderListScreen extends ConsumerWidget {
                             color: Theme.of(context).colorScheme.primary.withOpacity(0.7),
                           ),
                     ),
+                    const SizedBox(height: 24),
+                    ElevatedButton.icon(
+                      onPressed: () => context.go('/buyer/orders/browse-products'),
+                      icon: const Icon(Icons.storefront),
+                      label: const Text('Parcourir les produits'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Theme.of(context).colorScheme.primary,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                        textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      ),
+                    ),
                   ],
                 ),
               )

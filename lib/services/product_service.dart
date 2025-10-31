@@ -1,5 +1,10 @@
 import '../models/product.dart';
 import 'api_service.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+final productServiceProvider = Provider<ProductService>((ref) {
+  return ProductService(ref.read(apiServiceProvider));
+});
 
 class ProductService {
   final ApiService api;
@@ -7,11 +12,33 @@ class ProductService {
   ProductService(this.api);
 
   Future<List<Product>> fetchAll() async {
-    final resp = await api.get('/api/products');
-    final data = resp.data as List<dynamic>;
-    return data
-        .map((e) => Product.fromJson(Map<String, dynamic>.from(e)))
-        .toList();
+    try {
+      final response = await api.get('/api/common/products');
+      // ignore: avoid_print
+      print('ProductService.fetchAll - API Response Status: ${response.statusCode}');
+      // ignore: avoid_print
+      print('ProductService.fetchAll - API Response Data: ${response.data}');
+
+      if (response.statusCode == 200 && response.data['success'] == true) {
+        final Map<String, dynamic>? responseData = response.data['data'];
+        if (responseData != null && responseData.containsKey('content')) {
+          final List<dynamic> productsData = responseData['content'];
+          return productsData.map((json) => Product.fromJson(json)).toList();
+        } else {
+          // ignore: avoid_print
+          print('ProductService.fetchAll - API Error: Missing \'data\' or \'content\' field.');
+          return [];
+        }
+      } else {
+        // ignore: avoid_print
+        print('ProductService.fetchAll - API Error: ${response.data['message']}');
+        return [];
+      }
+    } catch (e) {
+      // ignore: avoid_print
+      print('ProductService.fetchAll - Error fetching products: $e');
+      return [];
+    }
   }
 
   Future<Product> getById(int id) async {

@@ -86,16 +86,7 @@ class _OrderConfirmationScreenState
       );
 
       // Ajouter la commande
-      ref.read(buyerOrdersProvider.notifier).createOrder(order);
-
-      // Simuler le processus de séquestre des fonds
-      await Future.delayed(const Duration(seconds: 2));
-
-      // Mettre à jour le statut
-      ref.read(buyerOrdersProvider.notifier).updateOrderStatus(
-            order.id ?? 0,
-            'ESCROWED',
-          );
+      await ref.read(buyerOrdersProvider.notifier).createOrder(order);
 
       // Afficher le message de succès
       if (mounted) {

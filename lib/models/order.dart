@@ -130,4 +130,12 @@ class Order {
   String get formattedCreatedDate => DateFormat.yMMMd('fr_FR').format(createdAt);
   DateTime? get escrowDate => escrowStartDate;
   DateTime? get deliveryDate => status == 'DELIVERED' ? updatedAt : null;
+
+  Map<String, dynamic> toJson() => {
+        'offerId': offerId,
+        'orderedQuantity': orderedQuantity,
+        'deliveryAddress': deliveryAddress,
+        'notes': notes,
+        // Les autres champs sont généralement générés par le backend ou ne sont pas envoyés lors de la création
+      };
 }

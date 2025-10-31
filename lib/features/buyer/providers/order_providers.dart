@@ -2,7 +2,6 @@ import 'package:agrilend/models/order.dart';
 import 'package:agrilend/services/api_service.dart';
 import 'package:agrilend/services/order_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:agrilend/services/auth_providers.dart';
 
 final orderServiceProvider = Provider<OrderService>((ref) {
   final apiService = ref.watch(apiServiceProvider);

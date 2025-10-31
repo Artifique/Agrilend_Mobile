@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:dio/dio.dart';
 
-import '../../../services/api_service.dart';
 import 'package:agrilend/features/auth/providers/auth_provider.dart';
+import '../../../services/auth_providers.dart'; // Import for userServiceProvider
 
 class ConfigureHederaAccountScreen extends ConsumerStatefulWidget {
   const ConfigureHederaAccountScreen({super.key});
@@ -32,19 +32,12 @@ class _ConfigureHederaAccountScreenState extends ConsumerState<ConfigureHederaAc
     });
 
     try {
-      final apiService = ApiService();
-      final response = await apiService.post(
-        '/api/user/update-hedera-account',
-        data: {'hederaAccountId': _hederaAccountIdController.text.trim()},
-      );
+      final userService = ref.read(userServiceProvider);
+      final updatedUser = await userService.linkHederaAccount(_hederaAccountIdController.text.trim());
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        if (mounted) {
-          ref.read(authProvider.notifier).updateUserHederaAccountId(_hederaAccountIdController.text.trim());
-          _showSuccessDialog();
-        }
-      } else {
-        _showErrorDialog('Erreur: ${response.statusMessage}');
+      if (mounted) {
+        ref.read(authProvider.notifier).updateUserHederaAccountId(updatedUser.hederaAccountId);
+        _showSuccessDialog();
       }
     } on DioException catch (e) {
       _showErrorDialog('Erreur réseau: ${e.message}');

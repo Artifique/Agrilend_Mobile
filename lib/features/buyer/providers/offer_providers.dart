@@ -2,7 +2,6 @@ import 'package:agrilend/models/offer.dart';
 import 'package:agrilend/services/api_service.dart';
 import 'package:agrilend/services/offer_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:agrilend/services/auth_providers.dart';
 
 final offerServiceProvider = Provider<OfferService>((ref) {
   final apiService = ref.watch(apiServiceProvider);

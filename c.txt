@@ -499,3 +499,8 @@ Je vais structurer ma réponse en détaillant chaque étape du parcours de l'ach
        * Encoder les transactions signées.
    3. Utilisez `flutter_secure_storage` pour gérer la clé privée de l'utilisateur de manière sécurisée.
    4. Suivez ce workflow pour chaque action de l'acheteur nécessitant une interaction avec Hedera.
+
+
+
+
+

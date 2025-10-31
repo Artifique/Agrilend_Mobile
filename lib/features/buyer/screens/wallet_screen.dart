@@ -237,24 +237,22 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
                   children: [
                     Expanded(
                       child: _buildActionCard(
-                        'Recevoir',
-                        Icons.call_received,
-                        Colors.green,
+                        'Déposer HBAR',
+                        Icons.account_balance_wallet_outlined,
+                        Colors.orange,
                         () {
-                          // Afficher QR code pour recevoir
-                          context.go('/buyer/receive-qr');
+                          context.go('/buyer/wallet/deposit-hbar');
                         },
                       ),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
                       child: _buildActionCard(
-                        'Envoyer',
-                        Icons.send,
-                        Colors.blue,
+                        'Associer Token',
+                        Icons.token,
+                        Colors.purple,
                         () {
-                          // Écran d'envoi
-                          context.go('/buyer/send-hbar');
+                          context.go('/buyer/wallet/associate-token');
                         },
                       ),
                     ),
@@ -267,26 +265,17 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
                   children: [
                     Expanded(
                       child: _buildActionCard(
-                        'Historique',
-                        Icons.history,
-                        Colors.purple,
+                        'Échanger AgriTokens',
+                        Icons.currency_exchange,
+                        Colors.red,
                         () {
-                          // Historique des transactions
-                          context.go('/buyer/transaction-history');
+                          context.go('/buyer/wallet/redeem-agritokens');
                         },
                       ),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
-                      child: _buildActionCard(
-                        'Configurer',
-                        Icons.settings,
-                        Colors.orange,
-                        () {
-                          // Configuration du compte
-                          context.go('/buyer/wallet-settings');
-                        },
-                      ),
+                      child: Container(), // Placeholder for alignment
                     ),
                   ],
                 ),

@@ -17,8 +17,6 @@ import 'user_service.dart';
 // Export notifier so feature code can reference AuthState/AuthNotifier types
 export 'auth_notifier.dart';
 
-final apiServiceProvider = Provider<ApiService>((ref) => ApiService());
-
 final authServiceProvider =
     Provider<AuthService>((ref) => AuthService(ref.read(apiServiceProvider)));
 
